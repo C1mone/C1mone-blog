@@ -85,11 +85,12 @@
 
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="94 讀書筆記咩">
-<meta property="og:url" content="http://C1mone.github.io/C1mone-blog/archives/index.html">
+<meta property="og:title" content="about">
+<meta property="og:url" content="http://C1mone.github.io/C1mone-blog/about/index.html">
 <meta property="og:site_name" content="94 讀書筆記咩">
+<meta property="og:updated_time" content="2016-11-17T15:18:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="94 讀書筆記咩">
+<meta name="twitter:title" content="about">
 
 
 
@@ -117,13 +118,19 @@
 
 
 
-  <link rel="canonical" href="http://C1mone.github.io/C1mone-blog/archives/"/>
+  <link rel="canonical" href="http://C1mone.github.io/C1mone-blog/about/"/>
 
 
 
 
 
-  <title> 歸檔 | 94 讀書筆記咩 </title>
+  <title>
+  
+
+  
+    about | 94 讀書筆記咩
+  
+</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
@@ -144,7 +151,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  page-archive  ">
+  <div class="container one-collumn sidebar-position-left  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -234,66 +241,20 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+  <header class="post-header">
 
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共計 1 篇文章。 繼續努力。
-    </span>
+	<h2 class="post-title" itemprop="name headline">about</h2>
+
+
+
+</header>
 
     
-
-      
-      
-      
-
-      
-        
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
-        </div>
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/C1mone-blog/2016/11/02/word2vec介紹/" itemprop="url">
-              
-                <span itemprop="name">玩轉文字探勘以 word2vec 以 ptt 資料為例</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-11-02T23:15:12+08:00"
-              content="2016-11-02" >
-          11-02
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
     
-
-  </section>
-
-  
-
+      
+    
+  </div>
 
 
           </div>
@@ -301,6 +262,17 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -472,12 +444,6 @@
 
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
-
 
   
 
@@ -494,9 +460,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'c1mone';
-      var disqus_identifier = 'archives/index.html';
+      var disqus_identifier = 'about/index.html';
 
-      var disqus_title = "";
+      var disqus_title = "about";
 
 
       function run_disqus_script(disqus_script) {
@@ -509,6 +475,13 @@
 
       run_disqus_script('count.js');
 
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
       
 
     </script>

@@ -188,6 +188,16 @@
         </li>
       
         
+        <li class="menu-item menu-item-about">
+          <a href="/C1mone-blog/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            關於
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/C1mone-blog/archives" rel="section">
             
@@ -289,6 +299,13 @@
           
 
           
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/C1mone-blog/2016/11/02/word2vec介紹/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/02/word2vec介紹/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -543,10 +560,28 @@
 
   
 
+    <script type="text/javascript">
+      var disqus_shortname = 'c1mone';
+      var disqus_identifier = 'index.html';
+
+      var disqus_title = "";
 
 
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
 
-	
+      run_disqus_script('count.js');
+
+      
+
+    </script>
+  
+
 
 
 
