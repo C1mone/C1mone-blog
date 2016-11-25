@@ -68,7 +68,7 @@
 <link href="/C1mone-blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="scala,coursera,functional programming," />
+  <meta name="keywords" content="docker,redmine," />
 
 
 
@@ -84,30 +84,18 @@
 
 
 
-<meta name="description" content="How Classes Are OrganizedTraitsTraits 就像是 Java 的 interface 只是可以擁有 field 以及 concret method
-Hierachy以下是 Scala 中各個 class 的繼承關係，有幾點記得比較清楚的是
-
-所有的 class 都擁有 subclass Nothing
-而 Int 參數不能被指派 null ： val x: Int">
+<meta name="description" content="docker upgrade最近看了一些文章發現自己的 docker 已經好久沒有升級了（將近快一年），不過因為後來工作都比較少在用 docker 的關係，一直都是把只要原有的 redmine container 起得來就不管他了！但是心血來潮想說來跟隨一下新潮的 docker ，因此做了一次升級的動作．">
 <meta property="og:type" content="article">
-<meta property="og:title" content="FP In Scala week3 note(2):Class & Polymorphism">
-<meta property="og:url" content="http://C1mone.github.io/C1mone-blog/2016/11/23/FP_scala_week3_2/index.html">
+<meta property="og:title" content="Upgrade docker for mac and run redmine">
+<meta property="og:url" content="http://C1mone.github.io/C1mone-blog/2016/11/25/Install-docker-for-mac/index.html">
 <meta property="og:site_name" content="94 讀書筆記咩">
-<meta property="og:description" content="How Classes Are OrganizedTraitsTraits 就像是 Java 的 interface 只是可以擁有 field 以及 concret method
-Hierachy以下是 Scala 中各個 class 的繼承關係，有幾點記得比較清楚的是
-
-所有的 class 都擁有 subclass Nothing
-而 Int 參數不能被指派 null ： val x: Int">
-<meta property="og:image" content="http://imgur.com/VSoN27U.jpg">
-<meta property="og:updated_time" content="2016-11-23T07:29:44.000Z">
+<meta property="og:description" content="docker upgrade最近看了一些文章發現自己的 docker 已經好久沒有升級了（將近快一年），不過因為後來工作都比較少在用 docker 的關係，一直都是把只要原有的 redmine container 起得來就不管他了！但是心血來潮想說來跟隨一下新潮的 docker ，因此做了一次升級的動作．">
+<meta property="og:image" content="http://imgur.com/FY3Xmap.jpg">
+<meta property="og:updated_time" content="2016-11-25T15:32:23.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="FP In Scala week3 note(2):Class & Polymorphism">
-<meta name="twitter:description" content="How Classes Are OrganizedTraitsTraits 就像是 Java 的 interface 只是可以擁有 field 以及 concret method
-Hierachy以下是 Scala 中各個 class 的繼承關係，有幾點記得比較清楚的是
-
-所有的 class 都擁有 subclass Nothing
-而 Int 參數不能被指派 null ： val x: Int">
-<meta name="twitter:image" content="http://imgur.com/VSoN27U.jpg">
+<meta name="twitter:title" content="Upgrade docker for mac and run redmine">
+<meta name="twitter:description" content="docker upgrade最近看了一些文章發現自己的 docker 已經好久沒有升級了（將近快一年），不過因為後來工作都比較少在用 docker 的關係，一直都是把只要原有的 redmine container 起得來就不管他了！但是心血來潮想說來跟隨一下新潮的 docker ，因此做了一次升級的動作．">
+<meta name="twitter:image" content="http://imgur.com/FY3Xmap.jpg">
 
 
 
@@ -135,13 +123,13 @@ Hierachy以下是 Scala 中各個 class 的繼承關係，有幾點記得比較�
 
 
 
-  <link rel="canonical" href="http://C1mone.github.io/C1mone-blog/2016/11/23/FP_scala_week3_2/"/>
+  <link rel="canonical" href="http://C1mone.github.io/C1mone-blog/2016/11/25/Install-docker-for-mac/"/>
 
 
 
 
 
-  <title> FP In Scala week3 note(2):Class & Polymorphism | 94 讀書筆記咩 </title>
+  <title> Upgrade docker for mac and run redmine | 94 讀書筆記咩 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
@@ -262,7 +250,7 @@ Hierachy以下是 Scala 中各個 class 的繼承關係，有幾點記得比較�
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://C1mone.github.io/C1mone-blog/C1mone-blog/2016/11/23/FP_scala_week3_2/">
+  <link itemprop="mainEntityOfPage" href="http://C1mone.github.io/C1mone-blog/C1mone-blog/2016/11/25/Install-docker-for-mac/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="C1mone">
@@ -286,7 +274,7 @@ Hierachy以下是 Scala 中各個 class 的繼承關係，有幾點記得比較�
             
             
               
-                FP In Scala week3 note(2):Class & Polymorphism
+                Upgrade docker for mac and run redmine
               
             
           </h1>
@@ -299,8 +287,8 @@ Hierachy以下是 Scala 中各個 class 的繼承關係，有幾點記得比較�
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-23T15:15:54+08:00">
-                2016-11-23
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-25T12:29:32+08:00">
+                2016-11-25
               </time>
             
 
@@ -315,8 +303,8 @@ Hierachy以下是 Scala 中各個 class 的繼承關係，有幾點記得比較�
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/C1mone-blog/2016/11/23/FP_scala_week3_2/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/23/FP_scala_week3_2/" itemprop="commentCount"></span>
+                <a href="/C1mone-blog/2016/11/25/Install-docker-for-mac/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/25/Install-docker-for-mac/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -342,26 +330,33 @@ Hierachy以下是 Scala 中各個 class 的繼承關係，有幾點記得比較�
       
 
       
-        <h1 id="How-Classes-Are-Organized"><a href="#How-Classes-Are-Organized" class="headerlink" title="How Classes Are Organized"></a>How Classes Are Organized</h1><h2 id="Traits"><a href="#Traits" class="headerlink" title="Traits"></a>Traits</h2><p>Traits 就像是 Java 的 interface 只是可以擁有 <strong>field</strong> 以及 <strong>concret method</strong></p>
-<h2 id="Hierachy"><a href="#Hierachy" class="headerlink" title="Hierachy"></a>Hierachy</h2><p>以下是 Scala 中各個 class 的繼承關係，有幾點記得比較清楚的是</p>
-<ul>
-<li>所有的 class 都擁有 subclass Nothing</li>
-<li>而 Int 參數不能被指派 null ： <code>val x: Int = null</code> 會報錯</li>
-</ul>
-<p><img src="http://imgur.com/VSoN27U.jpg" alt="scala hierachy"></p>
-<h1 id="Polymorphism"><a href="#Polymorphism" class="headerlink" title="Polymorphism"></a>Polymorphism</h1><h2 id="Polymorphism-（多型）"><a href="#Polymorphism-（多型）" class="headerlink" title="Polymorphism （多型）"></a>Polymorphism （多型）</h2><p>多型在 Scala 裡面有兩種實現方法</p>
-<ol>
-<li>subtype：一個 class 可以使用它子 class 的實體就是多型，例如上一個 note 中我們指定 <code>val x: string = null</code> 就是一種多型化的例子</li>
-<li>generic：一個 function 或是 class 可以接受不同種 type 的參數，也就是 type parameter</li>
-</ol>
-<p>以下就是 Scala 中 List 的實現</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">trait</span> <span class="title">List</span>[<span class="type">T</span>]</span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">isEmpty</span></span>: <span class="type">Boolean</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">head</span></span>: <span class="type">T</span></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">tail</span></span>: <span class="type">List</span>[<span class="type">T</span>]</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cons</span>[<span class="type">T</span>](<span class="params">val head: <span class="type">T</span>, val tail: <span class="type">List</span>[<span class="type">T</span>] </span>) <span class="keyword">extends</span> <span class="title">List</span>[<span class="type">T</span>]</span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">isEmpty</span></span>: <span class="type">Boolean</span> = <span class="literal">false</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Nil</span>[<span class="type">T</span>] <span class="keyword">extends</span> <span class="title">List</span>[<span class="type">T</span>]</span>&#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">isEmpty</span></span>: <span class="type">Boolean</span> = <span class="literal">true</span></div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">head</span></span>: <span class="type">Nothing</span> = <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">NoSuchElementException</span>(<span class="string">"nil head"</span>)</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">tail</span></span>: <span class="type">Nothing</span> = <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">NoSuchElementException</span>(<span class="string">"nil tail"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>其中 Cons 中使用的參數就會自動實現 trait 中的 head 以及 tail function，同意於下列程式</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cons</span>[<span class="type">T</span>](<span class="params">val _head: <span class="type">T</span>, val _tail: <span class="type">List</span>[<span class="type">T</span>]</span>) <span class="keyword">extends</span> <span class="title">List</span>[<span class="type">T</span>]</span>&#123;</div><div class="line">  head = _head</div><div class="line">  tail = _tail</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>課堂的練習要我們實現一個 nth function ，這不會很難實現．</p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">val</span> list = <span class="keyword">new</span> <span class="type">Cons</span>(<span class="number">1</span>, <span class="keyword">new</span> <span class="type">Cons</span>(<span class="number">2</span>, <span class="keyword">new</span> <span class="type">Cons</span>(<span class="number">3</span>, <span class="keyword">new</span> <span class="type">Nil</span>)))</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">singleton</span></span>[<span class="type">T</span>](elem: <span class="type">T</span>) = <span class="keyword">new</span> <span class="type">Cons</span>[<span class="type">T</span>](elem, <span class="keyword">new</span> <span class="type">Nil</span>[<span class="type">T</span>])</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">nth</span></span>[<span class="type">T</span>](n: <span class="type">Int</span>, list: <span class="type">List</span>[<span class="type">T</span>]): <span class="type">T</span> = &#123;</div><div class="line">  <span class="keyword">if</span> (list.isEmpty) <span class="keyword">throw</span> <span class="keyword">new</span> <span class="type">IndexOutOfBoundsException</span>(<span class="string">""</span>)</div><div class="line">  <span class="keyword">else</span> <span class="keyword">if</span> (n == <span class="number">0</span>) list.head</div><div class="line">  <span class="keyword">else</span> nth(n - <span class="number">1</span>, list.tail)</div><div class="line">&#125;</div><div class="line">nth(<span class="number">-1</span>, list)</div></pre></td></tr></table></figure>
-<p>重複一下這裡使用 T 的 function, class, trait 都是一種 generic 的表現，而 Nil class 定義中的 <code>def tail: Nothing</code> 則是 subtype</p>
-<h2 id="Type-Erasure"><a href="#Type-Erasure" class="headerlink" title="Type Erasure"></a>Type Erasure</h2><p>定義：在 evaluate 程式的時候會把 type 去除</p>
+        <h2 id="docker-upgrade"><a href="#docker-upgrade" class="headerlink" title="docker upgrade"></a>docker upgrade</h2><p>最近看了一些文章發現自己的 docker 已經好久沒有升級了（將近快一年），不過因為後來工作都比較少在用 docker 的關係，一直都是把只要原有的 redmine container 起得來就不管他了！但是心血來潮想說來跟隨一下新潮的 docker ，因此做了一次升級的動作．<br><a id="more"></a></p>
+<p>不看還好，一看原來 docker 早就已經在 mac 上面有一個新的版本稱作 <strong>docker for mac</strong> 使用了 <strong><a href="https://github.com/mist64/xhyve/" target="_blank" rel="external">xhyve</a></strong> 的一個技術來虛擬化 docker 在 mac 上．這句話有點文鄒鄒的，但最簡單的意思就是現在在 mac 上就不用再用麻煩的 docker-machine (boot2docker) 可以直接在命令列下面執行 docker 了，不然有時候 docker machine 怪怪的還要重開就一整個麻煩．但是在安裝 docker for mac 之前還是有一些步驟要做來把 docker-machine 的東西刪乾淨．</p>
+<h2 id="Uninstall-docker-amp-boot2docker"><a href="#Uninstall-docker-amp-boot2docker" class="headerlink" title="Uninstall docker &amp; boot2docker"></a>Uninstall docker &amp; boot2docker</h2><p>這裡我參考了以下的網址來完整的移除舊有的 docker．</p>
+<p><a href="https://therealmarv.com/how-to-fully-uninstall-the-offical-docker-os-x-installation/" target="_blank" rel="external">How to Fully Uninstall the Official Docker OS X Installation</a></p>
+<p>移除 default machine ，如果你有建立多個記得全部刪掉．</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker-machine rm -f default</div></pre></td></tr></table></figure>
+<p>停止和刪除 boot2docker </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">boot2docker stop</div><div class="line">boot2docker delete</div></pre></td></tr></table></figure>
+<p>移除 boot2docker &amp; docker app</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo rm -rf /Applications/boot2dockersudo</div><div class="line">rm -rf /Applications/Docker</div></pre></td></tr></table></figure>
+<p>移除 /usr/local 底下的一堆指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sudo rm -f /usr/local/bin/docker</div><div class="line">rm -f /usr/local/bin/boot2docker </div><div class="line">rm -f /usr/local/bin/docker-machine </div><div class="line">rm -r /usr/local/bin/docker-machine-driver* </div><div class="line">rm -f /usr/local/bin/docker-compose</div></pre></td></tr></table></figure>
+<p>移除 docker package</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo pkgutil --forget io.docker.pkg.docker</div><div class="line">pkgutil --forget io.docker.pkg.dockercompose</div><div class="line">pkgutil --forget io.docker.pkg.dockermachine</div><div class="line">pkgutil --forget io.boot2dockeriso.pkg.boot2dockeriso</div></pre></td></tr></table></figure>
+<p>移除 boot2docker images</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo rm -rf /usr/local/share/boot2dockerr</div><div class="line">m -rf ~/.boot2docker</div></pre></td></tr></table></figure>
+<p>移除 docker ssh key</p>
+<p><code>rm ~/.ssh/id_boot2docker*</code></p>
+<p>移除 <code>/private</code> 資料夾中的 boot2docker 檔案</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo rm -f /private/var/db/receipts/io.boot2docker.*</div><div class="line">sudo rm -f /private/var/db/receipts/io.boot2dockeriso.*</div></pre></td></tr></table></figure>
+<p>移除 docker 設定資料夾</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rm -rf ~/.docker</div></pre></td></tr></table></figure>
+<h2 id="Install-Docker-for-Mac"><a href="#Install-Docker-for-Mac" class="headerlink" title="Install Docker for Mac"></a>Install Docker for Mac</h2><p>跟著<a href="https://docs.docker.com/docker-for-mac/" target="_blank" rel="external">安裝步驟</a>應該就 ok 了，沒有遇到什麼問題</p>
+<h2 id="Run-Redmine-docker"><a href="#Run-Redmine-docker" class="headerlink" title="Run Redmine docker"></a>Run Redmine docker</h2><p>使用 docker-compose 的方法就可以快速建立一個 redmine docker 了！超快！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wget https://raw.githubusercontent.com/sameersbn/docker-redmine/master/docker-compose.yml</div><div class="line">docker-compose up</div></pre></td></tr></table></figure>
+<p>收工示意圖</p>
+<p><img src="http://imgur.com/FY3Xmap.jpg" alt=""></p>
 
       
     </div>
@@ -385,11 +380,9 @@ Hierachy以下是 Scala 中各個 class 的繼承關係，有幾點記得比較�
       
         <div class="post-tags">
           
-            <a href="/C1mone-blog/tags/scala/" rel="tag"># scala</a>
+            <a href="/C1mone-blog/tags/docker/" rel="tag"># docker</a>
           
-            <a href="/C1mone-blog/tags/coursera/" rel="tag"># coursera</a>
-          
-            <a href="/C1mone-blog/tags/functional-programming/" rel="tag"># functional programming</a>
+            <a href="/C1mone-blog/tags/redmine/" rel="tag"># redmine</a>
           
         </div>
       
@@ -398,8 +391,8 @@ Hierachy以下是 Scala 中各個 class 的繼承關係，有幾點記得比較�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/C1mone-blog/2016/11/22/FP_scala_week3_1/" rel="next" title="FP In Scala week3 note(1):class & binary tree">
-                <i class="fa fa-chevron-left"></i> FP In Scala week3 note(1):class & binary tree
+              <a href="/C1mone-blog/2016/11/23/FP_scala_week3_2/" rel="next" title="FP In Scala week3 note(2):Class & Polymorphism">
+                <i class="fa fa-chevron-left"></i> FP In Scala week3 note(2):Class & Polymorphism
               </a>
             
           </div>
@@ -407,10 +400,6 @@ Hierachy以下是 Scala 中各個 class 的繼承關係，有幾點記得比較�
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/C1mone-blog/2016/11/25/Install-docker-for-mac/" rel="prev" title="Upgrade docker for mac and run redmine">
-                Upgrade docker for mac and run redmine <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -541,7 +530,7 @@ Hierachy以下是 Scala 中各個 class 的繼承關係，有幾點記得比較�
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#How-Classes-Are-Organized"><span class="nav-number">1.</span> <span class="nav-text">How Classes Are Organized</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Traits"><span class="nav-number">1.1.</span> <span class="nav-text">Traits</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hierachy"><span class="nav-number">1.2.</span> <span class="nav-text">Hierachy</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Polymorphism"><span class="nav-number">2.</span> <span class="nav-text">Polymorphism</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Polymorphism-（多型）"><span class="nav-number">2.1.</span> <span class="nav-text">Polymorphism （多型）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Type-Erasure"><span class="nav-number">2.2.</span> <span class="nav-text">Type Erasure</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-upgrade"><span class="nav-number">1.</span> <span class="nav-text">docker upgrade</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Uninstall-docker-amp-boot2docker"><span class="nav-number">2.</span> <span class="nav-text">Uninstall docker & boot2docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-Docker-for-Mac"><span class="nav-number">3.</span> <span class="nav-text">Install Docker for Mac</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Run-Redmine-docker"><span class="nav-number">4.</span> <span class="nav-text">Run Redmine docker</span></a></li></ol></div>
             
 
           </div>
@@ -672,9 +661,9 @@ Hierachy以下是 Scala 中各個 class 的繼承關係，有幾點記得比較�
 
     <script type="text/javascript">
       var disqus_shortname = 'c1mone';
-      var disqus_identifier = '2016/11/23/FP_scala_week3_2/';
+      var disqus_identifier = '2016/11/25/Install-docker-for-mac/';
 
-      var disqus_title = "FP In Scala week3 note(2):Class & Polymorphism";
+      var disqus_title = "Upgrade docker for mac and run redmine";
 
 
       function run_disqus_script(disqus_script) {
