@@ -6,12 +6,12 @@ cache:
         - node_modules
 
 before_script:
-    - git clone --branch gh-pages git@github.com:C1mone/C1mone-blog.git public
+    - git clone --branch gh-pages https://github.com/C1mone/C1mone-blog.git public
 
 scripts:
-    - npm install
-    - hexo clean
-    - hexo generate
+    - yarn install
+    - yarn hexo clean
+    - yarn hexo generate
 
 after_success:
     - cd public
