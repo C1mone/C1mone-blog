@@ -1,0 +1,741 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-tw">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/C1mone-blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/C1mone-blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/C1mone-blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hexo,github,blog,Travis,CI,CD," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/C1mone-blog/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="使用 github pages, hexo 以及漂亮簡單的 theme Next 就可以很快地寫文章成部落格．但是每次在寫文章的時候，還要自己先編譯成靜態網頁以後部署上去，原本的文章卻沒有被 git 記錄起來，這讓我一直覺得很阿雜，剛好今天早上有點空就來研究一下自動化的方法．">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用 travis-ci 自動寫 hexo blog 到 github-pages">
+<meta property="og:url" content="http://c1mone.github.io/C1mone-blog/2016/11/30/blog-github-hexo-travis/index.html">
+<meta property="og:site_name" content="94 讀書筆記咩">
+<meta property="og:description" content="使用 github pages, hexo 以及漂亮簡單的 theme Next 就可以很快地寫文章成部落格．但是每次在寫文章的時候，還要自己先編譯成靜態網頁以後部署上去，原本的文章卻沒有被 git 記錄起來，這讓我一直覺得很阿雜，剛好今天早上有點空就來研究一下自動化的方法．">
+<meta property="og:image" content="http://imgur.com/m15up3A.jpg">
+<meta property="og:image" content="http://imgur.com/qtMVx7F.jpg">
+<meta property="og:updated_time" content="2016-11-30T09:37:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用 travis-ci 自動寫 hexo blog 到 github-pages">
+<meta name="twitter:description" content="使用 github pages, hexo 以及漂亮簡單的 theme Next 就可以很快地寫文章成部落格．但是每次在寫文章的時候，還要自己先編譯成靜態網頁以後部署上去，原本的文章卻沒有被 git 記錄起來，這讓我一直覺得很阿雜，剛好今天早上有點空就來研究一下自動化的方法．">
+<meta name="twitter:image" content="http://imgur.com/m15up3A.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/C1mone-blog/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://c1mone.github.io/C1mone-blog/2016/11/30/blog-github-hexo-travis/"/>
+
+
+
+
+
+  <title> 使用 travis-ci 自動寫 hexo blog 到 github-pages | 94 讀書筆記咩 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/C1mone-blog/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">94 讀書筆記咩</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/C1mone-blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/C1mone-blog/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            關於
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/C1mone-blog/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/C1mone-blog/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://c1mone.github.io/C1mone-blog/C1mone-blog/2016/11/30/blog-github-hexo-travis/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="C1mone">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/C1mone-blog/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="94 讀書筆記咩">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="94 讀書筆記咩" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用 travis-ci 自動寫 hexo blog 到 github-pages
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-30T16:40:43+08:00">
+                2016-11-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/C1mone-blog/2016/11/30/blog-github-hexo-travis/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/30/blog-github-hexo-travis/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>使用 github pages, hexo 以及漂亮簡單的 theme Next 就可以很快地寫文章成部落格．但是每次在寫文章的時候，還要自己先編譯成靜態網頁以後部署上去，原本的文章卻沒有被 git 記錄起來，這讓我一直覺得很阿雜，剛好今天早上有點空就來研究一下自動化的方法．<br><a id="more"></a></p>
+<h2 id="目標流程！"><a href="#目標流程！" class="headerlink" title="目標流程！"></a>目標流程！</h2><p>這裡先介紹一下最後會完成的流程讓大家先有一個感覺</p>
+<ol>
+<li>在 local 寫廢文</li>
+<li>commit 到遠端的 master pages</li>
+<li>travis 發現 master pages 有異動就把他抓下來自動產生靜態網頁！</li>
+<li>travis 把產生完成的靜態網頁 push 到遠端的 gh-pages branch </li>
+<li>登登登！就可以完成部落格文章更新了！</li>
+</ol>
+<h2 id="建立-hexo-以及使用-Next-theme"><a href="#建立-hexo-以及使用-Next-theme" class="headerlink" title="建立 hexo 以及使用 Next theme"></a>建立 hexo 以及使用 Next theme</h2><p>這段大家可以參考 <a href="https://hexo.io" target="_blank" rel="external">Hexo 官網</a> <a href="http://theme-next.iissnan.com" target="_blank" rel="external">Next 官網</a> ，就可以先在本地建立起網站！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">npm install hexo-cli -g</div><div class="line">hexo init blog</div><div class="line">cd blog</div><div class="line">git clone https://github.com/iissnan/hexo-theme-next themes/next</div><div class="line">rm themes/next/.gitignore</div><div class="line">rm -r themes/next/.git</div></pre></td></tr></table></figure>
+<p>這裡把 .gitignore 還有 .git 刪掉的原因是要把 Next 的 code 還有自己的設定都 commit 進入 git，也可以使用 gitmodule 的做法，但是這樣就會只能使用 default 的設定．</p>
+<h2 id="申請-Github-Personal-Access-Tokens"><a href="#申請-Github-Personal-Access-Tokens" class="headerlink" title="申請 Github Personal Access Tokens"></a>申請 Github <strong>Personal Access Tokens</strong></h2><p>因為要讓 travis 有權限來使用使用者的 github，搜尋網路上的做法大都是是申請 github personal access token 來限定使用範圍（總不能給他完整的 ssh key 吧 XD）．大家到 github 的 settings 裡面就可以看到申請頁面如下，特別注意這裡一定要把 token 記下來，因為下一頁以後他就會消失摟．</p>
+<p><img src="http://imgur.com/m15up3A.jpg" alt="Github Personal Acces Tokens"></p>
+<h2 id="加密-Github-Personal-Access-Tokens"><a href="#加密-Github-Personal-Access-Tokens" class="headerlink" title="加密 Github Personal Access Tokens"></a>加密 Github Personal Access Tokens</h2><p>當拿到 token 以後，有這個 token 的 service 就可以對你的 repository 做存取，而且是全部的 repository 喔！所以這個東西一定要謹慎使用．這裡我是使用 <a href="https://docs.travis-ci.com/user/environment-variables/#Encrypted-Variables" target="_blank" rel="external">Encrypted Variables</a> 把它加密以後寫在 travis 的設定檔 .travis.yml 裡面，讓最後 travis 有權限在最後 push code 到 gh-pages branch</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># 安裝 travis 命令列</div><div class="line">gem install travis</div><div class="line"></div><div class="line"># 加密 Personal Access Token</div><div class="line"># XXX 就是你的 Github Peronsal Access Token</div><div class="line">travis encrypt -r C1mone/C1mone-blog GITHUB_TOKEN=XXX</div><div class="line"># 這裡會得到 secure: &quot;...&quot; 一長串東西，要複製下來</div><div class="line"></div><div class="line">travis login --github-token GITHUB_TOKEN</div><div class="line">travis whoami</div><div class="line"># 測試一下 token 有沒有效</div></pre></td></tr></table></figure>
+<h2 id="Travis-設定"><a href="#Travis-設定" class="headerlink" title="Travis 設定"></a>Travis 設定</h2><p>接下來就是到 travis 頁面把 github repository 做一個連接摟！</p>
+<p><img src="http://imgur.com/qtMVx7F.jpg" alt="travis"></p>
+<h2 id="Travis-yml-檔"><a href="#Travis-yml-檔" class="headerlink" title="Travis yml 檔"></a>Travis yml 檔</h2><p>最後最重要的步驟就是在 repository 裡面寫一個 <code>.travis.yml</code> 檔案了，這裡獻醜附上我的 yml 檔案如下，當然也會解說一下．</p>
+<ul>
+<li>cache：這裡把 node_modules 做 cache 可以加快建構的速度</li>
+<li>before_script：我們會先把 gh-pages 的內容先 clone 下來到 public ，這麼做的原因是讓之前的 commit 紀錄不要消失．</li>
+<li>script：讓 hexo 產生靜態網頁檔案到 public 資料夾去．</li>
+<li>after_success：最後一段就是把 public 中的內容經由 github access token 的方式 commit 到遠端的 gh-pages 去．</li>
+<li>branches：這裡是只監聽 master branch 的錯誤．</li>
+<li>env： secure 指的是上面經由 travis cli 所產生出來的加密一長串 token．</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="attr">language:</span> node_js</div><div class="line"><span class="attr">node_js:</span> stable</div><div class="line"></div><div class="line"><span class="attr">cache:</span></div><div class="line"><span class="attr">    directories:</span></div><div class="line"><span class="bullet">        -</span> node_modules</div><div class="line"></div><div class="line"><span class="attr">before_script:</span></div><div class="line"><span class="bullet">    -</span> git clone --branch gh-pages https://github.com/C1mone/C1mone-blog.git public</div><div class="line"></div><div class="line"><span class="attr">script:</span></div><div class="line"><span class="bullet">    -</span> yarn install</div><div class="line"><span class="bullet">    -</span> yarn hexo generate</div><div class="line"></div><div class="line"><span class="attr">after_success:</span></div><div class="line"><span class="bullet">    -</span> cd public</div><div class="line"><span class="bullet">    -</span> git config user.name <span class="string">"C1mone"</span></div><div class="line"><span class="bullet">    -</span> git config user.email <span class="string">"c1mone.tsai@gmail.com"</span></div><div class="line"><span class="bullet">    -</span> git add --all .</div><div class="line"><span class="bullet">    -</span> git commit -m <span class="string">"Travis CI Auto Builder Update"</span></div><div class="line"><span class="bullet">    -</span> git push --quiet <span class="string">"https://$GITHUB_TOKEN@$GITHUB_REF"</span> gh-pages:gh-pages</div><div class="line"></div><div class="line"><span class="attr">branches:</span></div><div class="line"><span class="attr">    only:</span></div><div class="line"><span class="bullet">        -</span> master</div><div class="line"><span class="attr">env:</span></div><div class="line"><span class="attr">    global:</span></div><div class="line"><span class="attr">        - GITHUB_REF:</span> github.com/C1mone/C1mone-blog.git</div><div class="line"><span class="attr">        - secure:</span></div></pre></td></tr></table></figure>
+<h2 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h2><p>最後就是小弟我現在寫 blog 可以直接 commit 完就不用管他啦，然後沒有裝 node 的環境也可以寫，只要有 git 和 vim （誤？大家趕快來試用看看吧．</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/C1mone-blog/tags/hexo/" rel="tag"># hexo</a>
+          
+            <a href="/C1mone-blog/tags/github/" rel="tag"># github</a>
+          
+            <a href="/C1mone-blog/tags/blog/" rel="tag"># blog</a>
+          
+            <a href="/C1mone-blog/tags/Travis/" rel="tag"># Travis</a>
+          
+            <a href="/C1mone-blog/tags/CI/" rel="tag"># CI</a>
+          
+            <a href="/C1mone-blog/tags/CD/" rel="tag"># CD</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/C1mone-blog/2016/11/29/FP_scala_week3_assignment/" rel="next" title="FP_scala_week3_assignment">
+                <i class="fa fa-chevron-left"></i> FP_scala_week3_assignment
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/C1mone-blog/images/avatar.gif"
+               alt="C1mone" />
+          <p class="site-author-name" itemprop="name">C1mone</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/C1mone-blog/archives">
+              <span class="site-state-item-count">7</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/C1mone-blog/tags">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">標籤</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/C1mone" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#目標流程！"><span class="nav-number">1.</span> <span class="nav-text">目標流程！</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#建立-hexo-以及使用-Next-theme"><span class="nav-number">2.</span> <span class="nav-text">建立 hexo 以及使用 Next theme</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#申請-Github-Personal-Access-Tokens"><span class="nav-number">3.</span> <span class="nav-text">申請 Github Personal Access Tokens</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加密-Github-Personal-Access-Tokens"><span class="nav-number">4.</span> <span class="nav-text">加密 Github Personal Access Tokens</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Travis-設定"><span class="nav-number">5.</span> <span class="nav-text">Travis 設定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Travis-yml-檔"><span class="nav-number">6.</span> <span class="nav-text">Travis yml 檔</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#結論"><span class="nav-number">7.</span> <span class="nav-text">結論</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">C1mone</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/C1mone-blog/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/C1mone-blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/C1mone-blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/C1mone-blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/C1mone-blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/C1mone-blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/C1mone-blog/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/C1mone-blog/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/C1mone-blog/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/C1mone-blog/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/C1mone-blog/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/C1mone-blog/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/C1mone-blog/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'c1mone';
+      var disqus_identifier = '2016/11/30/blog-github-hexo-travis/';
+
+      var disqus_title = "使用 travis-ci 自動寫 hexo blog 到 github-pages";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
