@@ -1,0 +1,30 @@
+language: node_js
+node_js: stable
+
+cache:
+    directories:
+        - node_modules
+
+before_script:
+    - git clone --branch gh-pages git@github.com:C1mone/C1mone-blog.git public
+
+scripts:
+    - npm install
+    - hexo clean
+    - hexo generate
+
+after_success:
+    - cd public
+    - git config user.name "C1mone"
+    - git config user.email "c1mone.tsai@gmail.com"
+    - git add --all .
+    - git commit -m "Travis CI Auto Builder Update"
+    - git push https://$GITHUB_TOKEN@$GITHUB_REF master:gh-pages
+
+branches:
+    only:
+        - master
+env:
+    global:
+        - GITHUB_REF: github.com/C1mone/C1mone-blog.git
+        - secure: "JUP9mv6TZGiTGGDmHc8wN3ouG1YNbG5ovoNnMkmViOsf6VEQz1y5vKqjubGiTjUU7FxhpwuptszQkEHEb8yvmJWUDa4gKr8Jf4P86WRkFGy38zJvSmGS5dkzfu/ABl7Wix1RaUvIuyV/dPs+uhKyuvofOpqdswcawDJDDlAWm0SGMf9Nv0H7hs21O+UxGWgU9HOlDqSkmCr1zuih3e7UXJY4D8N1aP30NRxWD0bY69r/lk5nr1LUyW+PKe/9FTsk4CbtB0fcHXanvRawzeUzjbw4/VBs50dn14C8NrWyx1CoiKX1yk/trJx0hFbRtqQAF37/kDSWD0e7TAhcBVSsILRsBMwenATTodMgzqjlIX3mTkG8DWXEf5ZFV0Sy645w7x4rvut5t4PO8mkDwErvPM6BclBwOD2MB8MskCM+W8DaKzwAorKgz959khTOsrUkOUwCA0s1vfuj8MTZYSpBbuXbg3TfD/Wu5Ep3RXnVfJOrjdqoEi3YqyCzcgdPDkRSWKeBZzQZJjeDmpnNVY1ZEIrRHGohefG5wIYODT5zMTT8cvmvj6BXrzmj5NN05tNjF90ZO82ROD0f8xBP1vfojK08p+Xsj/XbtG8D+nOPJQLMm9mc7T6gVFp4GHUm2MkweUuIfQZgW0nVTm//YvIsaNTGH2kccVuRS2XQ3svG314="
