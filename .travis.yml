@@ -18,7 +18,7 @@ after_success:
     - git config user.email "c1mone.tsai@gmail.com"
     - git add --all .
     - git commit -m "Travis CI Auto Builder Update"
-    - git push "https://$GITHUB_TOKEN@$GITHUB_REF" gh-pages:gh-pages
+    - git push --quiet "https://$GITHUB_TOKEN@$GITHUB_REF" gh-pages:gh-pages
 
 branches:
     only:
