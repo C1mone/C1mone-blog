@@ -18,7 +18,7 @@ after_success:
     - git config user.email "c1mone.tsai@gmail.com"
     - git add --all .
     - git commit -m "Travis CI Auto Builder Update"
-    - git push "https://$GITHUB_TOKEN@$GITHUB_REF" master:gh-pages
+    - git push "https://$GITHUB_TOKEN@$GITHUB_REF" gh-pages:gh-pages
 
 branches:
     only:
@@ -26,4 +26,4 @@ branches:
 env:
     global:
         - GITHUB_REF: github.com/C1mone/C1mone-blog.git
-        - secure: "JUP9mv6TZGiTGGDmHc8wN3ouG1YNbG5ovoNnMkmViOsf6VEQz1y5vKqjubGiTjUU7FxhpwuptszQkEHEb8yvmJWUDa4gKr8Jf4P86WRkFGy38zJvSmGS5dkzfu/ABl7Wix1RaUvIuyV/dPs+uhKyuvofOpqdswcawDJDDlAWm0SGMf9Nv0H7hs21O+UxGWgU9HOlDqSkmCr1zuih3e7UXJY4D8N1aP30NRxWD0bY69r/lk5nr1LUyW+PKe/9FTsk4CbtB0fcHXanvRawzeUzjbw4/VBs50dn14C8NrWyx1CoiKX1yk/trJx0hFbRtqQAF37/kDSWD0e7TAhcBVSsILRsBMwenATTodMgzqjlIX3mTkG8DWXEf5ZFV0Sy645w7x4rvut5t4PO8mkDwErvPM6BclBwOD2MB8MskCM+W8DaKzwAorKgz959khTOsrUkOUwCA0s1vfuj8MTZYSpBbuXbg3TfD/Wu5Ep3RXnVfJOrjdqoEi3YqyCzcgdPDkRSWKeBZzQZJjeDmpnNVY1ZEIrRHGohefG5wIYODT5zMTT8cvmvj6BXrzmj5NN05tNjF90ZO82ROD0f8xBP1vfojK08p+Xsj/XbtG8D+nOPJQLMm9mc7T6gVFp4GHUm2MkweUuIfQZgW0nVTm//YvIsaNTGH2kccVuRS2XQ3svG314="
+        - secure: "H/0OjaeOmdo/jm1Efklmu/NnGBE7LRUmI+UyQ+I3vrm1tTgAK6eBskZKiYUR4JWPiVxoyJ0CjuvjOx9w1gt1IHhGaRpecIgWUIIAUvWcyyDqTzJFT8jI3VPnn9jS6cn0RUEcDSx8rGK5RS/ohyr7QV7lwtARCfRdC8P+8NmCLrJODvp/SiwZOoMP7If8SMtJO4gCGSHHDcKv7Mw4WF+d66YOdA+BQMO3YuTmQRw5xap/BVm6ZyLaYlfGAy8zrl05bRbaBxnjxkrA1xER0+NTH0fRiLJ9xwr7/EM/uty8/sIyKiWyfcYQeHvbfzz/VL19maBkKJotJE8MUTmbzMQ66ZRbcEEZO+ooc3P3qGKggBcVlZ7xEQFccexkCeAO8uc4+vx+rjsh6bYS6nYphKtzlLJ/i2rSoguGdXfLE5mEBS5OMx97O6oHAFTZP0+lb4EAop8MOj0WZTNZm+AUPEJiqC/ZPKxCryX9ELH+34qDI2lDpRH/yVrc4ghbPVj71QAG9gtjqU9JlooTKK80D/qn5N/mKXzqEyoa2awBVkCEpEOY87Tv28Qvi1GTlLnKaLdeBfDsimV29vRWKBL9xeLpDChe1aA8ieUCN+0UypfV7chIfyjxNn5h8vSKiTMURCTm9Yvwy9PNC+dl5oTUeE9c1tT806xaABoGS1ah4Uydk9k="
