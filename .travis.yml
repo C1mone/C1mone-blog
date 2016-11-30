@@ -10,7 +10,6 @@ before_script:
 
 script:
     - yarn install
-    - yarn hexo clean
     - yarn hexo generate
 
 after_success:
