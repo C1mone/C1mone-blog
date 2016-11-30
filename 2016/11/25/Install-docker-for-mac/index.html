@@ -1,0 +1,734 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-tw">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/C1mone-blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/C1mone-blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/C1mone-blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="docker,redmine," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/C1mone-blog/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="docker upgrade最近看了一些文章發現自己的 docker 已經好久沒有升級了（將近快一年），不過因為後來工作都比較少在用 docker 的關係，一直都是把只要原有的 redmine container 起得來就不管他了！但是心血來潮想說來跟隨一下新潮的 docker ，因此做了一次升級的動作．">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Upgrade docker for mac and run redmine">
+<meta property="og:url" content="http://c1mone.github.io/C1mone-blog/2016/11/25/Install-docker-for-mac/index.html">
+<meta property="og:site_name" content="94 讀書筆記咩">
+<meta property="og:description" content="docker upgrade最近看了一些文章發現自己的 docker 已經好久沒有升級了（將近快一年），不過因為後來工作都比較少在用 docker 的關係，一直都是把只要原有的 redmine container 起得來就不管他了！但是心血來潮想說來跟隨一下新潮的 docker ，因此做了一次升級的動作．">
+<meta property="og:image" content="http://imgur.com/FY3Xmap.jpg">
+<meta property="og:updated_time" content="2016-11-25T15:32:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Upgrade docker for mac and run redmine">
+<meta name="twitter:description" content="docker upgrade最近看了一些文章發現自己的 docker 已經好久沒有升級了（將近快一年），不過因為後來工作都比較少在用 docker 的關係，一直都是把只要原有的 redmine container 起得來就不管他了！但是心血來潮想說來跟隨一下新潮的 docker ，因此做了一次升級的動作．">
+<meta name="twitter:image" content="http://imgur.com/FY3Xmap.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/C1mone-blog/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://c1mone.github.io/C1mone-blog/2016/11/25/Install-docker-for-mac/"/>
+
+
+
+
+
+  <title> Upgrade docker for mac and run redmine | 94 讀書筆記咩 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/C1mone-blog/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">94 讀書筆記咩</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/C1mone-blog/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/C1mone-blog/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            關於
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/C1mone-blog/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/C1mone-blog/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://c1mone.github.io/C1mone-blog/C1mone-blog/2016/11/25/Install-docker-for-mac/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="C1mone">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/C1mone-blog/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="94 讀書筆記咩">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="94 讀書筆記咩" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Upgrade docker for mac and run redmine
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-25T12:29:32+08:00">
+                2016-11-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/C1mone-blog/2016/11/25/Install-docker-for-mac/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/25/Install-docker-for-mac/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="docker-upgrade"><a href="#docker-upgrade" class="headerlink" title="docker upgrade"></a>docker upgrade</h2><p>最近看了一些文章發現自己的 docker 已經好久沒有升級了（將近快一年），不過因為後來工作都比較少在用 docker 的關係，一直都是把只要原有的 redmine container 起得來就不管他了！但是心血來潮想說來跟隨一下新潮的 docker ，因此做了一次升級的動作．<br><a id="more"></a></p>
+<p>不看還好，一看原來 docker 早就已經在 mac 上面有一個新的版本稱作 <strong>docker for mac</strong> 使用了 <strong><a href="https://github.com/mist64/xhyve/" target="_blank" rel="external">xhyve</a></strong> 的一個技術來虛擬化 docker 在 mac 上．這句話有點文鄒鄒的，但最簡單的意思就是現在在 mac 上就不用再用麻煩的 docker-machine (boot2docker) 可以直接在命令列下面執行 docker 了，不然有時候 docker machine 怪怪的還要重開就一整個麻煩．但是在安裝 docker for mac 之前還是有一些步驟要做來把 docker-machine 的東西刪乾淨．</p>
+<h2 id="Uninstall-docker-amp-boot2docker"><a href="#Uninstall-docker-amp-boot2docker" class="headerlink" title="Uninstall docker &amp; boot2docker"></a>Uninstall docker &amp; boot2docker</h2><p>這裡我參考了以下的網址來完整的移除舊有的 docker．</p>
+<p><a href="https://therealmarv.com/how-to-fully-uninstall-the-offical-docker-os-x-installation/" target="_blank" rel="external">How to Fully Uninstall the Official Docker OS X Installation</a></p>
+<p>移除 default machine ，如果你有建立多個記得全部刪掉．</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker-machine rm -f default</div></pre></td></tr></table></figure>
+<p>停止和刪除 boot2docker </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">boot2docker stop</div><div class="line">boot2docker delete</div></pre></td></tr></table></figure>
+<p>移除 boot2docker &amp; docker app</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo rm -rf /Applications/boot2dockersudo</div><div class="line">rm -rf /Applications/Docker</div></pre></td></tr></table></figure>
+<p>移除 /usr/local 底下的一堆指令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sudo rm -f /usr/local/bin/docker</div><div class="line">rm -f /usr/local/bin/boot2docker </div><div class="line">rm -f /usr/local/bin/docker-machine </div><div class="line">rm -r /usr/local/bin/docker-machine-driver* </div><div class="line">rm -f /usr/local/bin/docker-compose</div></pre></td></tr></table></figure>
+<p>移除 docker package</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo pkgutil --forget io.docker.pkg.docker</div><div class="line">pkgutil --forget io.docker.pkg.dockercompose</div><div class="line">pkgutil --forget io.docker.pkg.dockermachine</div><div class="line">pkgutil --forget io.boot2dockeriso.pkg.boot2dockeriso</div></pre></td></tr></table></figure>
+<p>移除 boot2docker images</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo rm -rf /usr/local/share/boot2dockerr</div><div class="line">m -rf ~/.boot2docker</div></pre></td></tr></table></figure>
+<p>移除 docker ssh key</p>
+<p><code>rm ~/.ssh/id_boot2docker*</code></p>
+<p>移除 <code>/private</code> 資料夾中的 boot2docker 檔案</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo rm -f /private/var/db/receipts/io.boot2docker.*</div><div class="line">sudo rm -f /private/var/db/receipts/io.boot2dockeriso.*</div></pre></td></tr></table></figure>
+<p>移除 docker 設定資料夾</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rm -rf ~/.docker</div></pre></td></tr></table></figure>
+<h2 id="Install-Docker-for-Mac"><a href="#Install-Docker-for-Mac" class="headerlink" title="Install Docker for Mac"></a>Install Docker for Mac</h2><p>跟著<a href="https://docs.docker.com/docker-for-mac/" target="_blank" rel="external">安裝步驟</a>應該就 ok 了，沒有遇到什麼問題</p>
+<h2 id="Run-Redmine-docker"><a href="#Run-Redmine-docker" class="headerlink" title="Run Redmine docker"></a>Run Redmine docker</h2><p>使用 docker-compose 的方法就可以快速建立一個 redmine docker 了！超快！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wget https://raw.githubusercontent.com/sameersbn/docker-redmine/master/docker-compose.yml</div><div class="line">docker-compose up</div></pre></td></tr></table></figure>
+<p>收工示意圖</p>
+<p><img src="http://imgur.com/FY3Xmap.jpg" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/C1mone-blog/tags/docker/" rel="tag"># docker</a>
+          
+            <a href="/C1mone-blog/tags/redmine/" rel="tag"># redmine</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/C1mone-blog/2016/11/23/FP_scala_week3_2/" rel="next" title="FP In Scala week3 note(2):Class & Polymorphism">
+                <i class="fa fa-chevron-left"></i> FP In Scala week3 note(2):Class & Polymorphism
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/C1mone-blog/2016/11/29/FP_scala_week3_assignment/" rel="prev" title="FP_scala_week3_assignment">
+                FP_scala_week3_assignment <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/C1mone-blog/images/avatar.gif"
+               alt="C1mone" />
+          <p class="site-author-name" itemprop="name">C1mone</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/C1mone-blog/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/C1mone-blog/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">標籤</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/C1mone" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-upgrade"><span class="nav-number">1.</span> <span class="nav-text">docker upgrade</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Uninstall-docker-amp-boot2docker"><span class="nav-number">2.</span> <span class="nav-text">Uninstall docker & boot2docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-Docker-for-Mac"><span class="nav-number">3.</span> <span class="nav-text">Install Docker for Mac</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Run-Redmine-docker"><span class="nav-number">4.</span> <span class="nav-text">Run Redmine docker</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">C1mone</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/C1mone-blog/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/C1mone-blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/C1mone-blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/C1mone-blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/C1mone-blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/C1mone-blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/C1mone-blog/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/C1mone-blog/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/C1mone-blog/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/C1mone-blog/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/C1mone-blog/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/C1mone-blog/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/C1mone-blog/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'c1mone';
+      var disqus_identifier = '2016/11/25/Install-docker-for-mac/';
+
+      var disqus_title = "Upgrade docker for mac and run redmine";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
