@@ -68,7 +68,7 @@
 <link href="/C1mone-blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="docker,redmine," />
+  <meta name="keywords" content="tensorflow,deeplearning,neural network," />
 
 
 
@@ -84,18 +84,22 @@
 
 
 
-<meta name="description" content="docker upgrade最近看了一些文章發現自己的 docker 已經好久沒有升級了（將近快一年），不過因為後來工作都比較少在用 docker 的關係，一直都是把只要原有的 redmine container 起得來就不管他了！但是心血來潮想說來跟隨一下新潮的 docker ，因此做了一次升級的動作．">
+<meta name="description" content="不知道大家有沒有一個印象，有一些生活場景你就是特別會把它牢牢記住．
+那對於我而言，今年人機大戰李世石對 AlphaGo 下的那個神之一手的場景絕對會讓我一輩子記得（特別是李世石那個表情！）這代表的意義是人還沒有被機器完全打敗，縱使已經非常非常難贏了，但這一幕讓我這個旁觀者有種保留了尊嚴的感覺．
+事後當然媒體除了對李世石多加吹捧外，也出現一堆文章像是 AlphaGo 背後的秘密 為什麼 AlphaG">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Upgrade docker for mac and run redmine">
-<meta property="og:url" content="http://c1mone.github.io/C1mone-blog/2016/11/25/Install-docker-for-mac/index.html">
+<meta property="og:title" content="tensorflow 學習筆記 Day1 一開始的自我激勵">
+<meta property="og:url" content="http://c1mone.github.io/C1mone-blog/2016/12/16/tensorflow-note-day-1/index.html">
 <meta property="og:site_name" content="94 讀書筆記咩">
-<meta property="og:description" content="docker upgrade最近看了一些文章發現自己的 docker 已經好久沒有升級了（將近快一年），不過因為後來工作都比較少在用 docker 的關係，一直都是把只要原有的 redmine container 起得來就不管他了！但是心血來潮想說來跟隨一下新潮的 docker ，因此做了一次升級的動作．">
-<meta property="og:image" content="http://imgur.com/FY3Xmap.jpg">
-<meta property="og:updated_time" content="2016-12-16T15:56:05.238Z">
+<meta property="og:description" content="不知道大家有沒有一個印象，有一些生活場景你就是特別會把它牢牢記住．
+那對於我而言，今年人機大戰李世石對 AlphaGo 下的那個神之一手的場景絕對會讓我一輩子記得（特別是李世石那個表情！）這代表的意義是人還沒有被機器完全打敗，縱使已經非常非常難贏了，但這一幕讓我這個旁觀者有種保留了尊嚴的感覺．
+事後當然媒體除了對李世石多加吹捧外，也出現一堆文章像是 AlphaGo 背後的秘密 為什麼 AlphaG">
+<meta property="og:updated_time" content="2016-12-16T15:56:05.242Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Upgrade docker for mac and run redmine">
-<meta name="twitter:description" content="docker upgrade最近看了一些文章發現自己的 docker 已經好久沒有升級了（將近快一年），不過因為後來工作都比較少在用 docker 的關係，一直都是把只要原有的 redmine container 起得來就不管他了！但是心血來潮想說來跟隨一下新潮的 docker ，因此做了一次升級的動作．">
-<meta name="twitter:image" content="http://imgur.com/FY3Xmap.jpg">
+<meta name="twitter:title" content="tensorflow 學習筆記 Day1 一開始的自我激勵">
+<meta name="twitter:description" content="不知道大家有沒有一個印象，有一些生活場景你就是特別會把它牢牢記住．
+那對於我而言，今年人機大戰李世石對 AlphaGo 下的那個神之一手的場景絕對會讓我一輩子記得（特別是李世石那個表情！）這代表的意義是人還沒有被機器完全打敗，縱使已經非常非常難贏了，但這一幕讓我這個旁觀者有種保留了尊嚴的感覺．
+事後當然媒體除了對李世石多加吹捧外，也出現一堆文章像是 AlphaGo 背後的秘密 為什麼 AlphaG">
 
 
 
@@ -123,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://c1mone.github.io/C1mone-blog/2016/11/25/Install-docker-for-mac/"/>
+  <link rel="canonical" href="http://c1mone.github.io/C1mone-blog/2016/12/16/tensorflow-note-day-1/"/>
 
 
 
 
 
-  <title> Upgrade docker for mac and run redmine | 94 讀書筆記咩 </title>
+  <title> tensorflow 學習筆記 Day1 一開始的自我激勵 | 94 讀書筆記咩 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
@@ -250,7 +254,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://c1mone.github.io/C1mone-blog/C1mone-blog/2016/11/25/Install-docker-for-mac/">
+  <link itemprop="mainEntityOfPage" href="http://c1mone.github.io/C1mone-blog/C1mone-blog/2016/12/16/tensorflow-note-day-1/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="C1mone">
@@ -274,7 +278,7 @@
             
             
               
-                Upgrade docker for mac and run redmine
+                tensorflow 學習筆記 Day1 一開始的自我激勵
               
             
           </h1>
@@ -287,8 +291,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-25T12:29:32+00:00">
-                2016-11-25
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-16T23:52:09+00:00">
+                2016-12-16
               </time>
             
 
@@ -303,8 +307,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/C1mone-blog/2016/11/25/Install-docker-for-mac/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/25/Install-docker-for-mac/" itemprop="commentCount"></span>
+                <a href="/C1mone-blog/2016/12/16/tensorflow-note-day-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/16/tensorflow-note-day-1/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -330,33 +334,14 @@
       
 
       
-        <h2 id="docker-upgrade"><a href="#docker-upgrade" class="headerlink" title="docker upgrade"></a>docker upgrade</h2><p>最近看了一些文章發現自己的 docker 已經好久沒有升級了（將近快一年），不過因為後來工作都比較少在用 docker 的關係，一直都是把只要原有的 redmine container 起得來就不管他了！但是心血來潮想說來跟隨一下新潮的 docker ，因此做了一次升級的動作．<br><a id="more"></a></p>
-<p>不看還好，一看原來 docker 早就已經在 mac 上面有一個新的版本稱作 <strong>docker for mac</strong> 使用了 <strong><a href="https://github.com/mist64/xhyve/" target="_blank" rel="external">xhyve</a></strong> 的一個技術來虛擬化 docker 在 mac 上．這句話有點文鄒鄒的，但最簡單的意思就是現在在 mac 上就不用再用麻煩的 docker-machine (boot2docker) 可以直接在命令列下面執行 docker 了，不然有時候 docker machine 怪怪的還要重開就一整個麻煩．但是在安裝 docker for mac 之前還是有一些步驟要做來把 docker-machine 的東西刪乾淨．</p>
-<h2 id="Uninstall-docker-amp-boot2docker"><a href="#Uninstall-docker-amp-boot2docker" class="headerlink" title="Uninstall docker &amp; boot2docker"></a>Uninstall docker &amp; boot2docker</h2><p>這裡我參考了以下的網址來完整的移除舊有的 docker．</p>
-<p><a href="https://therealmarv.com/how-to-fully-uninstall-the-offical-docker-os-x-installation/" target="_blank" rel="external">How to Fully Uninstall the Official Docker OS X Installation</a></p>
-<p>移除 default machine ，如果你有建立多個記得全部刪掉．</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker-machine rm -f default</div></pre></td></tr></table></figure>
-<p>停止和刪除 boot2docker </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">boot2docker stop</div><div class="line">boot2docker delete</div></pre></td></tr></table></figure>
-<p>移除 boot2docker &amp; docker app</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo rm -rf /Applications/boot2dockersudo</div><div class="line">rm -rf /Applications/Docker</div></pre></td></tr></table></figure>
-<p>移除 /usr/local 底下的一堆指令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">sudo rm -f /usr/local/bin/docker</div><div class="line">rm -f /usr/local/bin/boot2docker </div><div class="line">rm -f /usr/local/bin/docker-machine </div><div class="line">rm -r /usr/local/bin/docker-machine-driver* </div><div class="line">rm -f /usr/local/bin/docker-compose</div></pre></td></tr></table></figure>
-<p>移除 docker package</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo pkgutil --forget io.docker.pkg.docker</div><div class="line">pkgutil --forget io.docker.pkg.dockercompose</div><div class="line">pkgutil --forget io.docker.pkg.dockermachine</div><div class="line">pkgutil --forget io.boot2dockeriso.pkg.boot2dockeriso</div></pre></td></tr></table></figure>
-<p>移除 boot2docker images</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo rm -rf /usr/local/share/boot2dockerr</div><div class="line">m -rf ~/.boot2docker</div></pre></td></tr></table></figure>
-<p>移除 docker ssh key</p>
-<p><code>rm ~/.ssh/id_boot2docker*</code></p>
-<p>移除 <code>/private</code> 資料夾中的 boot2docker 檔案</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo rm -f /private/var/db/receipts/io.boot2docker.*</div><div class="line">sudo rm -f /private/var/db/receipts/io.boot2dockeriso.*</div></pre></td></tr></table></figure>
-<p>移除 docker 設定資料夾</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">rm -rf ~/.docker</div></pre></td></tr></table></figure>
-<h2 id="Install-Docker-for-Mac"><a href="#Install-Docker-for-Mac" class="headerlink" title="Install Docker for Mac"></a>Install Docker for Mac</h2><p>跟著<a href="https://docs.docker.com/docker-for-mac/" target="_blank" rel="external">安裝步驟</a>應該就 ok 了，沒有遇到什麼問題</p>
-<h2 id="Run-Redmine-docker"><a href="#Run-Redmine-docker" class="headerlink" title="Run Redmine docker"></a>Run Redmine docker</h2><p>使用 docker-compose 的方法就可以快速建立一個 redmine docker 了！超快！</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">wget https://raw.githubusercontent.com/sameersbn/docker-redmine/master/docker-compose.yml</div><div class="line">docker-compose up</div></pre></td></tr></table></figure>
-<p>收工示意圖</p>
-<p><img src="http://imgur.com/FY3Xmap.jpg" alt=""></p>
+        <p>不知道大家有沒有一個印象，有一些生活場景你就是特別會把它牢牢記住．</p>
+<p>那對於我而言，今年人機大戰李世石對 AlphaGo 下的那個神之一手的場景絕對會讓我一輩子記得（特別是李世石那個表情！）這代表的意義是人還沒有被機器完全打敗，縱使已經非常非常難贏了，但這一幕讓我這個旁觀者有種保留了尊嚴的感覺．</p>
+<p>事後當然媒體除了對李世石多加吹捧外，也出現一堆文章像是 <strong>AlphaGo 背後的秘密</strong> <strong>為什麼 AlphaGo 不懂圍棋規則也可以擊敗棋王</strong> … 等文章．然後一時之間大家都可以朗朗上口說說 AlphaGo 有一個估值網路可以評估現在的贏面是如何？一個策略網路來知道下一步要怎麼走？好像大家都突然跟 AlphaGo 變很熟似的．．．</p>
+<p>而對於一個宅宅工程師來說，沒吃過豬肉也看過豬走路，Deep Learning 、CNN 、RNN 這些名詞多多少少聽過它的威名．但是當他組合一起貨真價實的出現在你面前的時候還是覺得這也太神了吧，這豬簡直會飛呀．太猛了 R．於是同事就開始互相推坑說要來組讀書會研究 tensorflow．想當然爾，當然是熱血一陣子就沒有下文了，我想應該是大家都很（ㄓㄨㄤ）忙的緣故吧！</p>
+<p>好了不要說太多無關緊要的話，說說 Neural Network 跟我的淵源好了．還記得四年前在學校上 Machine Learning 的課的時候，講到 Neural Network 這個章節，印象還很深刻聽到老師說 Neural 在上個世紀的時候曾經非常的紅，不過後來 SVM 實在太屌了，就沒什麼起色．．．但我想這時候這間教室裡面的所有人都不知道在當時 Hinton 的學生 Alex Krizhevsky 用 GPU 幹出了一個 deep learning 模型在 ImageNet 上面效果大幅超過了原本傳統的方法，引爆了後來幾年的熱潮．哎，當初會導個 backpropagation 就拿來做期末專題想想簡直是一個鄉下土包子呀．</p>
+<p>所以呀，稍微老了一點以後真真切切感受到科技的變化真的是太快了，有時候一些比較冷門的領域有了大進步就會突然翻紅了起來，這時候也要更敬佩 Hinton 能在這領域鑽研這麼久然後得到很大的成果（真真切切的跪）．<strong>我想這就是人的浪漫吧，當別人都不看好你的時候，把你的青春鑽研在你喜歡、你愛的事物上；最後取得了驚天駭地的成果，證明自己．</strong></p>
+<p>而畢業後小弟在做的工作則比較偏 data engineer ，當資料界的清道夫，寫寫 MapReduce 用用 spark ，頂多用用 mahout 或是 mllib 就很少再碰數學的東西．剛好這陣子非常的有閒，又被人推坑來鐵人賽寫文章，想來想去不知道可以寫什麼，那就想說讓我這個 python 弱弱來從零開始玩玩看 tensorflow，並且分享我 follow tensorflow tutorial 的學習筆記．然後看到隔壁棚的各位大大好多人都有把每一天的 schedule 訂出來，真的是要給他跪拜三次說聲太厲害了．在這裡可能就是非常隨意，但我一定會認真寫完三十天的！也要是有錯的地方歡迎給我指正討論，謝謝大家！</p>
+<p>P.S. 同時會把文章發佈在自己的部落格 ya</p>
 
       
     </div>
@@ -380,9 +365,11 @@
       
         <div class="post-tags">
           
-            <a href="/C1mone-blog/tags/docker/" rel="tag"># docker</a>
+            <a href="/C1mone-blog/tags/tensorflow/" rel="tag"># tensorflow</a>
           
-            <a href="/C1mone-blog/tags/redmine/" rel="tag"># redmine</a>
+            <a href="/C1mone-blog/tags/deeplearning/" rel="tag"># deeplearning</a>
+          
+            <a href="/C1mone-blog/tags/neural-network/" rel="tag"># neural network</a>
           
         </div>
       
@@ -391,8 +378,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/C1mone-blog/2016/11/23/FP_scala_week3_2/" rel="next" title="FP In Scala week3 note(2):Class & Polymorphism">
-                <i class="fa fa-chevron-left"></i> FP In Scala week3 note(2):Class & Polymorphism
+              <a href="/C1mone-blog/2016/11/30/blog-github-hexo-travis/" rel="next" title="使用 travis-ci 自動寫 hexo blog 到 github-pages">
+                <i class="fa fa-chevron-left"></i> 使用 travis-ci 自動寫 hexo blog 到 github-pages
               </a>
             
           </div>
@@ -400,10 +387,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/C1mone-blog/2016/11/29/FP_scala_week3_assignment/" rel="prev" title="FP_scala_week3_assignment">
-                FP_scala_week3_assignment <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -457,17 +440,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目錄
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            本站概覽
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/C1mone-blog/images/avatar.gif"
@@ -524,22 +498,6 @@
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#docker-upgrade"><span class="nav-number">1.</span> <span class="nav-text">docker upgrade</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Uninstall-docker-amp-boot2docker"><span class="nav-number">2.</span> <span class="nav-text">Uninstall docker & boot2docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-Docker-for-Mac"><span class="nav-number">3.</span> <span class="nav-text">Install Docker for Mac</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Run-Redmine-docker"><span class="nav-number">4.</span> <span class="nav-text">Run Redmine docker</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
     </div>
@@ -665,9 +623,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'c1mone';
-      var disqus_identifier = '2016/11/25/Install-docker-for-mac/';
+      var disqus_identifier = '2016/12/16/tensorflow-note-day-1/';
 
-      var disqus_title = "Upgrade docker for mac and run redmine";
+      var disqus_title = "tensorflow 學習筆記 Day1 一開始的自我激勵";
 
 
       function run_disqus_script(disqus_script) {
