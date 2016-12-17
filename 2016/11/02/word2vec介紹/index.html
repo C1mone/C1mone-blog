@@ -29,7 +29,7 @@
 
   
   
-  <link href="/c1mone-blog/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
@@ -63,9 +63,9 @@
 
 
 
-<link href="/c1mone-blog/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
 
-<link href="/c1mone-blog/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
   <meta name="keywords" content="word2vec,ptt,資料分析," />
@@ -77,7 +77,7 @@
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/c1mone-blog/favicon.ico?v=5.1.0" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
 
 
 
@@ -87,11 +87,11 @@
 <meta name="description" content="玩轉文字探勘以 word2vec 以及 ptt 資料為例文字探勘以及自然語言處理一直以來是數據分析世界非常重要的一部份，藉由對文字的處理，可以做出很有趣的應用．舉例來說，像是輿情分析系統，是利用分析社群網路資料來了解目前社群網路上面熱門的討論話題，更進一步得出社群對於這個討論話題的熱門評論，來得到社群使用者對於議題的觀感．在商業上面則可以知道說對於某個品牌在社群的討論度以及意見是如何，以提供行銷上">
 <meta property="og:type" content="article">
 <meta property="og:title" content="玩轉文字探勘以 word2vec 以 ptt 資料為例">
-<meta property="og:url" content="http://c1mone.github.io/c1mone-blog/2016/11/02/word2vec介紹/index.html">
+<meta property="og:url" content="http://blog.c1mone.com.tw/2016/11/02/word2vec介紹/index.html">
 <meta property="og:site_name" content="94 讀書筆記咩">
 <meta property="og:description" content="玩轉文字探勘以 word2vec 以及 ptt 資料為例文字探勘以及自然語言處理一直以來是數據分析世界非常重要的一部份，藉由對文字的處理，可以做出很有趣的應用．舉例來說，像是輿情分析系統，是利用分析社群網路資料來了解目前社群網路上面熱門的討論話題，更進一步得出社群對於這個討論話題的熱門評論，來得到社群使用者對於議題的觀感．在商業上面則可以知道說對於某個品牌在社群的討論度以及意見是如何，以提供行銷上">
 <meta property="og:image" content="https://1.bp.blogspot.com/-Q7F8ulD6fC0/UgvnVCSGmXI/AAAAAAAAAbg/MCWLTYBufhs/s1600/image00.gif">
-<meta property="og:updated_time" content="2016-12-17T01:48:18.960Z">
+<meta property="og:updated_time" content="2016-12-17T06:15:48.246Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="玩轉文字探勘以 word2vec 以 ptt 資料為例">
 <meta name="twitter:description" content="玩轉文字探勘以 word2vec 以及 ptt 資料為例文字探勘以及自然語言處理一直以來是數據分析世界非常重要的一部份，藉由對文字的處理，可以做出很有趣的應用．舉例來說，像是輿情分析系統，是利用分析社群網路資料來了解目前社群網路上面熱門的討論話題，更進一步得出社群對於這個討論話題的熱門評論，來得到社群使用者對於議題的觀感．在商業上面則可以知道說對於某個品牌在社群的討論度以及意見是如何，以提供行銷上">
@@ -102,7 +102,7 @@
 <script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
-    root: '/c1mone-blog/',
+    root: '/',
     scheme: 'Pisces',
     sidebar: {"position":"left","display":"post"},
     fancybox: true,
@@ -123,7 +123,7 @@
 
 
 
-  <link rel="canonical" href="http://c1mone.github.io/c1mone-blog/2016/11/02/word2vec介紹/"/>
+  <link rel="canonical" href="http://blog.c1mone.com.tw/2016/11/02/word2vec介紹/"/>
 
 
 
@@ -158,7 +158,7 @@
   
 
   <div class="custom-logo-site-title">
-    <a href="/c1mone-blog/"  class="brand" rel="start">
+    <a href="/"  class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <span class="site-title">94 讀書筆記咩</span>
       <span class="logo-line-after"><i></i></span>
@@ -183,7 +183,7 @@
       
         
         <li class="menu-item menu-item-home">
-          <a href="/c1mone-blog/" rel="section">
+          <a href="/" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
@@ -193,7 +193,7 @@
       
         
         <li class="menu-item menu-item-about">
-          <a href="/c1mone-blog/about" rel="section">
+          <a href="/about" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
@@ -203,7 +203,7 @@
       
         
         <li class="menu-item menu-item-archives">
-          <a href="/c1mone-blog/archives" rel="section">
+          <a href="/archives" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
@@ -213,7 +213,7 @@
       
         
         <li class="menu-item menu-item-tags">
-          <a href="/c1mone-blog/tags" rel="section">
+          <a href="/tags" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
@@ -250,12 +250,12 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://c1mone.github.io/c1mone-blog/c1mone-blog/2016/11/02/word2vec介紹/">
+  <link itemprop="mainEntityOfPage" href="http://blog.c1mone.com.tw/2016/11/02/word2vec介紹/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="C1mone">
     <meta itemprop="description" content="">
-    <meta itemprop="image" content="/c1mone-blog/images/avatar.gif">
+    <meta itemprop="image" content="/images/avatar.gif">
   </span>
 
   <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -303,7 +303,7 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/c1mone-blog/2016/11/02/word2vec介紹/#comments" itemprop="discussionUrl">
+                <a href="/2016/11/02/word2vec介紹/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/11/02/word2vec介紹/" itemprop="commentCount"></span>
                 </a>
               </span>
@@ -380,11 +380,11 @@
       
         <div class="post-tags">
           
-            <a href="/c1mone-blog/tags/word2vec/" rel="tag"># word2vec</a>
+            <a href="/tags/word2vec/" rel="tag"># word2vec</a>
           
-            <a href="/c1mone-blog/tags/ptt/" rel="tag"># ptt</a>
+            <a href="/tags/ptt/" rel="tag"># ptt</a>
           
-            <a href="/c1mone-blog/tags/資料分析/" rel="tag"># 資料分析</a>
+            <a href="/tags/資料分析/" rel="tag"># 資料分析</a>
           
         </div>
       
@@ -399,7 +399,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/c1mone-blog/2016/11/21/FP_scala_week2_assignment/" rel="prev" title="FP In Scala week2 assignment">
+              <a href="/2016/11/21/FP_scala_week2_assignment/" rel="prev" title="FP In Scala week2 assignment">
                 FP In Scala week2 assignment <i class="fa fa-chevron-right"></i>
               </a>
             
@@ -468,14 +468,14 @@
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/c1mone-blog/images/avatar.gif"
+               src="/images/avatar.gif"
                alt="C1mone" />
           <p class="site-author-name" itemprop="name">C1mone</p>
           <p class="site-description motion-element" itemprop="description"></p>
         </div>
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
-            <a href="/c1mone-blog/archives">
+            <a href="/archives">
               <span class="site-state-item-count">8</span>
               <span class="site-state-item-name">文章</span>
             </a>
@@ -485,7 +485,7 @@
 
           
             <div class="site-state-item site-state-tags">
-              <a href="/c1mone-blog/tags">
+              <a href="/tags">
                 <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">標籤</span>
               </a>
@@ -605,53 +605,53 @@
 
 
   
-  <script type="text/javascript" src="/c1mone-blog/lib/jquery/index.js?v=2.1.3"></script>
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
 
   
-  <script type="text/javascript" src="/c1mone-blog/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
 
   
-  <script type="text/javascript" src="/c1mone-blog/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
 
   
-  <script type="text/javascript" src="/c1mone-blog/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
 
   
-  <script type="text/javascript" src="/c1mone-blog/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
 
   
-  <script type="text/javascript" src="/c1mone-blog/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/c1mone-blog/js/src/utils.js?v=5.1.0"></script>
-
-  <script type="text/javascript" src="/c1mone-blog/js/src/motion.js?v=5.1.0"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/c1mone-blog/js/src/affix.js?v=5.1.0"></script>
-
-  <script type="text/javascript" src="/c1mone-blog/js/src/schemes/pisces.js?v=5.1.0"></script>
-
-
-
-  
-  <script type="text/javascript" src="/c1mone-blog/js/src/scrollspy.js?v=5.1.0"></script>
-<script type="text/javascript" src="/c1mone-blog/js/src/post-details.js?v=5.1.0"></script>
-
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
 
 
   
 
 
-  <script type="text/javascript" src="/c1mone-blog/js/src/bootstrap.js?v=5.1.0"></script>
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
 
 
 
