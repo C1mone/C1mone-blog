@@ -6,7 +6,7 @@ cache:
         - node_modules
 
 before_script:
-    - git clone --branch gh-pages https://github.com/C1mone/C1mone-blog.git public
+    - git clone --branch gh-pages https://github.com/c1mone/c1mone-blog.git public
 
 script:
     - yarn install
@@ -25,5 +25,5 @@ branches:
         - master
 env:
     global:
-        - GITHUB_REF: github.com/C1mone/C1mone-blog.git
+        - GITHUB_REF: github.com/c1mone/c1mone-blog.git
         - secure: "H/0OjaeOmdo/jm1Efklmu/NnGBE7LRUmI+UyQ+I3vrm1tTgAK6eBskZKiYUR4JWPiVxoyJ0CjuvjOx9w1gt1IHhGaRpecIgWUIIAUvWcyyDqTzJFT8jI3VPnn9jS6cn0RUEcDSx8rGK5RS/ohyr7QV7lwtARCfRdC8P+8NmCLrJODvp/SiwZOoMP7If8SMtJO4gCGSHHDcKv7Mw4WF+d66YOdA+BQMO3YuTmQRw5xap/BVm6ZyLaYlfGAy8zrl05bRbaBxnjxkrA1xER0+NTH0fRiLJ9xwr7/EM/uty8/sIyKiWyfcYQeHvbfzz/VL19maBkKJotJE8MUTmbzMQ66ZRbcEEZO+ooc3P3qGKggBcVlZ7xEQFccexkCeAO8uc4+vx+rjsh6bYS6nYphKtzlLJ/i2rSoguGdXfLE5mEBS5OMx97O6oHAFTZP0+lb4EAop8MOj0WZTNZm+AUPEJiqC/ZPKxCryX9ELH+34qDI2lDpRH/yVrc4ghbPVj71QAG9gtjqU9JlooTKK80D/qn5N/mKXzqEyoa2awBVkCEpEOY87Tv28Qvi1GTlLnKaLdeBfDsimV29vRWKBL9xeLpDChe1aA8ieUCN+0UypfV7chIfyjxNn5h8vSKiTMURCTm9Yvwy9PNC+dl5oTUeE9c1tT806xaABoGS1ah4Uydk9k="
