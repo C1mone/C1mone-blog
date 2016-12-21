@@ -86,32 +86,20 @@
 
 <meta name="description" content="今日目標
 了解如何在 tensorflow 中訓練模型
-了解如何在 tensorflow 中評估模型的好壞
-
-翻譯的 tutorial 如下
-模型訓練為了要訓練的我們的模型，我們必須先定義一下怎樣的模型才是好的模型．事實上在機器學習中，通常是定義一個模型怎樣算是不好的．我們把這個定義稱作成本 (cost) 或是損失 (loss)．它代表我們的模型和預期的結果間的差距．我們會嘗試要最小化這些成本，當">
+了解如何在 tensorflow 中評估模型的好壞">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Day6 訓練和評估 MNIST Softmax 模型">
 <meta property="og:url" content="http://blog.c1mone.com.tw/2016/12/21/tensorflow-note-day-6/index.html">
 <meta property="og:site_name" content="94 讀書筆記咩">
 <meta property="og:description" content="今日目標
 了解如何在 tensorflow 中訓練模型
-了解如何在 tensorflow 中評估模型的好壞
-
-翻譯的 tutorial 如下
-模型訓練為了要訓練的我們的模型，我們必須先定義一下怎樣的模型才是好的模型．事實上在機器學習中，通常是定義一個模型怎樣算是不好的．我們把這個定義稱作成本 (cost) 或是損失 (loss)．它代表我們的模型和預期的結果間的差距．我們會嘗試要最小化這些成本，當">
-<meta property="og:image" content="http://ithelp.ithome.com.tw/upload/images/20161221/20103494WDaGWulA96.png">
-<meta property="og:image" content="http://ithelp.ithome.com.tw/upload/images/20161221/20103494deMkJWm5Ca.png">
-<meta property="og:updated_time" content="2016-12-21T15:45:26.510Z">
+了解如何在 tensorflow 中評估模型的好壞">
+<meta property="og:updated_time" content="2016-12-21T15:53:17.638Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Day6 訓練和評估 MNIST Softmax 模型">
 <meta name="twitter:description" content="今日目標
 了解如何在 tensorflow 中訓練模型
-了解如何在 tensorflow 中評估模型的好壞
-
-翻譯的 tutorial 如下
-模型訓練為了要訓練的我們的模型，我們必須先定義一下怎樣的模型才是好的模型．事實上在機器學習中，通常是定義一個模型怎樣算是不好的．我們把這個定義稱作成本 (cost) 或是損失 (loss)．它代表我們的模型和預期的結果間的差距．我們會嘗試要最小化這些成本，當">
-<meta name="twitter:image" content="http://ithelp.ithome.com.tw/upload/images/20161221/20103494WDaGWulA96.png">
+了解如何在 tensorflow 中評估模型的好壞">
 
 
 
@@ -350,14 +338,15 @@
 <li>了解如何在 tensorflow 中訓練模型</li>
 <li>了解如何在 tensorflow 中評估模型的好壞</li>
 </ul>
+<a id="more"></a>
 <p>翻譯的 tutorial 如下</p>
 <h2 id="模型訓練"><a href="#模型訓練" class="headerlink" title="模型訓練"></a>模型訓練</h2><p>為了要訓練的我們的模型，我們必須先定義一下怎樣的模型才是好的模型．事實上在機器學習中，通常是定義一個模型怎樣算是不好的．我們把這個定義稱作成本 (cost) 或是損失 (loss)．它代表我們的模型和預期的結果間的差距．我們會嘗試要最小化這些成本，當這些成本或損失越低的時候，就代表著我們的模型越好．</p>
 <p>有一個非常常見而且很棒的成本函數稱作 <code>cross-entropy</code>．它原先產生於通訊理論中的通訊壓縮編碼，但從博弈到機器學習等領域都有著很重要的地位．它的定義如下:</p>
-<p><img src="http://ithelp.ithome.com.tw/upload/images/20161221/20103494WDaGWulA96.png" alt="http://ithelp.ithome.com.tw/upload/images/20161221/20103494WDaGWulA96.png"></p>
+<p>$$H_{y’}(y) = -\sum_i y’_i \log(y_i)$$</p>
 <p><code>y</code> 是預測的機率分佈，而 <code>y&#39;</code> 是真實的機率分佈 (one-hot 數字向量)．概略地來說 <code>cross-entropy</code> 用來量測我們的預測和真實之間的差距．更多的探討 <code>cross-entropy</code> 有點超出這裡這份的指引的範圍，但很推薦你好好地理解<a href="http://colah.github.io/posts/2015-09-Visual-Information/" target="_blank" rel="external">它</a>．</p>
 <p>為了實現 <code>cross-entropy</code> 我們必須先加入一個新的佔位子 (placeholder) 來放置正確的答案．</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">y_ = tf.placeholder(tf.float32, [<span class="keyword">None</span>, <span class="number">10</span>])</div></pre></td></tr></table></figure>
-<p>然後我們可以來實現 cross-entropy 函數 <img src="http://ithelp.ithome.com.tw/upload/images/20161221/20103494deMkJWm5Ca.png" alt="http://ithelp.ithome.com.tw/upload/images/20161221/20103494deMkJWm5Ca.png"></p>
+<p>然後我們可以來實現 cross-entropy 函數 $-\sum y’\log(y)$</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[<span class="number">1</span>]))</div></pre></td></tr></table></figure>
 <p>首先 <code>tf.log</code> 會先對每個 <code>y</code> 的元素取 log．接下來我們把每個 <code>y_</code> 中的元素乘上 <code>tf.log(y)</code> 中對應的元素．接下來使用 <code>tf.reduce_sum</code> 把第二個維度的元素加總起來，(reduction_indices=[1]，這個參數)．最後 <code>tf.reduce_mean</code> 計算出這一輪的平均值．</p>
 <p>(在程式碼裡面我們並沒有直接使用這段程式碼，因為它是 numerically unstable．取而代之的我們使用 <code>tf.nn.softmax_cross_entropy_with_logits</code>．並把 <code>tf.matmul(x, W) + b</code> 當作函數輸入．在你自己的程式裡面請考慮使用 <code>tf.nn(sparse_)softmax_cross_entropy_with_logits</code>．</p>
