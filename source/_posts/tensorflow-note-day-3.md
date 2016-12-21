@@ -4,6 +4,7 @@ date: 2016-12-18 09:19:52
 tags:
 - tensorflow
 - deeplearning
+- ithome鐵人
 ---
 
 ## 目標

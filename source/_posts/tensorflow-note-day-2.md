@@ -4,6 +4,7 @@ date: 2016-12-17 20:53:10
 tags:
 - deeplearning
 - tensorflow
+- ithome鐵人
 ---
 
 工欲善其事，必先利其器．
