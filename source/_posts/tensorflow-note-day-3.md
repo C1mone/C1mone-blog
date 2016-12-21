@@ -1,5 +1,5 @@
 ---
-title: Day3 MNIST 手寫數字辨識 - Softmax Regression (1)
+title: Day3 熟悉 MNIST 手寫數字辨識資料集
 date: 2016-12-18 09:19:52
 tags:
 - tensorflow
@@ -9,8 +9,6 @@ tags:
 
 ## 目標
 * 下載並熟悉 MNIST 資料集
-* 建立 tensorflow softmax regression model
-* 訓練 model 並計算出準確度
 
 以下是我把 tensorflow 官網 tutorial 做翻譯還有在 jupyter 上執行的筆記
 
