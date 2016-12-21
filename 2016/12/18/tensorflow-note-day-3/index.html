@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="deeplearning,tensorflow,ithome鐵人," />
+  <meta name="keywords" content="tensorflow,deeplearning,ithome鐵人," />
 
 
 
@@ -86,18 +86,14 @@
 
 <meta name="description" content="目標
 下載並熟悉 MNIST 資料集
-建立 tensorflow softmax regression model
-訓練 model 並計算出準確度
 
 以下是我把 tensorflow 官網 tutorial 做翻譯還有在 jupyter 上執行的筆記">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Day3 MNIST 手寫數字辨識 - Softmax Regression (1)">
+<meta property="og:title" content="Day3 熟悉 MNIST 手寫數字辨識資料集">
 <meta property="og:url" content="http://blog.c1mone.com.tw/2016/12/18/tensorflow-note-day-3/index.html">
 <meta property="og:site_name" content="94 讀書筆記咩">
 <meta property="og:description" content="目標
 下載並熟悉 MNIST 資料集
-建立 tensorflow softmax regression model
-訓練 model 並計算出準確度
 
 以下是我把 tensorflow 官網 tutorial 做翻譯還有在 jupyter 上執行的筆記">
 <meta property="og:image" content="https://www.tensorflow.org/images/MNIST.png">
@@ -107,13 +103,11 @@
 <meta property="og:image" content="http://imgur.com/Cwe9GHb.jpg">
 <meta property="og:image" content="http://imgur.com/62fULjF.jpg">
 <meta property="og:image" content="http://imgur.com/jD9Jafb.jpg">
-<meta property="og:updated_time" content="2016-12-21T15:58:34.092Z">
+<meta property="og:updated_time" content="2016-12-21T16:02:49.190Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Day3 MNIST 手寫數字辨識 - Softmax Regression (1)">
+<meta name="twitter:title" content="Day3 熟悉 MNIST 手寫數字辨識資料集">
 <meta name="twitter:description" content="目標
 下載並熟悉 MNIST 資料集
-建立 tensorflow softmax regression model
-訓練 model 並計算出準確度
 
 以下是我把 tensorflow 官網 tutorial 做翻譯還有在 jupyter 上執行的筆記">
 <meta name="twitter:image" content="https://www.tensorflow.org/images/MNIST.png">
@@ -150,7 +144,7 @@
 
 
 
-  <title> Day3 MNIST 手寫數字辨識 - Softmax Regression (1) | 94 讀書筆記咩 </title>
+  <title> Day3 熟悉 MNIST 手寫數字辨識資料集 | 94 讀書筆記咩 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
@@ -295,7 +289,7 @@
             
             
               
-                Day3 MNIST 手寫數字辨識 - Softmax Regression (1)
+                Day3 熟悉 MNIST 手寫數字辨識資料集
               
             
           </h1>
@@ -353,8 +347,6 @@
       
         <h2 id="目標"><a href="#目標" class="headerlink" title="目標"></a>目標</h2><ul>
 <li>下載並熟悉 MNIST 資料集</li>
-<li>建立 tensorflow softmax regression model</li>
-<li>訓練 model 並計算出準確度</li>
 </ul>
 <p>以下是我把 tensorflow 官網 tutorial 做翻譯還有在 jupyter 上執行的筆記</p>
 <a id="more"></a>
@@ -430,9 +422,9 @@ Extracting MNIST_data/t10k-labels-idx1-ubyte.gz
       
         <div class="post-tags">
           
-            <a href="/tags/deeplearning/" rel="tag"># deeplearning</a>
-          
             <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+          
+            <a href="/tags/deeplearning/" rel="tag"># deeplearning</a>
           
             <a href="/tags/ithome鐵人/" rel="tag"># ithome鐵人</a>
           
@@ -719,7 +711,7 @@ Extracting MNIST_data/t10k-labels-idx1-ubyte.gz
       var disqus_shortname = 'c1mone';
       var disqus_identifier = '2016/12/18/tensorflow-note-day-3/';
 
-      var disqus_title = "Day3 MNIST 手寫數字辨識 - Softmax Regression (1)";
+      var disqus_title = "Day3 熟悉 MNIST 手寫數字辨識資料集";
 
 
       function run_disqus_script(disqus_script) {
