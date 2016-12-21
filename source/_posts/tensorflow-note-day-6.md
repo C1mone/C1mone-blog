@@ -11,6 +11,8 @@ tags:
 - 了解如何在 tensorflow 中訓練模型
 - 了解如何在 tensorflow 中評估模型的好壞
 
+<!--more-->
+
 翻譯的 tutorial 如下
 
 ## 模型訓練
@@ -19,7 +21,7 @@ tags:
 
 有一個非常常見而且很棒的成本函數稱作 `cross-entropy`．它原先產生於通訊理論中的通訊壓縮編碼，但從博弈到機器學習等領域都有著很重要的地位．它的定義如下:
 
-![http://ithelp.ithome.com.tw/upload/images/20161221/20103494WDaGWulA96.png](http://ithelp.ithome.com.tw/upload/images/20161221/20103494WDaGWulA96.png)
+$$H_{y'}(y) = -\sum_i y'_i \log(y_i)$$
 
 `y` 是預測的機率分佈，而 `y'` 是真實的機率分佈 (one-hot 數字向量)．概略地來說 `cross-entropy` 用來量測我們的預測和真實之間的差距．更多的探討 `cross-entropy` 有點超出這裡這份的指引的範圍，但很推薦你好好地理解[它](http://colah.github.io/posts/2015-09-Visual-Information/)．
 
@@ -30,7 +32,7 @@ tags:
 y_ = tf.placeholder(tf.float32, [None, 10])
 ```
 
-然後我們可以來實現 cross-entropy 函數 ![http://ithelp.ithome.com.tw/upload/images/20161221/20103494deMkJWm5Ca.png](http://ithelp.ithome.com.tw/upload/images/20161221/20103494deMkJWm5Ca.png)
+然後我們可以來實現 cross-entropy 函數 $-\sum y'\log(y)$
 
 
 ```python
