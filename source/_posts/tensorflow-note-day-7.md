@@ -1,5 +1,5 @@
 ---
-title: Tensorflow Day 7 : 卷積神經網路實現 Convolutional Neural Network
+title: Tensorflow Day 7 卷積神經網路實現 Convolutional Neural Network
 date: 2016-12-22 23:12:52
 tags:
 - tensorflow

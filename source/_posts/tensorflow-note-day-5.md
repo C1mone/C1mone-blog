@@ -1,6 +1,6 @@
 ---
-title: Tensorflow Day5 : 實作 MNIST Softmax 模型
-date: 2016-12-21 23:56:02
+title: Tensorflow Day5 實作 MNIST Softmax 模型
+date: 2016-12-20 23:56:02
 tags:
 - tensorflow
 - deeplearning

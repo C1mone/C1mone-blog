@@ -1,5 +1,5 @@
 ---
-title: Tensorflow Day1 : 一開始的自我激勵
+title: Tensorflow Day1 一開始的自我激勵
 date: 2016-12-16 23:52:09
 tags:
 - tensorflow
