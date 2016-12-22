@@ -1,5 +1,5 @@
 ---
-title: Day3 熟悉 MNIST 手寫數字辨識資料集
+title: Tensorflow Day3 : 熟悉 MNIST 手寫數字辨識資料集
 date: 2016-12-18 09:19:52
 tags:
 - tensorflow

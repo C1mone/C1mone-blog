@@ -1,5 +1,5 @@
 ---
-title: Day6 訓練和評估 MNIST Softmax 模型
+title: Tensorflow Day6 : 訓練和評估 MNIST Softmax 模型
 date: 2016-12-21 23:40:05
 tags:
 - tensorflow

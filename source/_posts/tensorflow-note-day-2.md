@@ -1,5 +1,5 @@
 ---
-title: tensorflow 學習筆記 Day2 Get started
+title: Tensorflow Day2 : Jupyter Notebooks & Linear Regression 範例
 date: 2016-12-17 20:53:10
 tags:
 - deeplearning
