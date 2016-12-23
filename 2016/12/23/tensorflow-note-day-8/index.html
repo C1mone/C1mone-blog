@@ -84,18 +84,27 @@
 
 
 
-<meta name="description" content="工欲善其事，必先利其器．因此我們要先來找一個好用的平台來學習 tensorflow．而在 python 資料分析上面的首選一定是 jupyter notebook．雖然從頭建起使用環境是滿快的，但是最近剛好看到一個線上的 jupyter notebooks 平台，馬上來試用看看．">
+<meta name="description" content="今日目標
+了解卷積神經網路流程
+分析程式中的第一層卷積層訓練結果">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Tensorflow Day2 Jupyter Notebooks & Linear Regression 範例">
-<meta property="og:url" content="http://blog.c1mone.com.tw/2016/12/17/tensorflow-note-day-2/index.html">
+<meta property="og:title" content="Tensorflow Day8 CNN 解說 (1)">
+<meta property="og:url" content="http://blog.c1mone.com.tw/2016/12/23/tensorflow-note-day-8/index.html">
 <meta property="og:site_name" content="94 讀書筆記咩">
-<meta property="og:description" content="工欲善其事，必先利其器．因此我們要先來找一個好用的平台來學習 tensorflow．而在 python 資料分析上面的首選一定是 jupyter notebook．雖然從頭建起使用環境是滿快的，但是最近剛好看到一個線上的 jupyter notebooks 平台，馬上來試用看看．">
-<meta property="og:image" content="http://i.imgur.com/tNGrsy6.gif">
+<meta property="og:description" content="今日目標
+了解卷積神經網路流程
+分析程式中的第一層卷積層訓練結果">
+<meta property="og:image" content="http://imgur.com/bYFnDws.jpg">
+<meta property="og:image" content="http://imgur.com/2KE40Oo.jpg">
+<meta property="og:image" content="http://imgur.com/09eggaV.jpg">
+<meta property="og:image" content="http://imgur.com/POlzyzX.jpg">
 <meta property="og:updated_time" content="2016-12-23T15:51:31.868Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tensorflow Day2 Jupyter Notebooks & Linear Regression 範例">
-<meta name="twitter:description" content="工欲善其事，必先利其器．因此我們要先來找一個好用的平台來學習 tensorflow．而在 python 資料分析上面的首選一定是 jupyter notebook．雖然從頭建起使用環境是滿快的，但是最近剛好看到一個線上的 jupyter notebooks 平台，馬上來試用看看．">
-<meta name="twitter:image" content="http://i.imgur.com/tNGrsy6.gif">
+<meta name="twitter:title" content="Tensorflow Day8 CNN 解說 (1)">
+<meta name="twitter:description" content="今日目標
+了解卷積神經網路流程
+分析程式中的第一層卷積層訓練結果">
+<meta name="twitter:image" content="http://imgur.com/bYFnDws.jpg">
 
 
 
@@ -123,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="http://blog.c1mone.com.tw/2016/12/17/tensorflow-note-day-2/"/>
+  <link rel="canonical" href="http://blog.c1mone.com.tw/2016/12/23/tensorflow-note-day-8/"/>
 
 
 
 
 
-  <title> Tensorflow Day2 Jupyter Notebooks & Linear Regression 範例 | 94 讀書筆記咩 </title>
+  <title> Tensorflow Day8 CNN 解說 (1) | 94 讀書筆記咩 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
@@ -250,7 +259,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.c1mone.com.tw/2016/12/17/tensorflow-note-day-2/">
+  <link itemprop="mainEntityOfPage" href="http://blog.c1mone.com.tw/2016/12/23/tensorflow-note-day-8/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="C1mone">
@@ -274,7 +283,7 @@
             
             
               
-                Tensorflow Day2 Jupyter Notebooks & Linear Regression 範例
+                Tensorflow Day8 CNN 解說 (1)
               
             
           </h1>
@@ -287,8 +296,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-17T20:53:10+00:00">
-                2016-12-17
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-23T21:27:25+00:00">
+                2016-12-23
               </time>
             
 
@@ -303,8 +312,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2016/12/17/tensorflow-note-day-2/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/17/tensorflow-note-day-2/" itemprop="commentCount"></span>
+                <a href="/2016/12/23/tensorflow-note-day-8/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/23/tensorflow-note-day-8/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -330,22 +339,61 @@
       
 
       
-        <p>工欲善其事，必先利其器．<br>因此我們要先來找一個好用的平台來學習 tensorflow．而在 python 資料分析上面的首選一定是 jupyter notebook．雖然從頭建起使用環境是滿快的，但是最近剛好看到一個線上的 jupyter notebooks 平台，馬上來試用看看．</p>
+        <h2 id="今日目標"><a href="#今日目標" class="headerlink" title="今日目標"></a>今日目標</h2><ul>
+<li>了解卷積神經網路流程</li>
+<li>分析程式中的第一層卷積層訓練結果</li>
+</ul>
 <a id="more"></a>
-<h2 id="Microsoft-Azure-Notebooks"><a href="#Microsoft-Azure-Notebooks" class="headerlink" title="Microsoft Azure Notebooks"></a>Microsoft Azure Notebooks</h2><p><a href="https://notebooks.azure.com/" target="_blank" rel="external">Microsoft Azure Notebooks</a> 是 M\$ 最新開出來的平台，不過在這裡不能稱呼他為 M\$ 因為這是完全免費的！可以在上面開 notebook 來使用 jupyter ，大家馬上趕快去試試看，不知道可以免費到多久呢．</p>
-<h2 id="Check-version"><a href="#Check-version" class="headerlink" title="Check version"></a>Check version</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys</div><div class="line">sys.version</div></pre></td></tr></table></figure>
-<pre><code>&apos;2.7.11 |Anaconda custom (64-bit)| (default, Jun 15 2016, 15:21:30) \n[GCC 4.4.7 20120313 (Red Hat 4.4.7-1)]&apos;
-</code></pre><p>azure notebooks 的套件適用 Anaconda 安裝的，不過其中並沒有包含 tensorflow</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sys.version_info</div></pre></td></tr></table></figure>
-<pre><code>sys.version_info(major=2, minor=7, micro=11, releaselevel=&apos;final&apos;, serial=0)
-</code></pre><p>其中我使用的 python 的版本為 <strong>2.7.11</strong></p>
-<h2 id="Install-tensorflow-by-pip"><a href="#Install-tensorflow-by-pip" class="headerlink" title="Install tensorflow by pip"></a>Install tensorflow by pip</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">!pip install tensorflow</div></pre></td></tr></table></figure>
-<h2 id="tensorflow-with-linear-regression"><a href="#tensorflow-with-linear-regression" class="headerlink" title="tensorflow with linear regression"></a>tensorflow with linear regression</h2><p>這裡照個 tensorflow 的 tutorial 來做一個簡單的 linear regression demo．</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line"><span class="comment"># 用 numpy 亂數產生 100 個點，並且</span></div><div class="line">x_data = np.random.rand(<span class="number">100</span>).astype(np.float32)</div><div class="line">y_data = x_data * <span class="number">0.1</span> + <span class="number">0.3</span></div><div class="line"></div><div class="line"><span class="comment"># Try to find values for W and b that compute y_data = W * x_data + b</span></div><div class="line"><span class="comment"># (We know that W should be 0.1 and b 0.3, but TensorFlow will</span></div><div class="line"><span class="comment"># figure that out for us.) </span></div><div class="line"><span class="comment"># 等等 tensorflow 幫我們慢慢地找出 fitting 的權重值</span></div><div class="line"></div><div class="line">W = tf.Variable(tf.random_uniform([<span class="number">1</span>], <span class="number">-1.0</span>, <span class="number">1.0</span>))</div><div class="line">b = tf.Variable(tf.zeros([<span class="number">1</span>]))</div><div class="line">y = W * x_data + b</div><div class="line"></div><div class="line"><span class="comment"># Minimize the mean squared errors.</span></div><div class="line">loss = tf.reduce_mean(tf.square(y - y_data))</div><div class="line">optimizer = tf.train.GradientDescentOptimizer(<span class="number">0.2</span>)</div><div class="line">train = optimizer.minimize(loss)</div><div class="line"></div><div class="line"><span class="comment"># Before starting, initialize the variables.  We will 'run' this first.</span></div><div class="line">init = tf.global_variables_initializer()</div><div class="line"></div><div class="line"><span class="comment"># Launch the graph.</span></div><div class="line">sess = tf.Session()</div><div class="line">sess.run(init)</div><div class="line"></div><div class="line"><span class="comment"># Fit the line.</span></div><div class="line"><span class="keyword">for</span> step <span class="keyword">in</span> range(<span class="number">201</span>):</div><div class="line">    sess.run(train)</div><div class="line">    <span class="keyword">if</span> step % <span class="number">20</span> == <span class="number">0</span>:</div><div class="line">        print(step, sess.run(W), sess.run(b))</div><div class="line">        plt.plot(x_data, y_data, <span class="string">'ro'</span>, label=<span class="string">'Original data'</span>)</div><div class="line">        plt.plot(x_data, sess.run(W) * x_data + sess.run(b), label=<span class="string">'Fitted line'</span>)</div><div class="line">        plt.legend()</div><div class="line">        plt.show()</div><div class="line"></div><div class="line"><span class="comment"># Learns best fit is W: [0.1], b: [0.3]</span></div></pre></td></tr></table></figure>
-<p>以下就是每 20 round 印出的 W 還有 b，可以發現越來越接近原本的設定值</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">(0, array([-0.69138807], dtype=float32), array([ 0.36239833], dtype=float32))</div><div class="line">(20, array([-0.28371689], dtype=float32), array([ 0.53784662], dtype=float32))</div><div class="line">(40, array([-0.1455344], dtype=float32), array([ 0.45219433], dtype=float32))</div><div class="line">(60, array([-0.0571136], dtype=float32), array([ 0.39738676], dtype=float32))</div><div class="line">(80, array([-0.00053454], dtype=float32), array([ 0.36231628], dtype=float32))</div><div class="line">(100, array([ 0.03566952], dtype=float32), array([ 0.33987522], dtype=float32))</div><div class="line">(120, array([ 0.05883594], dtype=float32), array([ 0.32551554], dtype=float32))</div><div class="line">(140, array([ 0.07365976], dtype=float32), array([ 0.31632701], dtype=float32))</div><div class="line">(160, array([ 0.08314531], dtype=float32), array([ 0.31044737], dtype=float32))</div><div class="line">(180, array([ 0.08921498], dtype=float32), array([ 0.30668509], dtype=float32))</div><div class="line">(200, array([ 0.09309884], dtype=float32), array([ 0.30427769], dtype=float32))</div></pre></td></tr></table></figure>
-<p>而這個是每 20 round 繪出的 gif，可以它會慢慢地 fit 到原始的資料．</p>
-<p><img src="http://i.imgur.com/tNGrsy6.gif" alt=""></p>
+<h2 id="CNN-流程"><a href="#CNN-流程" class="headerlink" title="CNN 流程"></a>CNN 流程</h2><p>好的，我們現在已經成功了用 CNN 達到了非常不錯的準確率 (99.2%)，接下來就是來看一下到底它用了什麼樣的方法造成這麼厲害的結果，以及實現 CNN 的 Tensorflow 程式碼裡面的一些參數代表什麼意義？</p>
+<p>在從網路中自學以後大概了解了 CNN 的用意，大概有以下三點:</p>
+<ol>
+<li><p><strong>圖片中的特徵往往比整張圖片還要小</strong></p>
+<p>ex. 一張人臉照片中，幾個重要特徵會是眼睛，鼻子，耳朵．．．等．</p>
+</li>
+<li><p><strong>而圖片中的特徵常常是會重複出現的</strong></p>
+<p>ex. 一張人臉照片中，兩個眼睛特徵是非常相似的．</p>
+</li>
+<li><p><strong>要盡量的減少神經網路中的參數</strong></p>
+<p>ex. 如果輸入的圖片很大而且每個像素都連結到隱含層，這樣權重的數目會太多，導致計算困難．</p>
+</li>
+</ol>
+<p>那根據以上幾點我們回來看一下 CNN 的結構</p>
+<p><img src="http://imgur.com/bYFnDws.jpg" alt=""></p>
+<p>圖片輸入會經過兩個卷積層 (convolutional layer) 然後把它扳平 (Flatten) 之後進入全連結層 (Fully Connected Layer) 最後就是進入 Softmax 分類成 10 個數字．</p>
+<p>這些流程中的關鍵就是卷積層 (convolutional layer) ，卷積層的出現讓 CNN 可以達到上面的三個目標，接下來就讓我們一起看下去．</p>
+<h2 id="卷積層-Convolutional-Layer"><a href="#卷積層-Convolutional-Layer" class="headerlink" title="卷積層 Convolutional Layer"></a>卷積層 Convolutional Layer</h2><p>卷積層中有三個部分，我們會邊用邊用程式邊解說: </p>
+<ul>
+<li>Convolution</li>
+<li>ReLU</li>
+<li>Max Pooling</li>
+</ul>
+<p><img src="http://imgur.com/2KE40Oo.jpg" alt=""></p>
+<h3 id="Convolution"><a href="#Convolution" class="headerlink" title="Convolution"></a>Convolution</h3><p>以下是建立 <code>convolution</code> 的五行程式碼: </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv2d</span><span class="params">(x, W)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.nn.conv2d(x, W, strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding = <span class="string">'SAME'</span>)		(<span class="number">1</span>)</div><div class="line">x_image = tf.reshape(x, [<span class="number">-1</span>, <span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>])									(<span class="number">2</span>)</div><div class="line">W_conv1 = weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">32</span>])									(<span class="number">3</span>)</div><div class="line">b_conv1 = bias_variable([<span class="number">32</span>])												(<span class="number">4</span>)</div><div class="line">result = conv2d(x_image, W_conv1) + b_conv1 								(<span class="number">5</span>)</div></pre></td></tr></table></figure>
+<p>我們先從第二行開始看，它的用意是把圖片像素輸入變成一個 1x28x28x1 的四維矩陣．</p>
+<ul>
+<li>第一個參數為 -1 的意思是不管輸入有幾個，Tensorflow 會自動調整的意思，假設輸入 50 個圖片第一個維度就是 50．</li>
+<li>第二個第三個就是指數字圖片為 28 像素 x 28 像素 的意思</li>
+<li>最後一個則是指色階，這裡又稱 <strong>channel</strong>，這裡因為我們的輸入都是黑白灰階，因此值為 1．如果是彩色圖有 RGB 三原色，這裡的數值就是 3．</li>
+</ul>
+<p>第三行則是建立起過濾器 (filter)．過濾器我覺得也可以稱作特徵篩選器，可以想像說是負責來辨認圖片中的某些特徵，像是直線或是橫線或是轉彎處．</p>
+<ul>
+<li>一二三維的數字 <code>[5, 5, 1]</code> 代表著這個過濾器是一個 5x5x1 的矩陣，這跟上面的圖片一樣 5x5 代表著 5 像素 x 5 像素，而 1 則代表著灰階．</li>
+<li>最後一個數字 32 代表著我們建立了 32 個過濾器來篩選特徵．</li>
+</ul>
+<p>第四行建立一個偏移值 (bias) 避免負數．</p>
+<p>好的那現在讓我們先看一下經過訓練後前 16 個過濾器長得怎麼樣，其中紅色表示大於零的值，藍色表示小於零的值．</p>
+<p><img src="http://imgur.com/09eggaV.jpg" alt=""></p>
+<p>接下來看到每個過濾器對應的輸出是如何 (result)</p>
+<p><img src="http://imgur.com/POlzyzX.jpg" alt=""></p>
+<p>呃如果直接從圖片上面來看你看得出有什麼端倪嗎？</p>
+<p>我們可以發現幾點</p>
+<ol>
+<li>如果過濾器中有藍色<strong>橫線</strong> (ex. 左下角) 那在輸出就會出現數字中有藍色<strong>橫線</strong>的地方</li>
+<li>如果過濾器中有藍色<strong>斜線</strong> (ex. 右下角) 那在輸出就會出現數字中有藍色<strong>斜線</strong>的地方</li>
+</ol>
+<p>感覺這樣是不是每個過濾器所辨認到的 <strong>特徵</strong>都不一樣呢？</p>
+<p>明天再讓我們繼續來看看過濾器是怎麼和資料發生互動的，以及經過 ReLU 的結果．</p>
 
       
     </div>
@@ -382,8 +430,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/12/17/github-pages-with-custom-domain/" rel="next" title="在 github pages 上使用 custom domain">
-                <i class="fa fa-chevron-left"></i> 在 github pages 上使用 custom domain
+              <a href="/2016/12/22/tensorflow-note-day-7/" rel="next" title="Tensorflow Day 7 卷積神經網路實現 Convolutional Neural Network">
+                <i class="fa fa-chevron-left"></i> Tensorflow Day 7 卷積神經網路實現 Convolutional Neural Network
               </a>
             
           </div>
@@ -391,10 +439,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/12/18/tensorflow-note-day-3/" rel="prev" title="Tensorflow Day3 熟悉 MNIST 手寫數字辨識資料集">
-                Tensorflow Day3 熟悉 MNIST 手寫數字辨識資料集 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -525,7 +569,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Microsoft-Azure-Notebooks"><span class="nav-number">1.</span> <span class="nav-text">Microsoft Azure Notebooks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Check-version"><span class="nav-number">2.</span> <span class="nav-text">Check version</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-tensorflow-by-pip"><span class="nav-number">3.</span> <span class="nav-text">Install tensorflow by pip</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tensorflow-with-linear-regression"><span class="nav-number">4.</span> <span class="nav-text">tensorflow with linear regression</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日目標"><span class="nav-number">1.</span> <span class="nav-text">今日目標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CNN-流程"><span class="nav-number">2.</span> <span class="nav-text">CNN 流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卷積層-Convolutional-Layer"><span class="nav-number">3.</span> <span class="nav-text">卷積層 Convolutional Layer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Convolution"><span class="nav-number">3.1.</span> <span class="nav-text">Convolution</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -656,9 +700,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'c1mone';
-      var disqus_identifier = '2016/12/17/tensorflow-note-day-2/';
+      var disqus_identifier = '2016/12/23/tensorflow-note-day-8/';
 
-      var disqus_title = "Tensorflow Day2 Jupyter Notebooks & Linear Regression 範例";
+      var disqus_title = "Tensorflow Day8 CNN 解說 (1)";
 
 
       function run_disqus_script(disqus_script) {
