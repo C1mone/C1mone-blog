@@ -1,5 +1,5 @@
 ---
-title: Tensorflow Day8 CNN 解說 (1)
+title: Tensorflow Day8 卷積神經網路 (CNN) 分析 (1) 流程
 date: 2016-12-23 21:27:25
 tags:
 - tensorflow

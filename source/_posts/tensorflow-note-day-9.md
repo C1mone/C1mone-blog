@@ -13,6 +13,8 @@ tags:
 * 了解 ReLU 激活函數 (Activation) 運作方式
 * 了解最大池化器 MaxPooling 運作方式
 
+<!--more-->
+
 ## 過濾器 (Filter)
 
 從昨天的結果中我們看到過濾器中似乎會對有同樣特徵的輸入產生反應，例如過濾器如果有紅色橫線的存在，那對應輸出圖片的紅色橫線就會特別明顯．那這段過程中過濾器和輸入圖片是如何的互動關係呢？
@@ -29,7 +31,7 @@ tags:
 
 但這時侯回頭看一下 conv2d 的定義會看到還有一個參數值是 padding．
 
-```pthon
+```python
 def conv2d(x, W):
     return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding = 'SAME')
 ```
