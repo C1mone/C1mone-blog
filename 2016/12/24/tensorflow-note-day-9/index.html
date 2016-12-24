@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="tensorflow,deeplearning,neural network," />
+  <meta name="keywords" content="tensorflow,deeplearning,ithome鐵人," />
 
 
 
@@ -84,22 +84,41 @@
 
 
 
-<meta name="description" content="不知道大家有沒有一個印象，有一些生活場景你就是特別會把它牢牢記住．
-那對於我而言，今年人機大戰李世石對 AlphaGo 下的那個神之一手的場景絕對會讓我一輩子記得（特別是李世石那個表情！）這代表的意義是人還沒有被機器完全打敗，縱使已經非常非常難贏了，但這一幕讓我這個旁觀者有種保留了尊嚴的感覺．
-事後當然媒體除了對李世石多加吹捧外，也出現一堆文章像是 AlphaGo 背後的秘密 為什麼 AlphaG">
+<meta name="description" content="今日目標
+了解過濾器 (Filter) 運作方式
+了解 ReLU 激活函數 (Activation) 運作方式
+了解最大池化器 MaxPooling 運作方式
+
+過濾器 (Filter)從昨天的結果中我們看到過濾器中似乎會對有同樣特徵的輸入產生反應，例如過濾器如果有紅色橫線的存在，那對應輸出圖片的紅色橫線就會特別明顯．那這段過程中過濾器和輸入圖片是如何的互動關係呢？
+答案是 : Convoluti">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Tensorflow Day1 一開始的自我激勵">
-<meta property="og:url" content="http://blog.c1mone.com.tw/2016/12/16/tensorflow-note-day-1/index.html">
+<meta property="og:title" content="Tensorflow Day9 卷積神經網路 (CNN) 分析 (2) - Filter, ReLU, MaxPolling">
+<meta property="og:url" content="http://blog.c1mone.com.tw/2016/12/24/tensorflow-note-day-9/index.html">
 <meta property="og:site_name" content="94 讀書筆記咩">
-<meta property="og:description" content="不知道大家有沒有一個印象，有一些生活場景你就是特別會把它牢牢記住．
-那對於我而言，今年人機大戰李世石對 AlphaGo 下的那個神之一手的場景絕對會讓我一輩子記得（特別是李世石那個表情！）這代表的意義是人還沒有被機器完全打敗，縱使已經非常非常難贏了，但這一幕讓我這個旁觀者有種保留了尊嚴的感覺．
-事後當然媒體除了對李世石多加吹捧外，也出現一堆文章像是 AlphaGo 背後的秘密 為什麼 AlphaG">
+<meta property="og:description" content="今日目標
+了解過濾器 (Filter) 運作方式
+了解 ReLU 激活函數 (Activation) 運作方式
+了解最大池化器 MaxPooling 運作方式
+
+過濾器 (Filter)從昨天的結果中我們看到過濾器中似乎會對有同樣特徵的輸入產生反應，例如過濾器如果有紅色橫線的存在，那對應輸出圖片的紅色橫線就會特別明顯．那這段過程中過濾器和輸入圖片是如何的互動關係呢？
+答案是 : Convoluti">
+<meta property="og:image" content="http://imgur.com/8XHiO5I.gif">
+<meta property="og:image" content="http://imgur.com/qch3liz.jpg">
+<meta property="og:image" content="http://cs231n.github.io/assets/nn1/relu.jpeg">
+<meta property="og:image" content="http://imgur.com/89OTxR2.jpg">
+<meta property="og:image" content="http://imgur.com/MxuEsSo.gif">
+<meta property="og:image" content="http://imgur.com/403IOhD.jpg">
 <meta property="og:updated_time" content="2016-12-24T15:34:02.631Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tensorflow Day1 一開始的自我激勵">
-<meta name="twitter:description" content="不知道大家有沒有一個印象，有一些生活場景你就是特別會把它牢牢記住．
-那對於我而言，今年人機大戰李世石對 AlphaGo 下的那個神之一手的場景絕對會讓我一輩子記得（特別是李世石那個表情！）這代表的意義是人還沒有被機器完全打敗，縱使已經非常非常難贏了，但這一幕讓我這個旁觀者有種保留了尊嚴的感覺．
-事後當然媒體除了對李世石多加吹捧外，也出現一堆文章像是 AlphaGo 背後的秘密 為什麼 AlphaG">
+<meta name="twitter:title" content="Tensorflow Day9 卷積神經網路 (CNN) 分析 (2) - Filter, ReLU, MaxPolling">
+<meta name="twitter:description" content="今日目標
+了解過濾器 (Filter) 運作方式
+了解 ReLU 激活函數 (Activation) 運作方式
+了解最大池化器 MaxPooling 運作方式
+
+過濾器 (Filter)從昨天的結果中我們看到過濾器中似乎會對有同樣特徵的輸入產生反應，例如過濾器如果有紅色橫線的存在，那對應輸出圖片的紅色橫線就會特別明顯．那這段過程中過濾器和輸入圖片是如何的互動關係呢？
+答案是 : Convoluti">
+<meta name="twitter:image" content="http://imgur.com/8XHiO5I.gif">
 
 
 
@@ -127,13 +146,13 @@
 
 
 
-  <link rel="canonical" href="http://blog.c1mone.com.tw/2016/12/16/tensorflow-note-day-1/"/>
+  <link rel="canonical" href="http://blog.c1mone.com.tw/2016/12/24/tensorflow-note-day-9/"/>
 
 
 
 
 
-  <title> Tensorflow Day1 一開始的自我激勵 | 94 讀書筆記咩 </title>
+  <title> Tensorflow Day9 卷積神經網路 (CNN) 分析 (2) - Filter, ReLU, MaxPolling | 94 讀書筆記咩 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
@@ -254,7 +273,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.c1mone.com.tw/2016/12/16/tensorflow-note-day-1/">
+  <link itemprop="mainEntityOfPage" href="http://blog.c1mone.com.tw/2016/12/24/tensorflow-note-day-9/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="C1mone">
@@ -278,7 +297,7 @@
             
             
               
-                Tensorflow Day1 一開始的自我激勵
+                Tensorflow Day9 卷積神經網路 (CNN) 分析 (2) - Filter, ReLU, MaxPolling
               
             
           </h1>
@@ -291,8 +310,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-16T23:52:09+00:00">
-                2016-12-16
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-24T20:49:34+00:00">
+                2016-12-24
               </time>
             
 
@@ -307,8 +326,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2016/12/16/tensorflow-note-day-1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/16/tensorflow-note-day-1/" itemprop="commentCount"></span>
+                <a href="/2016/12/24/tensorflow-note-day-9/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/24/tensorflow-note-day-9/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -334,15 +353,36 @@
       
 
       
-        <p>不知道大家有沒有一個印象，有一些生活場景你就是特別會把它牢牢記住．</p>
-<p>那對於我而言，今年人機大戰李世石對 AlphaGo 下的那個神之一手的場景絕對會讓我一輩子記得（特別是李世石那個表情！）這代表的意義是人還沒有被機器完全打敗，縱使已經非常非常難贏了，但這一幕讓我這個旁觀者有種保留了尊嚴的感覺．</p>
-<p>事後當然媒體除了對李世石多加吹捧外，也出現一堆文章像是 <strong>AlphaGo 背後的秘密</strong> <strong>為什麼 AlphaGo 不懂圍棋規則也可以擊敗棋王</strong> … 等文章．然後一時之間大家都可以朗朗上口說說 AlphaGo 有一個估值網路可以評估現在的贏面是如何？一個策略網路來知道下一步要怎麼走？好像大家都突然跟 AlphaGo 變很熟似的．．．</p>
-<a id="more"></a>
-<p>而對於一個宅宅工程師來說，沒吃過豬肉也看過豬走路，Deep Learning 、CNN 、RNN 這些名詞多多少少聽過它的威名．但是當他組合一起貨真價實的出現在你面前的時候還是覺得這也太神了吧，這豬簡直會飛呀．太猛了 R．於是同事就開始互相推坑說要來組讀書會研究 tensorflow．想當然爾，當然是熱血一陣子就沒有下文了，我想應該是大家都很（ㄓㄨㄤ）忙的緣故吧！</p>
-<p>好了不要說太多無關緊要的話，說說 Neural Network 跟我的淵源好了．還記得四年前在學校上 Machine Learning 的課的時候，講到 Neural Network 這個章節，印象還很深刻聽到老師說 Neural 在上個世紀的時候曾經非常的紅，不過後來 SVM 實在太屌了，就沒什麼起色．．．但我想這時候這間教室裡面的所有人都不知道在當時 Hinton 的學生 Alex Krizhevsky 用 GPU 幹出了一個 deep learning 模型在 ImageNet 上面效果大幅超過了原本傳統的方法，引爆了後來幾年的熱潮．哎，當初會導個 backpropagation 就拿來做期末專題想想簡直是一個鄉下土包子呀．</p>
-<p>所以呀，稍微老了一點以後真真切切感受到科技的變化真的是太快了，有時候一些比較冷門的領域有了大進步就會突然翻紅了起來，這時候也要更敬佩 Hinton 能在這領域鑽研這麼久然後得到很大的成果（真真切切的跪）．<strong>我想這就是人的浪漫吧，當別人都不看好你的時候，把你的青春鑽研在你喜歡、你愛的事物上；最後取得了驚天駭地的成果，證明自己．</strong></p>
-<p>而畢業後小弟在做的工作則比較偏 data engineer ，當資料界的清道夫，寫寫 MapReduce 用用 spark ，頂多用用 mahout 或是 mllib 就很少再碰數學的東西．剛好這陣子非常的有閒，又被人推坑來鐵人賽寫文章，想來想去不知道可以寫什麼，那就想說讓我這個 python 弱弱來從零開始玩玩看 tensorflow，並且分享我 follow tensorflow tutorial 的學習筆記．然後看到隔壁棚的各位大大好多人都有把每一天的 schedule 訂出來，真的是要給他跪拜三次說聲太厲害了．在這裡可能就是非常隨意，但我一定會認真寫完三十天的！也要是有錯的地方歡迎給我指正討論，謝謝大家！</p>
-<p>P.S. 同時會把文章發佈在自己的部落格 ya</p>
+        <h2 id="今日目標"><a href="#今日目標" class="headerlink" title="今日目標"></a>今日目標</h2><ul>
+<li>了解過濾器 (Filter) 運作方式</li>
+<li>了解 ReLU 激活函數 (Activation) 運作方式</li>
+<li>了解最大池化器 MaxPooling 運作方式</li>
+</ul>
+<h2 id="過濾器-Filter"><a href="#過濾器-Filter" class="headerlink" title="過濾器 (Filter)"></a>過濾器 (Filter)</h2><p>從昨天的結果中我們看到過濾器中似乎會對有同樣特徵的輸入產生反應，例如過濾器如果有紅色橫線的存在，那對應輸出圖片的紅色橫線就會特別明顯．那這段過程中過濾器和輸入圖片是如何的互動關係呢？</p>
+<p>答案是 : <strong>Convolution！</strong></p>
+<p>避免掉了數學上的複雜我們直接用下面的 gif 來解釋，假設有一個 4 x 4 x 1 的輸入圖片，過濾器是 3 x 3 x 1，然後給定參數 stride = 1，可以看到過濾器開始從左上角往右以及往下和紅色的區域做點積 (每個對應元素相乘，最後全部相加)，得到的結果就是 2．再來我們會注意到紅色區域往右移了一格，而一格就是 stride 的值所對應的，同樣的當紅色區域到達最右邊後他會從左邊往下一格開始依序做點積，而最後的成果就是輸出矩陣了．</p>
+<p>我們可以依此類推，如果 stride = 2 那就是紅色區域一次會移動兩格的意思．</p>
+<p><img src="http://imgur.com/8XHiO5I.gif" alt=""></p>
+<p>但這時侯回頭看一下 conv2d 的定義會看到還有一個參數值是 padding．</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def conv2d(x, W):</div><div class="line">    return tf.nn.conv2d(x, W, strides=[1, 1, 1, 1], padding = &apos;SAME&apos;)</div></pre></td></tr></table></figure>
+<p>padding 為 SAME 的意思是就是要讓輸入和輸出的大小是一樣的，因為從上面的例子看到經過 convolution 以後 size 變小了，那如果要一樣的話，我們做的事情就是把輸入一開始補上 0 如下圖，那再去跑一次 convolution 就會得到一樣大小的圖片了．</p>
+<p><img src="http://imgur.com/qch3liz.jpg" alt=""></p>
+<h2 id="ReLU-激活函數"><a href="#ReLU-激活函數" class="headerlink" title="ReLU 激活函數"></a>ReLU 激活函數</h2><p>在這裡我們會把上面的輸出都通過一個函數如下，其實就是 <code>x &lt; 0</code> 的時候全部為 0，而 <code>x &gt; 0</code> 則為 x．要做激活函數的原因是因為要模擬出非線性函數，簡單想像就是加入激活函數可以讓神經網路學到更多奇奇怪怪的東西．</p>
+<p>而之前小弟在學校訓練原始 nn 的時候好像是用 <code>sigmoid</code> or <code>tanh</code>，大概查了一下是因為 ReLU 更簡單 ，在深度的網路裡面計算更快．(結果小於零就認定你辨識不出來，就把你關掉！譬如說一個過濾器是來辨識眼睛，若是發現圖片完全沒有眼睛，則輸出以後就會小於零，那經過 ReLU 以後，後面的神經網路就不會知道有這個特徵了，因為這個特徵被關掉了．)．</p>
+<p><img src="http://cs231n.github.io/assets/nn1/relu.jpeg" alt=""></p>
+<p>如下圖，就是經過 ReLU 後的結果，只剩下紅色大於零的輸出．</p>
+<p><img src="http://imgur.com/89OTxR2.jpg" alt=""></p>
+<h2 id="最大池化器-MaxPooling"><a href="#最大池化器-MaxPooling" class="headerlink" title="最大池化器 MaxPooling"></a>最大池化器 MaxPooling</h2><p>好的，convolutional layer 的最後一個地方就是 max pooling 了，話說我一直不太喜歡池化器這個翻譯…因為好饒口啊．</p>
+<p>記得前面有提到說 CNN 有個目標就是想要把參數降低，而我們學習是為了學習特徵，因此不一定要從高清（？中學習，可以把它變得沒那麼清楚一點．這裡做的事情就是 <code>downsampling</code>！那要怎麼樣既 down sampling 又保留特徵呢？以下就是一個示範：</p>
+<p>首先我們用一個 2x2 的矩陣來掃過輸入 (stride = 2)，然後在每個紅色區域裡都找那個區域裡最大值當作輸出，就這樣就完成了 down sampling 了！</p>
+<p><img src="http://imgur.com/MxuEsSo.gif" alt=""></p>
+<p>以下就是經過 max-pooling 的結果了！</p>
+<p><img src="http://imgur.com/403IOhD.jpg" alt=""></p>
+<h2 id="心得"><a href="#心得" class="headerlink" title="心得"></a>心得</h2><p>呼，今天把關於 convolutional layer 我學到的東西盡量簡化描述出來，知道了 convolution ReLU 以及 maxpooling 在做些什麼事情，以及輸出是什麼．但是記得這只是第一層的結果而已，明天要來看看第二層的結果會是如何呢？</p>
+<p>在這段自我學習的過程中，覺得最困難的事就是從數學還有敘述中理解 cnn 在做些什麼事，而最後終於大概理解以後心裡對於創造出這一切的人真的是萬分佩服．．．LeCun 和其他人實在太神啦．</p>
+<p>如果今天以及一系列我的筆記，大家有什麼問題或是寫錯的地方，再麻煩各位大大來跟我提醒一下，感謝！祝大家聖誕快樂！</p>
+<h3 id="學習資源連結"><a href="#學習資源連結" class="headerlink" title="學習資源連結"></a>學習資源連結</h3><p><a href="http://cs231n.github.io/convolutional-networks/" target="_blank" rel="external">超猛教學 CS231n</a></p>
+<p><a href="http://colah.github.io/posts/2014-07-Understanding-Convolutions/" target="_blank" rel="external">Convolution 究極理解</a></p>
 
       
     </div>
@@ -370,7 +410,7 @@
           
             <a href="/tags/deeplearning/" rel="tag"># deeplearning</a>
           
-            <a href="/tags/neural-network/" rel="tag"># neural network</a>
+            <a href="/tags/ithome鐵人/" rel="tag"># ithome鐵人</a>
           
         </div>
       
@@ -379,8 +419,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/11/30/blog-github-hexo-travis/" rel="next" title="使用 travis-ci 自動寫 hexo blog 到 github-pages">
-                <i class="fa fa-chevron-left"></i> 使用 travis-ci 自動寫 hexo blog 到 github-pages
+              <a href="/2016/12/23/tensorflow-note-day-8/" rel="next" title="Tensorflow Day8 CNN 解說 (1)">
+                <i class="fa fa-chevron-left"></i> Tensorflow Day8 CNN 解說 (1)
               </a>
             
           </div>
@@ -388,10 +428,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/12/17/github-pages-with-custom-domain/" rel="prev" title="在 github pages 上使用 custom domain">
-                在 github pages 上使用 custom domain <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -445,8 +481,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -503,6 +548,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日目標"><span class="nav-number">1.</span> <span class="nav-text">今日目標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#過濾器-Filter"><span class="nav-number">2.</span> <span class="nav-text">過濾器 (Filter)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ReLU-激活函數"><span class="nav-number">3.</span> <span class="nav-text">ReLU 激活函數</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最大池化器-MaxPooling"><span class="nav-number">4.</span> <span class="nav-text">最大池化器 MaxPooling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#心得"><span class="nav-number">5.</span> <span class="nav-text">心得</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#學習資源連結"><span class="nav-number">5.1.</span> <span class="nav-text">學習資源連結</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
     </div>
@@ -628,9 +689,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'c1mone';
-      var disqus_identifier = '2016/12/16/tensorflow-note-day-1/';
+      var disqus_identifier = '2016/12/24/tensorflow-note-day-9/';
 
-      var disqus_title = "Tensorflow Day1 一開始的自我激勵";
+      var disqus_title = "Tensorflow Day9 卷積神經網路 (CNN) 分析 (2) - Filter, ReLU, MaxPolling";
 
 
       function run_disqus_script(disqus_script) {
