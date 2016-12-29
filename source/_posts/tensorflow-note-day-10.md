@@ -1,5 +1,5 @@
 ---
-title: tensorflow-note-day-10
+title: Tensorflow Day10 卷積神經網路 (CNN) 分析 (3) 第二卷積層, 全連結層, dropout
 date: 2016-12-25 13:44:31
 tags:
 - tensorflow
