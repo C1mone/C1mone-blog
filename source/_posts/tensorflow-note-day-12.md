@@ -1,5 +1,5 @@
 ---
-title: Tensorflow day12 儲存以及載入模型參數
+title: Tensorflow Day12 儲存以及載入模型參數
 date: 2016-12-27 22:02:07
 tags:
 - tensorflow
