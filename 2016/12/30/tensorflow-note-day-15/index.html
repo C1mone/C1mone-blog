@@ -85,26 +85,25 @@
 
 
 <meta name="description" content="今日目標
-了解卷積神經網路流程
-分析程式中的第一層卷積層訓練結果">
+了解 Autoencoder 概念
+了解 Autoencoder 用於無監督訓練">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Tensorflow Day8 卷積神經網路 (CNN) 分析 (1) 流程">
-<meta property="og:url" content="http://blog.c1mone.com.tw/2016/12/23/tensorflow-note-day-8/index.html">
+<meta property="og:title" content="Tensorflow Day15 Autoencoder">
+<meta property="og:url" content="http://blog.c1mone.com.tw/2016/12/30/tensorflow-note-day-15/index.html">
 <meta property="og:site_name" content="94 讀書筆記咩">
 <meta property="og:description" content="今日目標
-了解卷積神經網路流程
-分析程式中的第一層卷積層訓練結果">
-<meta property="og:image" content="http://imgur.com/bYFnDws.jpg">
-<meta property="og:image" content="http://imgur.com/2KE40Oo.jpg">
-<meta property="og:image" content="http://imgur.com/09eggaV.jpg">
-<meta property="og:image" content="http://imgur.com/POlzyzX.jpg">
-<meta property="og:updated_time" content="2017-01-01T14:58:58.580Z">
+了解 Autoencoder 概念
+了解 Autoencoder 用於無監督訓練">
+<meta property="og:image" content="http://imgur.com/WnzC82f.jpg">
+<meta property="og:image" content="http://imgur.com/9QNBD27.jpg">
+<meta property="og:image" content="http://imgur.com/VX4oeSa.jpg">
+<meta property="og:updated_time" content="2017-01-01T14:58:58.576Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tensorflow Day8 卷積神經網路 (CNN) 分析 (1) 流程">
+<meta name="twitter:title" content="Tensorflow Day15 Autoencoder">
 <meta name="twitter:description" content="今日目標
-了解卷積神經網路流程
-分析程式中的第一層卷積層訓練結果">
-<meta name="twitter:image" content="http://imgur.com/bYFnDws.jpg">
+了解 Autoencoder 概念
+了解 Autoencoder 用於無監督訓練">
+<meta name="twitter:image" content="http://imgur.com/WnzC82f.jpg">
 
 
 
@@ -132,13 +131,13 @@
 
 
 
-  <link rel="canonical" href="http://blog.c1mone.com.tw/2016/12/23/tensorflow-note-day-8/"/>
+  <link rel="canonical" href="http://blog.c1mone.com.tw/2016/12/30/tensorflow-note-day-15/"/>
 
 
 
 
 
-  <title> Tensorflow Day8 卷積神經網路 (CNN) 分析 (1) 流程 | 94 讀書筆記咩 </title>
+  <title> Tensorflow Day15 Autoencoder | 94 讀書筆記咩 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
@@ -259,7 +258,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.c1mone.com.tw/2016/12/23/tensorflow-note-day-8/">
+  <link itemprop="mainEntityOfPage" href="http://blog.c1mone.com.tw/2016/12/30/tensorflow-note-day-15/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="C1mone">
@@ -283,7 +282,7 @@
             
             
               
-                Tensorflow Day8 卷積神經網路 (CNN) 分析 (1) 流程
+                Tensorflow Day15 Autoencoder
               
             
           </h1>
@@ -296,8 +295,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-23T21:27:25+00:00">
-                2016-12-23
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-30T22:10:31+00:00">
+                2016-12-30
               </time>
             
 
@@ -312,8 +311,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2016/12/23/tensorflow-note-day-8/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/23/tensorflow-note-day-8/" itemprop="commentCount"></span>
+                <a href="/2016/12/30/tensorflow-note-day-15/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/30/tensorflow-note-day-15/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -340,60 +339,35 @@
 
       
         <h2 id="今日目標"><a href="#今日目標" class="headerlink" title="今日目標"></a>今日目標</h2><ul>
-<li>了解卷積神經網路流程</li>
-<li>分析程式中的第一層卷積層訓練結果</li>
+<li>了解 Autoencoder 概念</li>
+<li>了解 Autoencoder 用於無監督訓練</li>
 </ul>
 <a id="more"></a>
-<h2 id="CNN-流程"><a href="#CNN-流程" class="headerlink" title="CNN 流程"></a>CNN 流程</h2><p>好的，我們現在已經成功了用 CNN 達到了非常不錯的準確率 (99.2%)，接下來就是來看一下到底它用了什麼樣的方法造成這麼厲害的結果，以及實現 CNN 的 Tensorflow 程式碼裡面的一些參數代表什麼意義？</p>
-<p>在從網路中自學以後大概了解了 CNN 的用意，大概有以下三點:</p>
-<ol>
-<li><p><strong>圖片中的特徵往往比整張圖片還要小</strong></p>
-<p>ex. 一張人臉照片中，幾個重要特徵會是眼睛，鼻子，耳朵．．．等．</p>
-</li>
-<li><p><strong>而圖片中的特徵常常是會重複出現的</strong></p>
-<p>ex. 一張人臉照片中，兩個眼睛特徵是非常相似的．</p>
-</li>
-<li><p><strong>要盡量的減少神經網路中的參數</strong></p>
-<p>ex. 如果輸入的圖片很大而且每個像素都連結到隱含層，這樣權重的數目會太多，導致計算困難．</p>
-</li>
-</ol>
-<p>那根據以上幾點我們回來看一下 CNN 的結構</p>
-<p><img src="http://imgur.com/bYFnDws.jpg" alt=""></p>
-<p>圖片輸入會經過兩個卷積層 (convolutional layer) 然後把它扳平 (Flatten) 之後進入全連結層 (Fully Connected Layer) 最後就是進入 Softmax 分類成 10 個數字．</p>
-<p>這些流程中的關鍵就是卷積層 (convolutional layer) ，卷積層的出現讓 CNN 可以達到上面的三個目標，接下來就讓我們一起看下去．</p>
-<h2 id="卷積層-Convolutional-Layer"><a href="#卷積層-Convolutional-Layer" class="headerlink" title="卷積層 Convolutional Layer"></a>卷積層 Convolutional Layer</h2><p>卷積層中有三個部分，我們會邊用邊用程式邊解說: </p>
-<ul>
-<li>Convolution</li>
-<li>ReLU</li>
-<li>Max Pooling</li>
+<h2 id="Autoencoder"><a href="#Autoencoder" class="headerlink" title="Autoencoder"></a>Autoencoder</h2><p>Autoencoder 是一種無監督 (unsupervised) 的訓練方式，也就是說在訓練的時候是不需要給定目標的，那它是怎麼做到的呢？</p>
+<p>閱讀了一些材料以後，找到 Hinton 的開山 <a href="[Reducing the Dimensionality of Data with Neural Networks](https://www.cs.toronto.edu/~hinton/science.pdf">paper</a>) ．它的概念可以從以下的圖來說明．可以看到有兩個部分 <strong>Encoder</strong> 以及 <strong>Decoder</strong>，而中間有一個重疊的 <strong>code layer</strong>．模型輸入是從 Encoder 輸入，輸出則是 Decoder 輸出．而 Encoder 中有許多的 hidden layer (隱層)，其中節點數量是遞減的；相對應的 Decoder 則是遞增的．</p>
+<p>在這樣對稱的網路結構中，給定的訓練條件是輸出越接近輸入越好，<br>$$<br>x : input of network \<br>\hat{x} : output of network \<br>h(x) : hidden layer function \<br>x \equiv \hat{x} = h(x)<br>$$</p>
+<p><img src="http://imgur.com/WnzC82f.jpg" alt=""> </p>
+<p>圖片來自 Hinton 的 paper <a href="https://www.cs.toronto.edu/~hinton/science.pdf" target="_blank" rel="external">Reducing the Dimensionality of Data with Neural Networks</a></p>
+<p>訓練的過程用 <code>backpropagation</code> 即可，而當訓練完成以後，我們把 Decoder 移除，只剩下 Encoder (包含 Code layer)．</p>
+<h2 id="無監督學習"><a href="#無監督學習" class="headerlink" title="無監督學習"></a>無監督學習</h2><p>很有趣的如果只剩下 Encoder，可以看到它有很類似 <code>PCA</code> 的 <code>Dimension Reduction</code> 效果．因為 2000 維輸入變成了 30 維．不同的是它是一個非線性的降維方法取出了原始輸入的必要特徵．</p>
+<p>來看看取出的特徵和 <code>PCA</code> 的做對照：</p>
+<p>第一列為原始圖片</p>
+<p>第二列為 Autoencoder 降維結果</p>
+<p>第三列為 PCA 降維結果</p>
+<p><img src="http://imgur.com/9QNBD27.jpg" alt=""></p>
+<p>圖片來自 Hinton 的 paper <a href="https://www.cs.toronto.edu/~hinton/science.pdf" target="_blank" rel="external">Reducing the Dimensionality of Data with Neural Networks</a></p>
+<p>可以看到 <code>Autoencoder</code> 的效果比 <code>PCA</code> 來得好．</p>
+<p>那如果用 MNIST 的資料投影到二維的視覺化圖形來看，左邊是 <code>PCA</code>，右邊是 <code>Autoencoder</code>，也可以看到它比較成功的輸入依據特徵不同做分類．但這段過程都是無監督的情下完成的，也可以說是 </p>
+<blockquote>
+<p><strong>它自動地學會了如何區分每個手寫數字</strong></p>
+</blockquote>
+<p><img src="http://imgur.com/VX4oeSa.jpg" alt=""></p>
+<p>而在實用的時候，網路的最後面會接一個 softmax 之類的分類器，因為理論上已經找出了輸入的特徵，這時候加上分類器，才是人類真正告訴它你分類出的結果是什麼．</p>
+<h2 id="心得"><a href="#心得" class="headerlink" title="心得"></a>心得</h2><p>今天閱讀的內容是關於 Autoencoder 的理論，這樣的方法感覺起來很強大，因為它可以自己對輸入做分類，而不需要外界介入．但這樣的作法 (encoder + softmax) 跟 (cnn + softmax) 能做到的事情非常像，那究竟有什麼不一樣的效果呢？還是有效率上的差異，這是我還在找資料學習的困惑之處．</p>
+<h2 id="學習資源連結"><a href="#學習資源連結" class="headerlink" title="學習資源連結"></a>學習資源連結</h2><ul>
+<li><a href="https://www.cs.toronto.edu/~hinton/science.pdf" target="_blank" rel="external">Reducing the Dimensionality of Data with Neural Networks</a></li>
+<li><a href="http://nikhilbuduma.com/2015/03/10/the-curse-of-dimensionality" target="_blank" rel="external">nikhilbuduma blog</a></li>
 </ul>
-<p><img src="http://imgur.com/2KE40Oo.jpg" alt=""></p>
-<h3 id="Convolution"><a href="#Convolution" class="headerlink" title="Convolution"></a>Convolution</h3><p>以下是建立 <code>convolution</code> 的五行程式碼: </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv2d</span><span class="params">(x, W)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.nn.conv2d(x, W, strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding = <span class="string">'SAME'</span>)		(<span class="number">1</span>)</div><div class="line">x_image = tf.reshape(x, [<span class="number">-1</span>, <span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>])									(<span class="number">2</span>)</div><div class="line">W_conv1 = weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">32</span>])									(<span class="number">3</span>)</div><div class="line">b_conv1 = bias_variable([<span class="number">32</span>])												(<span class="number">4</span>)</div><div class="line">result = conv2d(x_image, W_conv1) + b_conv1 								(<span class="number">5</span>)</div></pre></td></tr></table></figure>
-<p>我們先從第二行開始看，它的用意是把圖片像素輸入變成一個 1x28x28x1 的四維矩陣．</p>
-<ul>
-<li>第一個參數為 -1 的意思是不管輸入有幾個，Tensorflow 會自動調整的意思，假設輸入 50 個圖片第一個維度就是 50．</li>
-<li>第二個第三個就是指數字圖片為 28 像素 x 28 像素 的意思</li>
-<li>最後一個則是指色階，這裡又稱 <strong>channel</strong>，這裡因為我們的輸入都是黑白灰階，因此值為 1．如果是彩色圖有 RGB 三原色，這裡的數值就是 3．</li>
-</ul>
-<p>第三行則是建立起過濾器 (filter)．過濾器我覺得也可以稱作特徵篩選器，可以想像說是負責來辨認圖片中的某些特徵，像是直線或是橫線或是轉彎處．</p>
-<ul>
-<li>一二三維的數字 <code>[5, 5, 1]</code> 代表著這個過濾器是一個 5x5x1 的矩陣，這跟上面的圖片一樣 5x5 代表著 5 像素 x 5 像素，而 1 則代表著灰階．</li>
-<li>最後一個數字 32 代表著我們建立了 32 個過濾器來篩選特徵．</li>
-</ul>
-<p>第四行建立一個偏移值 (bias) 避免負數．</p>
-<p>好的那現在讓我們先看一下經過訓練後前 16 個過濾器長得怎麼樣，其中紅色表示大於零的值，藍色表示小於零的值．</p>
-<p><img src="http://imgur.com/09eggaV.jpg" alt=""></p>
-<p>接下來看到每個過濾器對應的輸出是如何 (result)</p>
-<p><img src="http://imgur.com/POlzyzX.jpg" alt=""></p>
-<p>呃如果直接從圖片上面來看你看得出有什麼端倪嗎？</p>
-<p>我們可以發現幾點</p>
-<ol>
-<li>如果過濾器中有藍色<strong>橫線</strong> (ex. 左下角) 那在輸出就會出現數字中有藍色<strong>橫線</strong>的地方</li>
-<li>如果過濾器中有藍色<strong>斜線</strong> (ex. 右上角) 那在輸出就會出現數字中有藍色<strong>斜線</strong>的地方</li>
-</ol>
-<p>感覺這樣是不是每個過濾器所辨認到的 <strong>特徵</strong>都不一樣呢？</p>
-<p>明天再讓我們繼續來看看過濾器是怎麼和資料發生互動的，以及經過 ReLU 的結果．</p>
 
       
     </div>
@@ -430,8 +404,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/12/22/tensorflow-note-day-7/" rel="next" title="Tensorflow Day 7 卷積神經網路實現 Convolutional Neural Network">
-                <i class="fa fa-chevron-left"></i> Tensorflow Day 7 卷積神經網路實現 Convolutional Neural Network
+              <a href="/2016/12/29/tensorflow-note-day-11/" rel="next" title="Tensorflow Day11 MNIST CNN 各層視覺化分析">
+                <i class="fa fa-chevron-left"></i> Tensorflow Day11 MNIST CNN 各層視覺化分析
               </a>
             
           </div>
@@ -439,10 +413,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/12/24/tensorflow-note-day-9/" rel="prev" title="Tensorflow Day9 卷積神經網路 (CNN) 分析 (2) - Filter, ReLU, MaxPolling">
-                Tensorflow Day9 卷積神經網路 (CNN) 分析 (2) - Filter, ReLU, MaxPolling <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -573,7 +543,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日目標"><span class="nav-number">1.</span> <span class="nav-text">今日目標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CNN-流程"><span class="nav-number">2.</span> <span class="nav-text">CNN 流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卷積層-Convolutional-Layer"><span class="nav-number">3.</span> <span class="nav-text">卷積層 Convolutional Layer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Convolution"><span class="nav-number">3.1.</span> <span class="nav-text">Convolution</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日目標"><span class="nav-number">1.</span> <span class="nav-text">今日目標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Autoencoder"><span class="nav-number">2.</span> <span class="nav-text">Autoencoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#無監督學習"><span class="nav-number">3.</span> <span class="nav-text">無監督學習</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#心得"><span class="nav-number">4.</span> <span class="nav-text">心得</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#學習資源連結"><span class="nav-number">5.</span> <span class="nav-text">學習資源連結</span></a></li></ol></div>
             
 
           </div>
@@ -704,9 +674,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'c1mone';
-      var disqus_identifier = '2016/12/23/tensorflow-note-day-8/';
+      var disqus_identifier = '2016/12/30/tensorflow-note-day-15/';
 
-      var disqus_title = "Tensorflow Day8 卷積神經網路 (CNN) 分析 (1) 流程";
+      var disqus_title = "Tensorflow Day15 Autoencoder";
 
 
       function run_disqus_script(disqus_script) {
