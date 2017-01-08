@@ -1,6 +1,6 @@
 ---
 title: Tensorflow Day16 Autoencoder 實作
-date: 2017-01-02 23:48:16
+date: 2016-12-31 23:48:16
 tags:
 - tensorflow
 - deeplearning
