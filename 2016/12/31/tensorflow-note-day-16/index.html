@@ -1,0 +1,753 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-tw">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tensorflow,deeplearning,ithome鐵人," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="今日目標
+實作 Autoencoder
+比較輸入以及輸出">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tensorflow Day16 Autoencoder 實作">
+<meta property="og:url" content="http://blog.c1mone.com.tw/2016/12/31/tensorflow-note-day-16/index.html">
+<meta property="og:site_name" content="94 讀書筆記咩">
+<meta property="og:description" content="今日目標
+實作 Autoencoder
+比較輸入以及輸出">
+<meta property="og:image" content="http://imgur.com/hSV4p73.jpg">
+<meta property="og:image" content="http://imgur.com/C47xFGh.jpg">
+<meta property="og:image" content="http://imgur.com/Yv5zufY.jpg">
+<meta property="og:image" content="http://imgur.com/034kYZi.jpg">
+<meta property="og:image" content="http://imgur.com/R2a7IH2.jpg">
+<meta property="og:image" content="http://imgur.com/HlGA1C6.jpg">
+<meta property="og:image" content="http://imgur.com/1n9Ljnb.jpg">
+<meta property="og:image" content="http://imgur.com/cmzYYOS.jpg">
+<meta property="og:image" content="http://imgur.com/ICUGyPC.jpg">
+<meta property="og:image" content="http://imgur.com/VpnycII.jpg">
+<meta property="og:updated_time" content="2017-01-08T11:45:23.834Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tensorflow Day16 Autoencoder 實作">
+<meta name="twitter:description" content="今日目標
+實作 Autoencoder
+比較輸入以及輸出">
+<meta name="twitter:image" content="http://imgur.com/hSV4p73.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.c1mone.com.tw/2016/12/31/tensorflow-note-day-16/"/>
+
+
+
+
+
+  <title> Tensorflow Day16 Autoencoder 實作 | 94 讀書筆記咩 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">94 讀書筆記咩</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            關於
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.c1mone.com.tw/2016/12/31/tensorflow-note-day-16/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="C1mone">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="94 讀書筆記咩">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="94 讀書筆記咩" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Tensorflow Day16 Autoencoder 實作
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-31T23:48:16+00:00">
+                2016-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2016/12/31/tensorflow-note-day-16/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/31/tensorflow-note-day-16/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="今日目標"><a href="#今日目標" class="headerlink" title="今日目標"></a>今日目標</h2><ul>
+<li>實作 Autoencoder</li>
+<li>比較輸入以及輸出</li>
+</ul>
+<a id="more"></a>
+<p><a href="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/5_Autoencoder.ipynb" target="_blank" rel="external">Github Ipython Notebook 好讀完整版</a></p>
+<h2 id="實作"><a href="#實作" class="headerlink" title="實作"></a>實作</h2><h3 id="定義-weight-以及-bias-函數"><a href="#定義-weight-以及-bias-函數" class="headerlink" title="定義 weight 以及 bias 函數"></a>定義 weight 以及 bias 函數</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">weight_variable</span><span class="params">(shape, name)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.Variable(tf.truncated_normal(shape = shape, stddev = <span class="number">0.1</span>), name)</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">bias_variable</span><span class="params">(shape, name)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.Variable(tf.constant(<span class="number">0.1</span>, shape = shape), name)</div></pre></td></tr></table></figure>
+<h3 id="autoencoder-架構"><a href="#autoencoder-架構" class="headerlink" title="autoencoder 架構"></a>autoencoder 架構</h3><p>初步的構想是建立一個七層的神經網路，在 encoder 維度會從 784 逐步變成 300, 100, 5 (code layer)， decoder 的時候再逐步轉回 100, 300, 784．而這個想法在現在對 tensorflow 比較熟悉的情形下是很容易實現的，以下就是我實現的程式碼片段</p>
+<p><strong>input -&gt; 784 -&gt; 300 -&gt; 100 -&gt; 5 (code layer) -&gt; 100 -&gt; 300 -&gt; 784 -&gt; output</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">x = tf.placeholder(tf.float32, shape = [<span class="keyword">None</span>, <span class="number">784</span>])</div><div class="line">e_W_1 = weight_variable([<span class="number">784</span>, <span class="number">300</span>], <span class="string">"e_W_1"</span>)</div><div class="line">e_b_1 = bias_variable([<span class="number">300</span>], <span class="string">"e_b_1"</span>)</div><div class="line">e_layer1 = tf.nn.relu(tf.matmul(x, e_W_1) + e_b_1)</div><div class="line">e_W_2 = weight_variable([<span class="number">300</span>, <span class="number">100</span>], <span class="string">"e_W_2"</span>)</div><div class="line">e_b_2 = bias_variable([<span class="number">100</span>], <span class="string">"e_b_2"</span>)</div><div class="line">e_layer2 = tf.nn.relu(tf.matmul(e_layer1, e_W_2) + e_b_2)</div><div class="line">e_W_3 = weight_variable([<span class="number">100</span>, <span class="number">20</span>], <span class="string">"e_W_3"</span>)</div><div class="line">e_b_3 = bias_variable([<span class="number">20</span>], <span class="string">"e_b_3"</span>)</div><div class="line">code_layer = tf.nn.relu(tf.matmul(e_layer2, e_W_3) + e_b_3)</div><div class="line">d_W_1 = weight_variable([<span class="number">20</span>, <span class="number">100</span>], <span class="string">"d_W_1"</span>)</div><div class="line">d_b_1 = bias_variable([<span class="number">100</span>], <span class="string">"d_b_1"</span>)</div><div class="line">d_layer1 = tf.nn.relu(tf.matmul(code_layer, d_W_1) + d_b_1)</div><div class="line">d_W_2 = weight_variable([<span class="number">100</span>, <span class="number">300</span>], <span class="string">"d_W_2"</span>)</div><div class="line">d_b_2 = bias_variable([<span class="number">300</span>], <span class="string">"d_b_2"</span>)</div><div class="line">d_layer2 = tf.nn.relu(tf.matmul(d_layer1, d_W_2) + d_b_2)</div><div class="line">d_W_3 = weight_variable([<span class="number">300</span>, <span class="number">784</span>], <span class="string">"d_W_3"</span>)</div><div class="line">d_b_3 = bias_variable([<span class="number">784</span>], <span class="string">"d_b_3"</span>)</div><div class="line">output_layer = tf.nn.relu(tf.matmul(d_layer2, d_W_3) + d_b_3)</div></pre></td></tr></table></figure>
+<h3 id="loss"><a href="#loss" class="headerlink" title="loss"></a>loss</h3><p>loss 函數我使用了 <code>mean square error</code>，而 optimizer 原本是使用 <code>GradientDescentOptimizer</code>，但是做出來的 decode 結果變得非常糟糕 (如下)．後來上網搜尋了以後改用 <code>RMSPropOptimizer</code>，以下會隨機選出數個數字來看看所做出來的結果．</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">loss = tf.reduce_mean(tf.pow(output_layer - x, <span class="number">2</span>))</div><div class="line">optimizer = tf.train.RMSPropOptimizer(<span class="number">0.01</span>).minimize(loss)</div><div class="line">init_op = tf.global_variables_initializer()</div></pre></td></tr></table></figure>
+<h3 id="training"><a href="#training" class="headerlink" title="training"></a>training</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">sess = tf.InteractiveSession()</div><div class="line">sess.run(init_op)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">20000</span>):</div><div class="line">    batch = mnist.train.next_batch(<span class="number">50</span>)</div><div class="line">    <span class="keyword">if</span> i%<span class="number">100</span> == <span class="number">0</span>:</div><div class="line">        print(<span class="string">"step %d, loss %g"</span>%(i, loss.eval(feed_dict=&#123;x:batch[<span class="number">0</span>]&#125;)))</div><div class="line">    optimizer.run(feed_dict=&#123;x: batch[<span class="number">0</span>]&#125;)</div><div class="line">    </div><div class="line">print(<span class="string">"final loss %g"</span> % loss.eval(feed_dict=&#123;x: mnist.test.images&#125;))</div></pre></td></tr></table></figure>
+<p>final loss 0.031768</p>
+<h3 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</div><div class="line">%matplotlib inline</div><div class="line">trainimg = mnist.train.images</div><div class="line">trainlabel = mnist.train.labels</div><div class="line">output_nd = output_layer.eval(feed_dict = &#123;x: mnist.train.images&#125;)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]:</div><div class="line">    curr_img   = np.reshape(trainimg[i, :], (<span class="number">28</span>, <span class="number">28</span>)) <span class="comment"># 28 by 28 matrix </span></div><div class="line">    ae_img = np.reshape(output_nd[i,:], (<span class="number">28</span>, <span class="number">28</span>))</div><div class="line">    curr_label = np.argmax(trainlabel[i, :] ) <span class="comment"># Label</span></div><div class="line">    plt.matshow(curr_img, cmap=plt.get_cmap(<span class="string">'gray'</span>))</div><div class="line">    plt.matshow(ae_img, cmap=plt.get_cmap(<span class="string">'gray'</span>))</div></pre></td></tr></table></figure>
+<p><img src="http://imgur.com/hSV4p73.jpg" alt=""></p>
+<p><img src="http://imgur.com/C47xFGh.jpg" alt=""></p>
+<p><img src="http://imgur.com/Yv5zufY.jpg" alt=""></p>
+<p><img src="http://imgur.com/034kYZi.jpg" alt=""></p>
+<p><img src="http://imgur.com/R2a7IH2.jpg" alt=""></p>
+<p><img src="http://imgur.com/HlGA1C6.jpg" alt=""></p>
+<h3 id="調整-code-layer-維度"><a href="#調整-code-layer-維度" class="headerlink" title="調整 code layer 維度"></a>調整 code layer 維度</h3><p>而接下來當我想嘗試把 code layer 的維度調整為 2 維來看看</p>
+<p><img src="http://imgur.com/1n9Ljnb.jpg" alt=""></p>
+<p><img src="http://imgur.com/cmzYYOS.jpg" alt=""></p>
+<p><img src="http://imgur.com/ICUGyPC.jpg" alt=""></p>
+<p><img src="http://imgur.com/VpnycII.jpg" alt=""></p>
+<p>我們可以發現完全糊掉了，只用二維來表示輸入數字是不太夠的．更進一步仔細看 code layer 的值，都已經接近零，表示這個網路已經算是死掉了，因此還要想想為什麼會造成這樣的結果．</p>
+<h2 id="今日心得"><a href="#今日心得" class="headerlink" title="今日心得"></a>今日心得</h2><p>用 tensorflow 實作了 autoencoder，但是在降成兩維的效果並不好，需要再找找看有什麼方法可以幫助解決這個情形， google 上看到說 sparse autoencoder 可能可以幫助這個情形．</p>
+<p>祝大家新年快樂！偶要去跨年摟</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+          
+            <a href="/tags/deeplearning/" rel="tag"># deeplearning</a>
+          
+            <a href="/tags/ithome鐵人/" rel="tag"># ithome鐵人</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/30/tensorflow-note-day-15/" rel="next" title="Tensorflow Day15 Autoencoder">
+                <i class="fa fa-chevron-left"></i> Tensorflow Day15 Autoencoder
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/01/tensorflow-note-day-17/" rel="prev" title="Tensorflow Day17 Sparse Autoencoder">
+                Tensorflow Day17 Sparse Autoencoder <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="C1mone" />
+          <p class="site-author-name" itemprop="name">C1mone</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">23</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">標籤</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/C1mone" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日目標"><span class="nav-number">1.</span> <span class="nav-text">今日目標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#實作"><span class="nav-number">2.</span> <span class="nav-text">實作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定義-weight-以及-bias-函數"><span class="nav-number">2.1.</span> <span class="nav-text">定義 weight 以及 bias 函數</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#autoencoder-架構"><span class="nav-number">2.2.</span> <span class="nav-text">autoencoder 架構</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loss"><span class="nav-number">2.3.</span> <span class="nav-text">loss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#training"><span class="nav-number">2.4.</span> <span class="nav-text">training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#成果"><span class="nav-number">2.5.</span> <span class="nav-text">成果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#調整-code-layer-維度"><span class="nav-number">2.6.</span> <span class="nav-text">調整 code layer 維度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#今日心得"><span class="nav-number">3.</span> <span class="nav-text">今日心得</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">C1mone</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'c1mone';
+      var disqus_identifier = '2016/12/31/tensorflow-note-day-16/';
+
+      var disqus_title = "Tensorflow Day16 Autoencoder 實作";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
