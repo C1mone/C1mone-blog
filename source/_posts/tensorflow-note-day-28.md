@@ -1,6 +1,6 @@
 ---
-title: tensorflow-note-day-28
-date: 2017-01-13 15:29:29
+title: Tensorflow Day28 Generative Adversarial Network with MNIST
+date: 2017-01-12 15:29:29
 tags:
 - deeplearning
 - tensorflow
