@@ -1,0 +1,790 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-tw">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tensorflow,deeplearning,ithome鐵人," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="今日目標
+實作 Generative Adversarial Network
+用 MNIST 手寫數字資料來訓練 Generative Adversarial Network (GAN)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tensorflow-note-day-28">
+<meta property="og:url" content="http://blog.c1mone.com.tw/2017/01/13/tensorflow-note-day-28/index.html">
+<meta property="og:site_name" content="94 讀書筆記咩">
+<meta property="og:description" content="今日目標
+實作 Generative Adversarial Network
+用 MNIST 手寫數字資料來訓練 Generative Adversarial Network (GAN)">
+<meta property="og:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/13_Generative_Adversarial_Network/GAN_algorithm.jpg?raw=true">
+<meta property="og:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/13_Generative_Adversarial_Network/GAN_result.gif?raw=true">
+<meta property="og:updated_time" content="2017-01-13T08:00:14.696Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="tensorflow-note-day-28">
+<meta name="twitter:description" content="今日目標
+實作 Generative Adversarial Network
+用 MNIST 手寫數字資料來訓練 Generative Adversarial Network (GAN)">
+<meta name="twitter:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/13_Generative_Adversarial_Network/GAN_algorithm.jpg?raw=true">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://blog.c1mone.com.tw/2017/01/13/tensorflow-note-day-28/"/>
+
+
+
+
+
+  <title> tensorflow-note-day-28 | 94 讀書筆記咩 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">94 讀書筆記咩</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle"></p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首頁
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            關於
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            歸檔
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            標籤
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://blog.c1mone.com.tw/2017/01/13/tensorflow-note-day-28/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="C1mone">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.gif">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="94 讀書筆記咩">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="94 讀書筆記咩" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                tensorflow-note-day-28
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">發表於</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-13T15:29:29+00:00">
+                2017-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/2017/01/13/tensorflow-note-day-28/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/13/tensorflow-note-day-28/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="今日目標"><a href="#今日目標" class="headerlink" title="今日目標"></a>今日目標</h2><ul>
+<li>實作 Generative Adversarial Network</li>
+<li>用 MNIST 手寫數字資料來訓練 Generative Adversarial Network (GAN)</li>
+</ul>
+<a id="more"></a>
+<p><a href="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/13_Generative_Adversarial_Network.ipynb" target="_blank" rel="external">Github Ipython Notebook 好讀完整版</a></p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Generative Adversarial Network 簡稱 GAN 中文是對抗式生成網路，是一個這幾年很紅的一個網路模型．是在 2014 年的這篇 <a href="https://arxiv.org/abs/1406.2661" target="_blank" rel="external">論文 by Ian Goodfellow</a> 被提出來的．</p>
+<p>它理論的出發點很有趣，很普遍來解釋這個模型的例子是，可以先想像現在有一個製造偽鈔的罪犯，還有一個很會辨識偽鈔的鑑識人員．一個很厲害的偽鈔製作員的定義就是，它做出的偽鈔讓人無法分出和真的鈔票有什麼不一樣；而一個很會辨識的鑑識人員，則是可以分辨出每一張偽鈔．這一種競爭關係在 Game Theory 中被稱作 min max game．</p>
+<p>而對抗式生成網路 (GAN) 就是這種關係在神經網中的實現．其中它包括了兩個神經網路，一個代表罪犯的生成式網路 (Generator)；另一個代表鑑識人員的鑑別式網路 (Discriminator)．生成式網路負責產生資料，而鑑別式網路負責判斷資料和真實資料的差異．它的輸出會是一個從 0 到 1 的數字，代表著輸入資料是真實資料的機率．例如輸出是 1 代表著它判斷 100% 這是真實資料，輸出是 0 代表這 100% 是假的資料．</p>
+<p>理論上訓練到最後，當輸入生成式網路產出的資料給鑑別式網路，它的輸出會是 0.5，代表著它沒有辦法區分這是真實還是假的．</p>
+<p>以下會利用 MNIST 資料集來嘗試訓練一個 GAN．</p>
+<h3 id="Parameters"><a href="#Parameters" class="headerlink" title="Parameters"></a>Parameters</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">batch_size = <span class="number">256</span></div><div class="line">g_dim = <span class="number">128</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">x_d = tf.placeholder(tf.float32, shape = [<span class="keyword">None</span>, <span class="number">784</span>])</div><div class="line">x_g = tf.placeholder(tf.float32, shape = [<span class="keyword">None</span>, <span class="number">128</span>])</div><div class="line"></div><div class="line">weights = &#123;</div><div class="line">    <span class="string">"w_d1"</span> : weight_variable([<span class="number">784</span>, <span class="number">128</span>], <span class="string">"w_d1"</span>),</div><div class="line">    <span class="string">"w_d2"</span> : weight_variable([<span class="number">128</span>, <span class="number">1</span>], <span class="string">"w_d2"</span>),</div><div class="line">    <span class="string">"w_g1"</span> : weight_variable([<span class="number">128</span>, <span class="number">256</span>], <span class="string">"w_g1"</span>),</div><div class="line">    <span class="string">"w_g2"</span> : weight_variable([<span class="number">256</span>, <span class="number">784</span>], <span class="string">"w_g2"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line">biases = &#123;</div><div class="line">    <span class="string">"b_d1"</span> : bias_variable([<span class="number">128</span>], <span class="string">"b_d1"</span>),</div><div class="line">    <span class="string">"b_d2"</span> : bias_variable([<span class="number">1</span>], <span class="string">"b_d2"</span>),</div><div class="line">    <span class="string">"b_g1"</span> : bias_variable([<span class="number">256</span>], <span class="string">"b_g1"</span>),</div><div class="line">    <span class="string">"b_g2"</span> : bias_variable([<span class="number">784</span>], <span class="string">"b_g2"</span>),</div><div class="line">&#125;</div><div class="line"></div><div class="line">var_d = [weights[<span class="string">"w_d1"</span>], weights[<span class="string">"w_d2"</span>], biases[<span class="string">"b_d1"</span>], biases[<span class="string">"b_d2"</span>]]</div><div class="line">var_g = [weights[<span class="string">"w_g1"</span>], weights[<span class="string">"w_g2"</span>], biases[<span class="string">"b_g1"</span>], biases[<span class="string">"b_g2"</span>]]</div></pre></td></tr></table></figure>
+<h3 id="Build-generator-and-discriminator-networks"><a href="#Build-generator-and-discriminator-networks" class="headerlink" title="Build generator and discriminator networks"></a>Build generator and discriminator networks</h3><p>一個 GAN 裡包含了兩個神經網路，一個是 generator，另一個是 discriminator．首先照著定義個別建立網路．</p>
+<p>生成式網路 <code>generator(z)</code> 會接受一個 128 維的輸入 z 並經過兩層網路以後產生一個 784 維的輸出，這就是所謂假的 MNIST 資料．</p>
+<p>判斷式網路 <code>discrimination(x)</code> 接受一個 784 維的輸入 x 並經過兩層網路以後產生一個 1 維的輸出，而輸出經過 sigmoid 之後是一個 0 ~ 1 的數，代表著判斷式網路此輸出 x 是真實資料的機率．</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">(z)</span>:</span></div><div class="line">    h_g1 = tf.nn.relu(tf.add(tf.matmul(z, weights[<span class="string">"w_g1"</span>]), biases[<span class="string">"b_g1"</span>]))</div><div class="line">    h_g2 = tf.nn.sigmoid(tf.add(tf.matmul(h_g1, weights[<span class="string">"w_g2"</span>]),biases[<span class="string">"b_g2"</span>]))</div><div class="line">    <span class="keyword">return</span> h_g2</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">discriminator</span><span class="params">(x)</span>:</span></div><div class="line">    h_d1 = tf.nn.relu(tf.add(tf.matmul(x, weights[<span class="string">"w_d1"</span>]), biases[<span class="string">"b_d1"</span>]))</div><div class="line">    h_d2 = tf.nn.sigmoid(tf.add(tf.matmul(h_d1, weights[<span class="string">"w_d2"</span>]), biases[<span class="string">"b_d2"</span>]))</div><div class="line">    <span class="keyword">return</span> h_d2</div></pre></td></tr></table></figure>
+<h3 id="Build-cost-functions"><a href="#Build-cost-functions" class="headerlink" title="Build cost functions"></a>Build cost functions</h3><p>在定義訓練 cost 函數的時候，和之前的神經網路比較不一樣的地方是它沒有一個標準的 loss 計算．畢竟這個模型要判斷的問題是真或假的問題．可以參考以下從<a href="https://arxiv.org/abs/1406.2661" target="_blank" rel="external">論文</a>摘錄出來的演算法片段，我們可以從以下步驟一一來看．</p>
+<p><img src="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/13_Generative_Adversarial_Network/GAN_algorithm.jpg?raw=true" alt=""></p>
+<h4 id="計算-discriminator-cost"><a href="#計算-discriminator-cost" class="headerlink" title="計算 discriminator cost"></a>計算 discriminator cost</h4><ul>
+<li>一開始先要從一個 noise prior 取樣出資料給 generator 產生 MNIST 假資料，然後再把假資料丟給 discriminator 產生輸出稱作 <code>d_fake</code>．這裡使用 <code>uniform 分佈</code>當作 prior．</li>
+<li>把真正的訓練資料丟給 discriminator 產生輸出稱作 <code>d_real</code>．</li>
+<li>定義 discriminator 的 loss 為 <code>-tf.reduce_mean(tf.log(d_real) + tf.log(1. - d_fake))</code>，其意義為要讓 <code>d_real</code> 和 <code>1 - d_fake</code> 越大越好，而加上負號讓 tensorflow 去做最小化．</li>
+</ul>
+<h4 id="計算-generator-cost"><a href="#計算-generator-cost" class="headerlink" title="計算 generator cost"></a>計算 generator cost</h4><ul>
+<li>最小化 <code>1 - d_fake</code> 也就是讓 geneartor 產生的輸出越不被判斷成假的越好．</li>
+<li>論文中後來有一段說明最小化 <code>-d_fake</code> 會比直接最小化 <code>1 - d_fake</code> 來得好，因此這裡使用前者．</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">sample_Z</span><span class="params">(m, n)</span>:</span></div><div class="line">    <span class="keyword">return</span> np.random.uniform(<span class="number">-1.</span>, <span class="number">1.</span>, size=[m, n])</div><div class="line"></div><div class="line">g_sample = generator(x_g)</div><div class="line">d_real= discriminator(x_d)</div><div class="line">d_fake = discriminator(g_sample)</div><div class="line"></div><div class="line">d_loss = -tf.reduce_mean(tf.log(d_real) + tf.log(<span class="number">1.</span> - d_fake))</div><div class="line">g_loss = -tf.reduce_mean(tf.log(d_fake))</div></pre></td></tr></table></figure>
+<h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><p>接下來使用 AdamOptimizer 來做訓練，其中提到了要先對 discriminator 更新參數再對 geneartor 更新．因此需要在其中指定更新參數 <code>var_list</code>．</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 只更新 discriminator</span></div><div class="line">d_optimizer = tf.train.AdamOptimizer(<span class="number">0.0005</span>).minimize(d_loss, var_list= var_d)</div><div class="line"><span class="comment"># 只更新 generator parameters</span></div><div class="line">g_optimizer = tf.train.AdamOptimizer(<span class="number">0.0001</span>).minimize(g_loss, var_list= var_g)</div></pre></td></tr></table></figure>
+<p>讓我們對其做 20000 次訓練，每 2000 次觀察 generator 輸出的結果．</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">sess = tf.InteractiveSession()</div><div class="line">init_op = tf.global_variables_initializer()</div><div class="line">sess.run(init_op)</div><div class="line"><span class="keyword">for</span> step <span class="keyword">in</span> range(<span class="number">20001</span>):</div><div class="line">    batch_x = mnist.train.next_batch(batch_size)[<span class="number">0</span>]</div><div class="line">    _, d_loss_train = sess.run([d_optimizer, d_loss], feed_dict = &#123;x_d: batch_x, x_g: sample_Z(batch_size, g_dim)&#125;)</div><div class="line">    _, g_loss_train = sess.run([g_optimizer, g_loss], feed_dict = &#123;x_g: sample_Z(batch_size, g_dim)&#125;)</div></pre></td></tr></table></figure>
+<pre><code>step 0, discriminator loss 1.69854  generator loss 1.50697
+step 100, discriminator loss 0.02105  generator loss 5.91726
+step 200, discriminator loss 0.01915  generator loss 6.58675
+step 300, discriminator loss 0.08829  generator loss 4.98141
+step 400, discriminator loss 0.12522  generator loss 3.94451
+step 500, discriminator loss 0.08411  generator loss 4.59359
+step 600, discriminator loss 0.03992  generator loss 5.07491
+step 700, discriminator loss 0.02336  generator loss 5.24649
+step 800, discriminator loss 0.02547  generator loss 4.81976
+step 900, discriminator loss 0.03401  generator loss 4.83940
+step 1000, discriminator loss 0.04611  generator loss 5.42968
+step 2000, discriminator loss 0.02058  generator loss 6.19514
+step 3000, discriminator loss 0.03554  generator loss 5.14732
+step 4000, discriminator loss 0.02936  generator loss 6.21211
+step 5000, discriminator loss 0.05945  generator loss 5.61464
+step 6000, discriminator loss 0.07699  generator loss 6.15091
+step 7000, discriminator loss 0.09617  generator loss 5.44982
+step 8000, discriminator loss 0.22989  generator loss 5.43957
+step 9000, discriminator loss 0.12218  generator loss 4.57952
+step 10000, discriminator loss 0.24000  generator loss 4.42710
+step 11000, discriminator loss 0.18720  generator loss 4.53043
+step 12000, discriminator loss 0.30363  generator loss 4.57338
+step 13000, discriminator loss 0.25502  generator loss 4.22321
+step 14000, discriminator loss 0.24274  generator loss 4.36683
+step 15000, discriminator loss 0.31198  generator loss 4.60863
+step 16000, discriminator loss 0.33660  generator loss 4.08293
+step 17000, discriminator loss 0.41924  generator loss 3.87464
+step 18000, discriminator loss 0.23020  generator loss 4.31049
+step 19000, discriminator loss 0.30502  generator loss 4.32447
+step 20000, discriminator loss 0.25217  generator loss 3.92429
+</code></pre><p>Bingo! 可以看到 generator 輸出的影像和 MNIST 資料越來越像，但會有許多模糊的殘影．以下是 gif 檔</p>
+<p><img src="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/13_Generative_Adversarial_Network/GAN_result.gif?raw=true" alt="gif"></p>
+<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>我們使用了 tensorflow 實現了 GAN 的組成的兩個神經網路，並用 MNIST 來測驗其對抗式生成的過程．</p>
+<p>其中遇到比較大的問題是，一開始把學習參數調整得太大，因此會造成網路崩潰，後來學到一開始的學習參數要調整的比較小一點．還有一個問題是，很難從 loss 中看出現在 generator 的效果如何，目前發現有一個規律是如果 discriminator 的 loss 太快變成 0 就表示網路崩潰．</p>
+<p>而 20000 次的訓練可以讓 generator 產生有點形狀但模糊的影像，但是還沒有辦法做到很完美的地步，例如數字邊緣的利銳度就不太夠．</p>
+<h3 id="問題"><a href="#問題" class="headerlink" title="問題"></a>問題</h3><ul>
+<li>如果讓 generator 變得更複雜 (ex. 3 層)，會不會有比較好的效果?</li>
+<li>取樣換成別種機率分佈，會不會學得比較快?</li>
+<li>如果把 VAE 的 decoder 拿來當 GAN 的初始參數會不會訓練的比較快?</li>
+</ul>
+<h2 id="學習資源連結"><a href="#學習資源連結" class="headerlink" title="學習資源連結"></a>學習資源連結</h2><ul>
+<li><a href="https://arxiv.org/abs/1406.2661" target="_blank" rel="external">Generative Adversarial Netork</a></li>
+<li><a href="http://wiseodd.github.io/techblog/2016/09/17/gan-tensorflow" target="_blank" rel="external">GAN tensorflow blog post</a></li>
+<li><a href="https://github.com/soumith/ganhacks" target="_blank" rel="external">Tips and tricks to make GAN</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+          
+            <a href="/tags/deeplearning/" rel="tag"># deeplearning</a>
+          
+            <a href="/tags/ithome鐵人/" rel="tag"># ithome鐵人</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/10/tensorflow-note-day-25/" rel="next" title="Tensorflow Day25 Reccurent Neural Network with MNIST">
+                <i class="fa fa-chevron-left"></i> Tensorflow Day25 Reccurent Neural Network with MNIST
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="C1mone" />
+          <p class="site-author-name" itemprop="name">C1mone</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-name">文章</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">標籤</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/C1mone" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日目標"><span class="nav-number">1.</span> <span class="nav-text">今日目標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Parameters"><span class="nav-number">2.1.</span> <span class="nav-text">Parameters</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-generator-and-discriminator-networks"><span class="nav-number">2.2.</span> <span class="nav-text">Build generator and discriminator networks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-cost-functions"><span class="nav-number">2.3.</span> <span class="nav-text">Build cost functions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#計算-discriminator-cost"><span class="nav-number">2.3.1.</span> <span class="nav-text">計算 discriminator cost</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#計算-generator-cost"><span class="nav-number">2.3.2.</span> <span class="nav-text">計算 generator cost</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Training"><span class="nav-number">2.4.</span> <span class="nav-text">Training</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小結"><span class="nav-number">3.</span> <span class="nav-text">小結</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#問題"><span class="nav-number">3.1.</span> <span class="nav-text">問題</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#學習資源連結"><span class="nav-number">4.</span> <span class="nav-text">學習資源連結</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">C1mone</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 強力驅動
+</div>
+
+<div class="theme-info">
+  主題 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'c1mone';
+      var disqus_identifier = '2017/01/13/tensorflow-note-day-28/';
+
+      var disqus_title = "tensorflow-note-day-28";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
