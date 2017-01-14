@@ -29,6 +29,8 @@ Generative Adversarial Network 簡稱 GAN 中文是對抗式生成網路，是�
 
 以下會利用 MNIST 資料集來嘗試訓練一個 GAN．
 
+## Implementation
+
 ### Parameters
 
 
