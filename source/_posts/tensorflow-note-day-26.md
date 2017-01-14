@@ -1,6 +1,6 @@
 ---
 title: Tensorflow Day26 LSTM 
-date: 2017-01-14 16:07:55
+date: 2017-01-11 16:07:55
 tags:
 - tensorflow
 - deeplearning
