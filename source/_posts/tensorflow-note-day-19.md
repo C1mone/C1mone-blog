@@ -25,6 +25,8 @@ tags:
 
 以下會用一個 convolutional 的網路結構來完成一個 denoising autoencoder．並用 MNIST 的資料來訓練之．
 
+## Implementation
+
 ### Build helper functions
 
 
@@ -88,7 +90,7 @@ cost = tf.reduce_mean(tf.pow(x_reconstruct - x_origin, 2))
 optimizer = tf.train.AdamOptimizer(0.01).minimize(cost)
 ```
 
-### Training (Add noise with coefficient 0.3)
+## Training (Add noise with coefficient 0.3)
 
 在訓練的過程中，輸入的噪音影像 (參數為 `0.3`)，並觀察 mean square error 的下降情形．
 
