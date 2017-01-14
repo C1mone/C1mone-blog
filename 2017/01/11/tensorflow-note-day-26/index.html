@@ -85,20 +85,23 @@
 
 
 <meta name="description" content="今日目標
-了解 word2vec 的概念">
+了解 LSTM 內部結構">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Tensorflow Day22 word2vec 介紹">
-<meta property="og:url" content="http://blog.c1mone.com.tw/2017/01/07/tensorflow-note-day-22/index.html">
+<meta property="og:title" content="Tensorflow Day26 LSTM">
+<meta property="og:url" content="http://blog.c1mone.com.tw/2017/01/11/tensorflow-note-day-26/index.html">
 <meta property="og:site_name" content="94 讀書筆記咩">
 <meta property="og:description" content="今日目標
-了解 word2vec 的概念">
-<meta property="og:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/12_word2vec/word2vec_example.gif?raw=true">
+了解 LSTM 內部結構">
+<meta property="og:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/11_Char_RNN/lstm_inner1.jpg?raw=true">
+<meta property="og:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/11_Char_RNN/lstm_inner2.jpg?raw=true">
+<meta property="og:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/11_Char_RNN/lstm_inner3.jpg?raw=true">
+<meta property="og:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/11_Char_RNN/lstm_inner4.jpg?raw=true">
 <meta property="og:updated_time" content="2017-01-14T15:50:35.425Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tensorflow Day22 word2vec 介紹">
+<meta name="twitter:title" content="Tensorflow Day26 LSTM">
 <meta name="twitter:description" content="今日目標
-了解 word2vec 的概念">
-<meta name="twitter:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/12_word2vec/word2vec_example.gif?raw=true">
+了解 LSTM 內部結構">
+<meta name="twitter:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/11_Char_RNN/lstm_inner1.jpg?raw=true">
 
 
 
@@ -126,13 +129,13 @@
 
 
 
-  <link rel="canonical" href="http://blog.c1mone.com.tw/2017/01/07/tensorflow-note-day-22/"/>
+  <link rel="canonical" href="http://blog.c1mone.com.tw/2017/01/11/tensorflow-note-day-26/"/>
 
 
 
 
 
-  <title> Tensorflow Day22 word2vec 介紹 | 94 讀書筆記咩 </title>
+  <title> Tensorflow Day26 LSTM | 94 讀書筆記咩 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
@@ -253,7 +256,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.c1mone.com.tw/2017/01/07/tensorflow-note-day-22/">
+  <link itemprop="mainEntityOfPage" href="http://blog.c1mone.com.tw/2017/01/11/tensorflow-note-day-26/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="C1mone">
@@ -277,7 +280,7 @@
             
             
               
-                Tensorflow Day22 word2vec 介紹
+                Tensorflow Day26 LSTM
               
             
           </h1>
@@ -290,8 +293,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-07T10:56:32+00:00">
-                2017-01-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-11T16:07:55+00:00">
+                2017-01-11
               </time>
             
 
@@ -306,8 +309,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/01/07/tensorflow-note-day-22/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/07/tensorflow-note-day-22/" itemprop="commentCount"></span>
+                <a href="/2017/01/11/tensorflow-note-day-26/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/11/tensorflow-note-day-26/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -334,31 +337,27 @@
 
       
         <h2 id="今日目標"><a href="#今日目標" class="headerlink" title="今日目標"></a>今日目標</h2><ul>
-<li>了解 word2vec 的概念</li>
+<li>了解 LSTM 內部結構</li>
 </ul>
 <a id="more"></a>
-<h2 id="word2vec-簡介"><a href="#word2vec-簡介" class="headerlink" title="word2vec 簡介"></a>word2vec 簡介</h2><p>word2vec 正如其名就是 </p>
-<blockquote>
-<p>word to vector 是一個能把文字變成向量的演算法．</p>
-</blockquote>
-<p>用更口語的表達來說，<br>word2vec 是在做一項<strong>翻譯</strong>的工作，把詞（word）轉換成電腦可以了解的模式（vector）．當然，如果它只有這項功能的話，並不需要特別把它拿出來講．最有趣的事情是 word2vec 在做翻譯這項工作的時候，他同時可以讀取出詞裡的概念．舉個 word2vec 的經典例子來說，當我們想到英國的時候，可能就會想到它的首都倫敦．而word2vec<br>在經過訓練以後是有能力做到這樣的推想的．更棒的是他的訓練速度非常快，因此實用價值非常地高．</p>
-<p>而為什麼 word2vec 可以讀取出詞與詞的概念呢，這個跟他的演算方法有關．用一句話解釋就是他會把這個詞附近的相鄰詞考慮進來．實際上實作有兩種的演算法，第一種稱作 Countinuous Bag Of Words（CBOW），此方法會利用上下文的詞來當作神經網路的輸入，最後預測這個目標的詞是什麼．而第二種則是 Skip-Gram 演算法，剛好跟第一種演算法相反，他所輸入的是當前的詞來預測這一段的文章上下文的詞．這兩種演算法可以在使用 word2vec 的時候進行選擇，會有不同的效果．</p>
-<p>讓我們用口語的方式再說明一次上述演算法的概念．我們現在從一篇文章隨機取出了兩個詞，在學習的過程中，這兩個詞分別的上下文會被導入 word2vec 來決定他們向量的數值．而這個向量是一個 N（本文取 100 來做測試） 個長度的數字．同一個詞，例如：台灣．向量值必定是一樣的．</p>
-<p>在訓練的過程中，如果這兩個向量的上下文被判定為相似的，那 word2vec 會調整向量裡的數值來讓彼此在向量空間裡的距離拉近，而反之則會把他拉遠．</p>
-<p>從這個概念裡面可以推想的到，最後學習完成的模型會把同樣概念的詞在向量空間裡面聚集在一起，這可能是國家的名稱例如：法國，英國，德國．而抽象的概念也會被聚集在一起例如：高興，快樂，愉悅．</p>
-<p>因此學習完成後我們可以任意抽出兩個詞，並得到他的詞向量，並用詞向量來計算他們之間的距離．這個實際距離的概念也就是抽象意義上面他們兩個詞的相似性．所以我們可以說當這兩個向量數值是相似的時候．他在抽象意義上面的關係是很近的．</p>
-<p>（編按：我們是如何計算兩個詞的相似性呢？word2vec 使用 Cosine Similarity 來計算兩個詞的相似性．這是一個 -1 到 1 的數值，如果兩個詞完全一樣就是 1．像是「台灣」這個詞和他自身的 Cosine Similarity 就是 1）</p>
-<p>而除了比較相似性以外， word2vec 還可已有<strong>類推</strong>這個概念．從引用至 google open source blog 的圖來看，我們可以看到國家的距離是彼此相近的．中國，俄國，日本．．．等．而相對應首都的距離也是相近的．接下來就是有趣的地方了，可以觀察到每個國家和其首都的距離都是類似的．如圖中每條虛線的所示．那如果我們把這種對應關係改成數學上的表示的話就是．巴黎 - 法國 ＝ 柏林 - 德國．這真的是非常酷炫的對應關係．所以我們可以在向量上面有這樣的表示方法 巴黎 - 法國 + 德國 ＝ ？ ．聰明的你應該可以想到我們可以用這個方法來推斷未知國家的首都在哪</p>
-<p><img src="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/12_word2vec/word2vec_example.gif?raw=true" alt="image"></p>
-<p>(圖片來源: <a href="https://opensource.googleblog.com/2013/08/learning-meaning-behind-words.html" target="_blank" rel="external">google blog</a>)</p>
-<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>今天學習了 word2vec 的基本觀念，了解到把詞變成一個向量以後，可以根據語意做詞向量的加法減法得到新的詞向量．</p>
-<h3 id="問題"><a href="#問題" class="headerlink" title="問題"></a>問題</h3><ul>
-<li>word2vec 是如何把神經網路結合 Skip-Gram?</li>
-<li>word2vec 是如何把神經網路結合 CBOW?</li>
-</ul>
+<h2 id="介紹"><a href="#介紹" class="headerlink" title="介紹"></a>介紹</h2><p>之前提到了 LSTM 可以有效的解決 gradient vanishing 的問題，那到底其中的結構有什麼魔法呢？讓我們從以下的內部結構圖來看一下．</p>
+<h3 id="Cell-State"><a href="#Cell-State" class="headerlink" title="Cell State"></a>Cell State</h3><p>LSTM 的第一個定義是 cell 裡面會存著狀態 (state) : C(t) ，而 C(t) 會跟上個時間點 C(t-1) 有關，當然在時間點 t 會對其做些修改，然後再繼續傳遞給下一個時間點 t+1．</p>
+<p><img src="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/11_Char_RNN/lstm_inner1.jpg?raw=true" alt="lstm_inner1"></p>
+<h3 id="Forget-Gate"><a href="#Forget-Gate" class="headerlink" title="Forget Gate"></a>Forget Gate</h3><p>第二個特性是其中會有一個 forget gate 來決定上一個時刻的 C(t-1) 中的內容哪些要保留哪些要留下來，而這是由 H(t-1) 以及 X(t) 經過一個 sigmoid 所決定的，其輸出的內容是一個 0 到 1 的數，0 代表完全捨棄；1 代表完全留下．而這個結果會乘上 C(t-1) 來決定過去的狀態有哪些要被留下，以及留下的程度．</p>
+<p>$$ \mathbf{f<em>{t}} = \sigma(\mathbf{W</em>{xf}} \mathbf{X<em>{t}} + \mathbf{W</em>{hf}H<em>{t-1}} + \mathbf{b</em>{f}}) $$</p>
+<p><img src="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/11_Char_RNN/lstm_inner2.jpg?raw=true" alt="lstm_inner2"></p>
+<h3 id="Input-Gate"><a href="#Input-Gate" class="headerlink" title="Input Gate"></a>Input Gate</h3><p>接著要決定的事情是在 cell 狀態裡面要加入哪些新的資訊，其中新的資訊由 X(t) 以及 H(t-1) 經過 tanh 產生，而資訊的強弱程度則由 X(t) 以及 H(t-1) 經過 sigmoid 來決定．</p>
+<p>$$ \mathbf{i<em>{t}}=\sigma(\mathbf{W</em>{xi}X<em>{t}} + \mathbf{W</em>{hi}X<em>{i}} + \mathbf{b</em>{i}})*tanh(\mathbf{W<em>{xc}X</em>{t}} + \mathbf{W<em>{hc}X</em>{i}} + \mathbf{b_{c}})$$</p>
+<p>最後新的 cell 狀態 C(t) 會由舊狀態 (C(t-1)) 和其遺忘的程度 (f(t)) 加上新訊息 (i(t)) 所決定．</p>
+<p>$$\mathbf{C<em>{t}} = \mathbf{C</em>{t-1} * f_{t}} + \mathbf{i_t} $$</p>
+<p><img src="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/11_Char_RNN/lstm_inner3.jpg?raw=true" alt="lstm_inner3"></p>
+<h3 id="Output-Gate"><a href="#Output-Gate" class="headerlink" title="Output Gate"></a>Output Gate</h3><p>最後還需要來決定輸出 H(t)，其會由 cell 的狀態加上一些操作來決定．首先它會把 C(t) 乘上一個 tanh 來把它的數值轉換到 -1 以及 1 之間，之後乘上 H(t-1) 以及 X(t) 經過 sigmoid 的值，以此決定輸出數值的強弱程度．到此就完成了一個標準的 LSTM．</p>
+<p>$$\mathbf{H<em>{t}} = tanh(\mathbf{C</em>{t}}) * \sigma(\mathbf{W<em>{xo}X</em>{t} + W<em>{ho}H</em>{t-1}} + b_{o})$$</p>
+<p><img src="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/11_Char_RNN/lstm_inner4.jpg?raw=true" alt="lstm_inner4"></p>
+<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>經由圖解以及數學式了解了一個基本的 LSTM 內部基本結構，</p>
+<h3 id="問題"><a href="#問題" class="headerlink" title="問題"></a>問題</h3><p>嘗試使用基本的 tensorflow op 來實現此 LSTM 結構．</p>
 <h2 id="學習資源連結"><a href="#學習資源連結" class="headerlink" title="學習資源連結"></a>學習資源連結</h2><ul>
-<li><a href="https://opensource.googleblog.com/2013/08/learning-meaning-behind-words.html" target="_blank" rel="external">word2vec google blog post</a></li>
-<li><a href="https://code.google.com/archive/p/word2vec/" target="_blank" rel="external">word2vec google open source</a></li>
+<li><a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="external">Colah LSTM blog post</a></li>
 </ul>
 
       
@@ -396,8 +395,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/03/tensorflow-note-day-19/" rel="next" title="Tensorflow Day19 Denoising Autoencoder">
-                <i class="fa fa-chevron-left"></i> Tensorflow Day19 Denoising Autoencoder
+              <a href="/2017/01/10/tensorflow-note-day-25/" rel="next" title="Tensorflow Day25 Reccurent Neural Network with MNIST">
+                <i class="fa fa-chevron-left"></i> Tensorflow Day25 Reccurent Neural Network with MNIST
               </a>
             
           </div>
@@ -406,8 +405,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/01/10/tensorflow-note-day-25/" rel="prev" title="Tensorflow Day25 Reccurent Neural Network with MNIST">
-                Tensorflow Day25 Reccurent Neural Network with MNIST <i class="fa fa-chevron-right"></i>
+              <a href="/2017/01/12/tensorflow-note-day-28/" rel="prev" title="Tensorflow Day28 Generative Adversarial Network with MNIST">
+                Tensorflow Day28 Generative Adversarial Network with MNIST <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -539,7 +538,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日目標"><span class="nav-number">1.</span> <span class="nav-text">今日目標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#word2vec-簡介"><span class="nav-number">2.</span> <span class="nav-text">word2vec 簡介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小結"><span class="nav-number">3.</span> <span class="nav-text">小結</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#問題"><span class="nav-number">3.1.</span> <span class="nav-text">問題</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#學習資源連結"><span class="nav-number">4.</span> <span class="nav-text">學習資源連結</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日目標"><span class="nav-number">1.</span> <span class="nav-text">今日目標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#介紹"><span class="nav-number">2.</span> <span class="nav-text">介紹</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cell-State"><span class="nav-number">2.1.</span> <span class="nav-text">Cell State</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Forget-Gate"><span class="nav-number">2.2.</span> <span class="nav-text">Forget Gate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Input-Gate"><span class="nav-number">2.3.</span> <span class="nav-text">Input Gate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Output-Gate"><span class="nav-number">2.4.</span> <span class="nav-text">Output Gate</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小結"><span class="nav-number">3.</span> <span class="nav-text">小結</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#問題"><span class="nav-number">3.1.</span> <span class="nav-text">問題</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#學習資源連結"><span class="nav-number">4.</span> <span class="nav-text">學習資源連結</span></a></li></ol></div>
             
 
           </div>
@@ -663,9 +662,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'c1mone';
-      var disqus_identifier = '2017/01/07/tensorflow-note-day-22/';
+      var disqus_identifier = '2017/01/11/tensorflow-note-day-26/';
 
-      var disqus_title = "Tensorflow Day22 word2vec 介紹";
+      var disqus_title = "Tensorflow Day26 LSTM";
 
 
       function run_disqus_script(disqus_script) {

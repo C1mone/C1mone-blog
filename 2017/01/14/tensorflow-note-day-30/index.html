@@ -84,21 +84,16 @@
 
 
 
-<meta name="description" content="今日目標
-了解 word2vec 的概念">
+<meta name="description" content="時間很快地來到了最後一天，30 天其實比我想像中的還要短許多．不例外地要來總結一下 30 天的學習成果以及心得，還有給各位想入門 tensorflow 的看倌們一些建議．">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Tensorflow Day22 word2vec 介紹">
-<meta property="og:url" content="http://blog.c1mone.com.tw/2017/01/07/tensorflow-note-day-22/index.html">
+<meta property="og:title" content="Tensorflow Day30 學習心得以及入門建議">
+<meta property="og:url" content="http://blog.c1mone.com.tw/2017/01/14/tensorflow-note-day-30/index.html">
 <meta property="og:site_name" content="94 讀書筆記咩">
-<meta property="og:description" content="今日目標
-了解 word2vec 的概念">
-<meta property="og:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/12_word2vec/word2vec_example.gif?raw=true">
+<meta property="og:description" content="時間很快地來到了最後一天，30 天其實比我想像中的還要短許多．不例外地要來總結一下 30 天的學習成果以及心得，還有給各位想入門 tensorflow 的看倌們一些建議．">
 <meta property="og:updated_time" content="2017-01-14T15:50:35.425Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tensorflow Day22 word2vec 介紹">
-<meta name="twitter:description" content="今日目標
-了解 word2vec 的概念">
-<meta name="twitter:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/12_word2vec/word2vec_example.gif?raw=true">
+<meta name="twitter:title" content="Tensorflow Day30 學習心得以及入門建議">
+<meta name="twitter:description" content="時間很快地來到了最後一天，30 天其實比我想像中的還要短許多．不例外地要來總結一下 30 天的學習成果以及心得，還有給各位想入門 tensorflow 的看倌們一些建議．">
 
 
 
@@ -126,13 +121,13 @@
 
 
 
-  <link rel="canonical" href="http://blog.c1mone.com.tw/2017/01/07/tensorflow-note-day-22/"/>
+  <link rel="canonical" href="http://blog.c1mone.com.tw/2017/01/14/tensorflow-note-day-30/"/>
 
 
 
 
 
-  <title> Tensorflow Day22 word2vec 介紹 | 94 讀書筆記咩 </title>
+  <title> Tensorflow Day30 學習心得以及入門建議 | 94 讀書筆記咩 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-tw">
@@ -253,7 +248,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://blog.c1mone.com.tw/2017/01/07/tensorflow-note-day-22/">
+  <link itemprop="mainEntityOfPage" href="http://blog.c1mone.com.tw/2017/01/14/tensorflow-note-day-30/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="C1mone">
@@ -277,7 +272,7 @@
             
             
               
-                Tensorflow Day22 word2vec 介紹
+                Tensorflow Day30 學習心得以及入門建議
               
             
           </h1>
@@ -290,8 +285,8 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">發表於</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-07T10:56:32+00:00">
-                2017-01-07
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-14T22:50:58+00:00">
+                2017-01-14
               </time>
             
 
@@ -306,8 +301,8 @@
             
               <span class="post-comments-count">
                 <span class="post-meta-divider">|</span>
-                <a href="/2017/01/07/tensorflow-note-day-22/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/07/tensorflow-note-day-22/" itemprop="commentCount"></span>
+                <a href="/2017/01/14/tensorflow-note-day-30/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/01/14/tensorflow-note-day-30/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -333,33 +328,35 @@
       
 
       
-        <h2 id="今日目標"><a href="#今日目標" class="headerlink" title="今日目標"></a>今日目標</h2><ul>
-<li>了解 word2vec 的概念</li>
-</ul>
+        <p>時間很快地來到了最後一天，30 天其實比我想像中的還要短許多．不例外地要來總結一下 30 天的學習成果以及心得，還有給各位想入門 tensorflow 的看倌們一些建議．</p>
 <a id="more"></a>
-<h2 id="word2vec-簡介"><a href="#word2vec-簡介" class="headerlink" title="word2vec 簡介"></a>word2vec 簡介</h2><p>word2vec 正如其名就是 </p>
-<blockquote>
-<p>word to vector 是一個能把文字變成向量的演算法．</p>
-</blockquote>
-<p>用更口語的表達來說，<br>word2vec 是在做一項<strong>翻譯</strong>的工作，把詞（word）轉換成電腦可以了解的模式（vector）．當然，如果它只有這項功能的話，並不需要特別把它拿出來講．最有趣的事情是 word2vec 在做翻譯這項工作的時候，他同時可以讀取出詞裡的概念．舉個 word2vec 的經典例子來說，當我們想到英國的時候，可能就會想到它的首都倫敦．而word2vec<br>在經過訓練以後是有能力做到這樣的推想的．更棒的是他的訓練速度非常快，因此實用價值非常地高．</p>
-<p>而為什麼 word2vec 可以讀取出詞與詞的概念呢，這個跟他的演算方法有關．用一句話解釋就是他會把這個詞附近的相鄰詞考慮進來．實際上實作有兩種的演算法，第一種稱作 Countinuous Bag Of Words（CBOW），此方法會利用上下文的詞來當作神經網路的輸入，最後預測這個目標的詞是什麼．而第二種則是 Skip-Gram 演算法，剛好跟第一種演算法相反，他所輸入的是當前的詞來預測這一段的文章上下文的詞．這兩種演算法可以在使用 word2vec 的時候進行選擇，會有不同的效果．</p>
-<p>讓我們用口語的方式再說明一次上述演算法的概念．我們現在從一篇文章隨機取出了兩個詞，在學習的過程中，這兩個詞分別的上下文會被導入 word2vec 來決定他們向量的數值．而這個向量是一個 N（本文取 100 來做測試） 個長度的數字．同一個詞，例如：台灣．向量值必定是一樣的．</p>
-<p>在訓練的過程中，如果這兩個向量的上下文被判定為相似的，那 word2vec 會調整向量裡的數值來讓彼此在向量空間裡的距離拉近，而反之則會把他拉遠．</p>
-<p>從這個概念裡面可以推想的到，最後學習完成的模型會把同樣概念的詞在向量空間裡面聚集在一起，這可能是國家的名稱例如：法國，英國，德國．而抽象的概念也會被聚集在一起例如：高興，快樂，愉悅．</p>
-<p>因此學習完成後我們可以任意抽出兩個詞，並得到他的詞向量，並用詞向量來計算他們之間的距離．這個實際距離的概念也就是抽象意義上面他們兩個詞的相似性．所以我們可以說當這兩個向量數值是相似的時候．他在抽象意義上面的關係是很近的．</p>
-<p>（編按：我們是如何計算兩個詞的相似性呢？word2vec 使用 Cosine Similarity 來計算兩個詞的相似性．這是一個 -1 到 1 的數值，如果兩個詞完全一樣就是 1．像是「台灣」這個詞和他自身的 Cosine Similarity 就是 1）</p>
-<p>而除了比較相似性以外， word2vec 還可已有<strong>類推</strong>這個概念．從引用至 google open source blog 的圖來看，我們可以看到國家的距離是彼此相近的．中國，俄國，日本．．．等．而相對應首都的距離也是相近的．接下來就是有趣的地方了，可以觀察到每個國家和其首都的距離都是類似的．如圖中每條虛線的所示．那如果我們把這種對應關係改成數學上的表示的話就是．巴黎 - 法國 ＝ 柏林 - 德國．這真的是非常酷炫的對應關係．所以我們可以在向量上面有這樣的表示方法 巴黎 - 法國 + 德國 ＝ ？ ．聰明的你應該可以想到我們可以用這個方法來推斷未知國家的首都在哪</p>
-<p><img src="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/12_word2vec/word2vec_example.gif?raw=true" alt="image"></p>
-<p>(圖片來源: <a href="https://opensource.googleblog.com/2013/08/learning-meaning-behind-words.html" target="_blank" rel="external">google blog</a>)</p>
-<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>今天學習了 word2vec 的基本觀念，了解到把詞變成一個向量以後，可以根據語意做詞向量的加法減法得到新的詞向量．</p>
-<h3 id="問題"><a href="#問題" class="headerlink" title="問題"></a>問題</h3><ul>
-<li>word2vec 是如何把神經網路結合 Skip-Gram?</li>
-<li>word2vec 是如何把神經網路結合 CBOW?</li>
-</ul>
-<h2 id="學習資源連結"><a href="#學習資源連結" class="headerlink" title="學習資源連結"></a>學習資源連結</h2><ul>
-<li><a href="https://opensource.googleblog.com/2013/08/learning-meaning-behind-words.html" target="_blank" rel="external">word2vec google blog post</a></li>
-<li><a href="https://code.google.com/archive/p/word2vec/" target="_blank" rel="external">word2vec google open source</a></li>
-</ul>
+<h2 id="成果"><a href="#成果" class="headerlink" title="成果"></a>成果</h2><p>這 30 天的學習方式是直接使用 tensorflow 刻出一個又一個模型，然後使用 MNIST 或是其他資料集來訓練．而這所有的訓練過程以及程式碼和說明，都放在我自己的 Github repo 上，連結如下，歡迎大家取用．其中這些過程都是寫成 ipyhon notebook 的檔案，如果有錯誤的地方再煩請指正，謝謝！之後還會繼續新增內容！</p>
+<p><strong>Github repo : <a href="https://github.com/c1mone/Tensorflow-101" target="_blank" rel="external">Tensorflow 101</a></strong></p>
+<p>除此之外每一天的學習過程以及心得，也另外放在自己的 Tech blog 上，連結如下．在結束鐵人賽以後，這個 blog 仍會持續運作，之後我實現的模型也會寫成文章丟上去．</p>
+<p><strong>個人技術部落格 : <a href="http://blog.c1mone.com.tw/">Tech blog</a></strong></p>
+<p>(目前 30 天的內容還有部分尚未補全，持續努力中)</p>
+<h2 id="心得"><a href="#心得" class="headerlink" title="心得"></a>心得</h2><h3 id="學習方式"><a href="#學習方式" class="headerlink" title="學習方式"></a>學習方式</h3><p>這幾天的學習方法如下</p>
+<ol>
+<li>上網找找 tensorflow 的各個模型 tutorials，看一下大略的介紹．</li>
+<li>照著刻一遍，以及利用資料集訓練模型．</li>
+<li>刻完之後，再找技術部落格或者論文來看．</li>
+<li>修改 tensorflow 模型</li>
+<li>寫技術文章</li>
+</ol>
+<p>迥異於先理解數學的方式，可以說是從程式碼來理解這些模型在做什麼事，再深入了解理論．我覺得這樣的方式有一個好處是非常 hands on．雖然這些過程會花很多時間，但是刻過程式碼後，再接觸數學的部分會比較有感覺，以及對整個流程較為熟悉．</p>
+<h3 id="Github-repo-以及-論文"><a href="#Github-repo-以及-論文" class="headerlink" title="Github repo 以及 論文"></a>Github repo 以及 論文</h3><p>在這段過程中，可以感覺到，現在 deep learning 是一個非常非常紅的研究，許多比較新的論文一出來，在 Github 上很快就會有網友實作出來論文的內容，重現論文的結果．因此如果想要學習這方面的知識，Github 加上 arxiv 就有無止盡的東西可以學習．</p>
+<h3 id="數學-非常-非常-重要！"><a href="#數學-非常-非常-重要！" class="headerlink" title="數學 非常 非常 重要！"></a>數學 非常 非常 重要！</h3><p>照著 Github 上面的資源使用 tensorflow 重現模型不太算一件困難的事情，但是當要調教模型的時候就會非常需要用到數學．原因在於必須深入的了解模型的內容，才有辦法調整 (當然也可以就隨機亂調 hyperparameters)</p>
+<h3 id="好的設備？"><a href="#好的設備？" class="headerlink" title="好的設備？"></a>好的設備？</h3><p>這段時間遇到的問題就是我的筆電實在跑得好慢呀，很多想要做的事情都受限於在機體上面，有許多脫稿的日子都是這個原因 (藉口)</p>
+<h2 id="入門建議"><a href="#入門建議" class="headerlink" title="入門建議"></a>入門建議</h2><ol>
+<li>基本 python 就夠了，覺得重點在於機器學習相關的知識．</li>
+<li>基本的機器學習知識是非常重要的，我也是花了許多時間喚醒很久以前的記憶，建議可以先看林軒田大神的<a href="http://www.csie.ntu.edu.tw/~htlin/mooc/" target="_blank" rel="external">機器學習課程</a></li>
+<li>深度學習的知識，建議可以看李宏毅大神的<a href="https://www.youtube.com/channel/UC2ggjtuuWvxrHHHiaDH1dlQ" target="_blank" rel="external">機器學習影片</a>，這段時間我主要看這些影片來了解觀念．</li>
+<li>數學！</li>
+<li>可以先練習用 tensorflow 把 repo <a href="https://github.com/c1mone/Tensorflow-101" target="_blank" rel="external">Tensorflow 101</a> 裡面的模型都刻一遍，就會比較有感覺．</li>
+<li>練習！練習！</li>
+</ol>
+<p>感謝大家在這段鐵人賽的觀看，之後我會繼續修改 repo 以及 blog 上面的內容，來讓它更完善．然後感覺鐵人賽 30 天之後覺得這方面真的是滿有趣的，也會繼續寫些程式以及相關的技術文章．</p>
+<p>鐵人賽第一次參賽 Done!</p>
 
       
     </div>
@@ -396,8 +393,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/01/03/tensorflow-note-day-19/" rel="next" title="Tensorflow Day19 Denoising Autoencoder">
-                <i class="fa fa-chevron-left"></i> Tensorflow Day19 Denoising Autoencoder
+              <a href="/2017/01/12/tensorflow-note-day-28/" rel="next" title="Tensorflow Day28 Generative Adversarial Network with MNIST">
+                <i class="fa fa-chevron-left"></i> Tensorflow Day28 Generative Adversarial Network with MNIST
               </a>
             
           </div>
@@ -405,10 +402,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/01/10/tensorflow-note-day-25/" rel="prev" title="Tensorflow Day25 Reccurent Neural Network with MNIST">
-                Tensorflow Day25 Reccurent Neural Network with MNIST <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -539,7 +532,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日目標"><span class="nav-number">1.</span> <span class="nav-text">今日目標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#word2vec-簡介"><span class="nav-number">2.</span> <span class="nav-text">word2vec 簡介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小結"><span class="nav-number">3.</span> <span class="nav-text">小結</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#問題"><span class="nav-number">3.1.</span> <span class="nav-text">問題</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#學習資源連結"><span class="nav-number">4.</span> <span class="nav-text">學習資源連結</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#成果"><span class="nav-number">1.</span> <span class="nav-text">成果</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#心得"><span class="nav-number">2.</span> <span class="nav-text">心得</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#學習方式"><span class="nav-number">2.1.</span> <span class="nav-text">學習方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Github-repo-以及-論文"><span class="nav-number">2.2.</span> <span class="nav-text">Github repo 以及 論文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#數學-非常-非常-重要！"><span class="nav-number">2.3.</span> <span class="nav-text">數學 非常 非常 重要！</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#好的設備？"><span class="nav-number">2.4.</span> <span class="nav-text">好的設備？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#入門建議"><span class="nav-number">3.</span> <span class="nav-text">入門建議</span></a></li></ol></div>
             
 
           </div>
@@ -663,9 +656,9 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'c1mone';
-      var disqus_identifier = '2017/01/07/tensorflow-note-day-22/';
+      var disqus_identifier = '2017/01/14/tensorflow-note-day-30/';
 
-      var disqus_title = "Tensorflow Day22 word2vec 介紹";
+      var disqus_title = "Tensorflow Day30 學習心得以及入門建議";
 
 
       function run_disqus_script(disqus_script) {
