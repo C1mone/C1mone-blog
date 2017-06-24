@@ -12,4 +12,4 @@ Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
 
-Sitemap: http://blog.c1mone.com.tw
+Sitemap: https://blog.c1mone.com.tw
