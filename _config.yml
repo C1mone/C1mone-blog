@@ -4,11 +4,11 @@
 
 # Site
 title: 94 讀書筆記咩
-subtitle:
-description:
-author: C1mone
+subtitle: 全棧數據工程師之路
+description: 
+author: c1mone
 language: zh-tw
-timezone:
+timezone: Asia/Taipei
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
@@ -69,6 +69,6 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: git@github.com:C1mone/C1mone-blog.git
+  repo: git@github.com:c1mone/c1mone-blog.git
   branch: gh-pages
 
