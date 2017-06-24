@@ -1,0 +1,744 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="NjP189VhFlmwjqBiqOeGB6U7MJXKXL9W0mO_oqF9rKY" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tensorflow,deeplearning,ithome鐵人," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="工欲善其事，必先利其器．因此我們要先來找一個好用的平台來學習 tensorflow．而在 python 資料分析上面的首選一定是 jupyter notebook．雖然從頭建起使用環境是滿快的，但是最近剛好看到一個線上的 jupyter notebooks 平台，馬上來試用看看．">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tensorflow Day2 Jupyter Notebooks & Linear Regression 範例">
+<meta property="og:url" content="https://blog.c1mone.com.tw/tensorflow-note-day-2.html">
+<meta property="og:site_name" content="94 讀書筆記咩">
+<meta property="og:description" content="工欲善其事，必先利其器．因此我們要先來找一個好用的平台來學習 tensorflow．而在 python 資料分析上面的首選一定是 jupyter notebook．雖然從頭建起使用環境是滿快的，但是最近剛好看到一個線上的 jupyter notebooks 平台，馬上來試用看看．">
+<meta property="og:image" content="http://i.imgur.com/tNGrsy6.gif">
+<meta property="og:updated_time" content="2017-06-24T13:59:00.021Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tensorflow Day2 Jupyter Notebooks & Linear Regression 範例">
+<meta name="twitter:description" content="工欲善其事，必先利其器．因此我們要先來找一個好用的平台來學習 tensorflow．而在 python 資料分析上面的首選一定是 jupyter notebook．雖然從頭建起使用環境是滿快的，但是最近剛好看到一個線上的 jupyter notebooks 平台，馬上來試用看看．">
+<meta name="twitter:image" content="http://i.imgur.com/tNGrsy6.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.c1mone.com.tw/tensorflow-note-day-2.html"/>
+
+
+
+
+
+  <title> Tensorflow Day2 Jupyter Notebooks & Linear Regression 範例 | 94 讀書筆記咩 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-101607299-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">94 讀書筆記咩</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">全棧數據工程師之路迢迢</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://blog.c1mone.com.tw/tensorflow-note-day-2.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="c1mone">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/4519639?v=3&s=400.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="94 讀書筆記咩">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="94 讀書筆記咩" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Tensorflow Day2 Jupyter Notebooks & Linear Regression 範例
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-17T20:53:10+08:00">
+                2016-12-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/tensorflow-note-day-2.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="tensorflow-note-day-2.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>工欲善其事，必先利其器．<br>因此我們要先來找一個好用的平台來學習 tensorflow．而在 python 資料分析上面的首選一定是 jupyter notebook．雖然從頭建起使用環境是滿快的，但是最近剛好看到一個線上的 jupyter notebooks 平台，馬上來試用看看．</p>
+<a id="more"></a>
+<h2 id="Microsoft-Azure-Notebooks"><a href="#Microsoft-Azure-Notebooks" class="headerlink" title="Microsoft Azure Notebooks"></a>Microsoft Azure Notebooks</h2><p><a href="https://notebooks.azure.com/" target="_blank" rel="external">Microsoft Azure Notebooks</a> 是 M\$ 最新開出來的平台，不過在這裡不能稱呼他為 M\$ 因為這是完全免費的！可以在上面開 notebook 來使用 jupyter ，大家馬上趕快去試試看，不知道可以免費到多久呢．</p>
+<h2 id="Check-version"><a href="#Check-version" class="headerlink" title="Check version"></a>Check version</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys</div><div class="line">sys.version</div></pre></td></tr></table></figure>
+<pre><code>&apos;2.7.11 |Anaconda custom (64-bit)| (default, Jun 15 2016, 15:21:30) \n[GCC 4.4.7 20120313 (Red Hat 4.4.7-1)]&apos;
+</code></pre><p>azure notebooks 的套件適用 Anaconda 安裝的，不過其中並沒有包含 tensorflow</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sys.version_info</div></pre></td></tr></table></figure>
+<pre><code>sys.version_info(major=2, minor=7, micro=11, releaselevel=&apos;final&apos;, serial=0)
+</code></pre><p>其中我使用的 python 的版本為 <strong>2.7.11</strong></p>
+<h2 id="Install-tensorflow-by-pip"><a href="#Install-tensorflow-by-pip" class="headerlink" title="Install tensorflow by pip"></a>Install tensorflow by pip</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">!pip install tensorflow</div></pre></td></tr></table></figure>
+<h2 id="tensorflow-with-linear-regression"><a href="#tensorflow-with-linear-regression" class="headerlink" title="tensorflow with linear regression"></a>tensorflow with linear regression</h2><p>這裡照個 tensorflow 的 tutorial 來做一個簡單的 linear regression demo．</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"></div><div class="line"><span class="comment"># 用 numpy 亂數產生 100 個點，並且</span></div><div class="line">x_data = np.random.rand(<span class="number">100</span>).astype(np.float32)</div><div class="line">y_data = x_data * <span class="number">0.1</span> + <span class="number">0.3</span></div><div class="line"></div><div class="line"><span class="comment"># Try to find values for W and b that compute y_data = W * x_data + b</span></div><div class="line"><span class="comment"># (We know that W should be 0.1 and b 0.3, but TensorFlow will</span></div><div class="line"><span class="comment"># figure that out for us.) </span></div><div class="line"><span class="comment"># 等等 tensorflow 幫我們慢慢地找出 fitting 的權重值</span></div><div class="line"></div><div class="line">W = tf.Variable(tf.random_uniform([<span class="number">1</span>], <span class="number">-1.0</span>, <span class="number">1.0</span>))</div><div class="line">b = tf.Variable(tf.zeros([<span class="number">1</span>]))</div><div class="line">y = W * x_data + b</div><div class="line"></div><div class="line"><span class="comment"># Minimize the mean squared errors.</span></div><div class="line">loss = tf.reduce_mean(tf.square(y - y_data))</div><div class="line">optimizer = tf.train.GradientDescentOptimizer(<span class="number">0.2</span>)</div><div class="line">train = optimizer.minimize(loss)</div><div class="line"></div><div class="line"><span class="comment"># Before starting, initialize the variables.  We will 'run' this first.</span></div><div class="line">init = tf.global_variables_initializer()</div><div class="line"></div><div class="line"><span class="comment"># Launch the graph.</span></div><div class="line">sess = tf.Session()</div><div class="line">sess.run(init)</div><div class="line"></div><div class="line"><span class="comment"># Fit the line.</span></div><div class="line"><span class="keyword">for</span> step <span class="keyword">in</span> range(<span class="number">201</span>):</div><div class="line">    sess.run(train)</div><div class="line">    <span class="keyword">if</span> step % <span class="number">20</span> == <span class="number">0</span>:</div><div class="line">        print(step, sess.run(W), sess.run(b))</div><div class="line">        plt.plot(x_data, y_data, <span class="string">'ro'</span>, label=<span class="string">'Original data'</span>)</div><div class="line">        plt.plot(x_data, sess.run(W) * x_data + sess.run(b), label=<span class="string">'Fitted line'</span>)</div><div class="line">        plt.legend()</div><div class="line">        plt.show()</div><div class="line"></div><div class="line"><span class="comment"># Learns best fit is W: [0.1], b: [0.3]</span></div></pre></td></tr></table></figure>
+<p>以下就是每 20 round 印出的 W 還有 b，可以發現越來越接近原本的設定值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">(0, array([-0.69138807], dtype=float32), array([ 0.36239833], dtype=float32))</div><div class="line">(20, array([-0.28371689], dtype=float32), array([ 0.53784662], dtype=float32))</div><div class="line">(40, array([-0.1455344], dtype=float32), array([ 0.45219433], dtype=float32))</div><div class="line">(60, array([-0.0571136], dtype=float32), array([ 0.39738676], dtype=float32))</div><div class="line">(80, array([-0.00053454], dtype=float32), array([ 0.36231628], dtype=float32))</div><div class="line">(100, array([ 0.03566952], dtype=float32), array([ 0.33987522], dtype=float32))</div><div class="line">(120, array([ 0.05883594], dtype=float32), array([ 0.32551554], dtype=float32))</div><div class="line">(140, array([ 0.07365976], dtype=float32), array([ 0.31632701], dtype=float32))</div><div class="line">(160, array([ 0.08314531], dtype=float32), array([ 0.31044737], dtype=float32))</div><div class="line">(180, array([ 0.08921498], dtype=float32), array([ 0.30668509], dtype=float32))</div><div class="line">(200, array([ 0.09309884], dtype=float32), array([ 0.30427769], dtype=float32))</div></pre></td></tr></table></figure>
+<p>而這個是每 20 round 繪出的 gif，可以它會慢慢地 fit 到原始的資料．</p>
+<p><img src="http://i.imgur.com/tNGrsy6.gif" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+          
+            <a href="/tags/deeplearning/" rel="tag"># deeplearning</a>
+          
+            <a href="/tags/ithome鐵人/" rel="tag"># ithome鐵人</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/github-pages-with-custom-domain.html" rel="next" title="在 github pages 上使用 custom domain">
+                <i class="fa fa-chevron-left"></i> 在 github pages 上使用 custom domain
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/tensorflow-note-day-3.html" rel="prev" title="Tensorflow Day3 熟悉 MNIST 手寫數字辨識資料集">
+                Tensorflow Day3 熟悉 MNIST 手寫數字辨識資料集 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/4519639?v=3&s=400.jpg"
+               alt="c1mone" />
+          <p class="site-author-name" itemprop="name">c1mone</p>
+          <p class="site-description motion-element" itemprop="description">Be relentlessly resourceful．</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/c1mone" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Microsoft-Azure-Notebooks"><span class="nav-number">1.</span> <span class="nav-text">Microsoft Azure Notebooks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Check-version"><span class="nav-number">2.</span> <span class="nav-text">Check version</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Install-tensorflow-by-pip"><span class="nav-number">3.</span> <span class="nav-text">Install tensorflow by pip</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tensorflow-with-linear-regression"><span class="nav-number">4.</span> <span class="nav-text">tensorflow with linear regression</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">c1mone</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'c1mone';
+      var disqus_identifier = 'tensorflow-note-day-2.html';
+
+      var disqus_title = "Tensorflow Day2 Jupyter Notebooks & Linear Regression 範例";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

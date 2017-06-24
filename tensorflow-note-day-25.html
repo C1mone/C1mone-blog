@@ -1,0 +1,868 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="NjP189VhFlmwjqBiqOeGB6U7MJXKXL9W0mO_oqF9rKY" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tensorflow,deeplearning,ithome鐵人," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="今日目標
+了解 RNN
+用 MNIST 訓練 RNN
+觀察 RNN 訓練的情形以及結果">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tensorflow Day25 Reccurent Neural Network with MNIST">
+<meta property="og:url" content="https://blog.c1mone.com.tw/tensorflow-note-day-25.html">
+<meta property="og:site_name" content="94 讀書筆記咩">
+<meta property="og:description" content="今日目標
+了解 RNN
+用 MNIST 訓練 RNN
+觀察 RNN 訓練的情形以及結果">
+<meta property="og:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/10_Reccurent_Neural_Network/rnn_cell.jpg?raw=true">
+<meta property="og:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/10_Reccurent_Neural_Network/rnn_expand.jpg?raw=true">
+<meta property="og:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/10_Reccurent_Neural_Network/gradient.jpg?raw=true">
+<meta property="og:updated_time" content="2017-06-24T13:59:00.021Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tensorflow Day25 Reccurent Neural Network with MNIST">
+<meta name="twitter:description" content="今日目標
+了解 RNN
+用 MNIST 訓練 RNN
+觀察 RNN 訓練的情形以及結果">
+<meta name="twitter:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/10_Reccurent_Neural_Network/rnn_cell.jpg?raw=true">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.c1mone.com.tw/tensorflow-note-day-25.html"/>
+
+
+
+
+
+  <title> Tensorflow Day25 Reccurent Neural Network with MNIST | 94 讀書筆記咩 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-101607299-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">94 讀書筆記咩</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">全棧數據工程師之路迢迢</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://blog.c1mone.com.tw/tensorflow-note-day-25.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="c1mone">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/4519639?v=3&s=400.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="94 讀書筆記咩">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="94 讀書筆記咩" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Tensorflow Day25 Reccurent Neural Network with MNIST
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-10T19:20:06+08:00">
+                2017-01-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/tensorflow-note-day-25.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="tensorflow-note-day-25.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="今日目標"><a href="#今日目標" class="headerlink" title="今日目標"></a>今日目標</h2><ul>
+<li>了解 RNN</li>
+<li>用 MNIST 訓練 RNN</li>
+<li>觀察 RNN 訓練的情形以及結果</li>
+</ul>
+<a id="more"></a>
+<p><a href="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/10_MNIST_Reccurent_Neural_Network.ipynb" target="_blank" rel="external">Github Ipython Notebook 好讀完整版</a></p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Reccurent Neural Network 簡稱 RNN．跟之前提到的 CNN (找出特徵)，Autoencoder (降維 重建) 不同．它關注的是 <strong>時間序列</strong> 有關的問題，舉個例子，一篇文章中的文字會是跟前後文有前因後果的，而如果想要製作一個文章產生器，就會需要用到 RNN．</p>
+<p>那 RNN 是如何解決這個問題呢？．觀察下面這個 RNN 基本的結構圖．其中 <code>Xt</code> 以及 <code>Ht</code> 分別是 <code>t</code> 時刻的輸入以及輸出，可以看到 <code>Ht</code> 會跟 <code>Ht-1</code> 以及 <code>Xt</code> 有關，可以簡單地把它想像成多一個輸入的神經網路．</p>
+<p><img src="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/10_Reccurent_Neural_Network/rnn_cell.jpg?raw=true" alt=""></p>
+<p>那如果我們依照時間序列展開 RNN 就會變成以下的樣子：</p>
+<p><img src="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/10_Reccurent_Neural_Network/rnn_expand.jpg?raw=true" alt=""></p>
+<p>每一個時間點的輸出，除了跟當前的輸入有關，也會跟前一刻，前前一刻．．．等時間點的輸出有關係．如此就相當於把各個時間序列點的輸出連結了起來．</p>
+<p>理論上來說這是一個很完美結構，可以處理許多跟時間序列有關的問題，但是實際上會遇到許多的問題，什麼問題呢？想像一下在訓練模型的時候會利用 Backpropagation 來更新權重，而 RNN 的輸出會跟前一刻有關，所以也會傳遞到前一刻的模型更新權重，依此類推．當這些更新同時發生的時候就可能會產生兩個結果，一個是梯度爆炸 (Gradient Exploding)另一個是梯度消失 (Gradient Vanishing)．</p>
+<h3 id="Gradient-Exploding"><a href="#Gradient-Exploding" class="headerlink" title="Gradient Exploding"></a>Gradient Exploding</h3><p>梯度爆炸，也就是說隨著序列增加，後續權重的更新大到無法處理的地步，如下圖．而解決這個問題的方式比較簡單的方法就硬性規定一個更新上限，更新值大於上限就用上限值取代．</p>
+<h3 id="Gradient-Vanishing"><a href="#Gradient-Vanishing" class="headerlink" title="Gradient Vanishing"></a>Gradient Vanishing</h3><p>梯度消失，也就是說隨著序列增加，後續權重的更新小到趨近於 0．使得 RNN 只<strong>記得</strong>最近發生的事情，而沒有辦法記起時間較久前的結果．而解決這個問題的方式就是 <strong>LSTMs</strong>，在<a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank" rel="external">不可思議的 RNN</a>這篇文章中，提到了許多 RNN 非常有效的使用場景，就是因為使用了 LSTMs．</p>
+<p>使用 LSTM 的方法非常簡單就是把 RNN cell 替換成 LSTM cell，關於 LSTM 的內容這裡不會細講，可以看這一篇非常棒的<a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="external">文章</a>，目前請先想像成它可以有效的解決梯度消失的問題．</p>
+<p><img src="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/10_Reccurent_Neural_Network/gradient.jpg?raw=true" alt=""></p>
+<p>圖片來自 Udacity <a href="https://www.youtube.com/watch?time_continue=4&amp;v=VuamhbEWEWA" target="_blank" rel="external">course</a></p>
+<h2 id="MNIST-Test-with-RNN"><a href="#MNIST-Test-with-RNN" class="headerlink" title="MNIST Test with RNN"></a>MNIST Test with RNN</h2><p>接下來我們會用 Tensorflow 中的 RNN 來處理 MNIST 手寫數字辨識的問題．但是一個圖片要怎麼跟時間序列扯上關係呢？簡單的想法就是我們把 MNIST 中 28 x 28 維的資料，想像成 28 個時間點，而每一時間點就給 RNN 28 維的向量．換句話說就是讓 RNN <strong>‘一列一列地看’</strong>手寫數字，當看完整個圖片的以後，把他的輸出 <code>H28</code> 先丟給一個全連結層之後再丟給分類器來決定說這個看到的數字屬於哪一類．</p>
+<h3 id="Configuraions"><a href="#Configuraions" class="headerlink" title="Configuraions"></a>Configuraions</h3><p>設定相關的參數，其中要讓 RNN 看 MNIST 圖片的話就是，一次給它看一列 (n_input = 28維)，由上看到下看 28 個輸入 (n_steps = 28 steps)．</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">n_input = <span class="number">28</span> <span class="comment"># MNIST data input (image shape: 28*28)</span></div><div class="line">n_steps = <span class="number">28</span> <span class="comment"># steps</span></div><div class="line">n_hidden = <span class="number">128</span> <span class="comment"># number of neurons in fully connected layer </span></div><div class="line">n_classes = <span class="number">10</span> <span class="comment"># (0-9 digits)</span></div><div class="line"></div><div class="line">x = tf.placeholder(<span class="string">"float"</span>, [<span class="keyword">None</span>, n_steps, n_input])</div><div class="line">y = tf.placeholder(<span class="string">"float"</span>, [<span class="keyword">None</span>, n_classes])</div><div class="line"></div><div class="line">weights = &#123;</div><div class="line">    <span class="string">"w_fc"</span> : weight_variable([n_hidden, n_classes], <span class="string">"w_fc"</span>)</div><div class="line">&#125;</div><div class="line">biases = &#123;</div><div class="line">    <span class="string">"b_fc"</span> : bias_variable([n_classes], <span class="string">"b_fc"</span>) </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="Adjust-input-x-to-RNN"><a href="#Adjust-input-x-to-RNN" class="headerlink" title="Adjust input x to RNN"></a>Adjust input x to RNN</h3><p>因應 tensorflow 中 RNN 輸入的要求，現在要來變化輸入向量的形式</p>
+<ul>
+<li>先把 x 交換維度成 <code>n_step, None, n_input</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x_transpose = tf.transpose(x, [<span class="number">1</span>, <span class="number">0</span>, <span class="number">2</span>])</div><div class="line">print(<span class="string">"x_transpose shape: %s"</span> % x_transpose.get_shape())</div></pre></td></tr></table></figure>
+<pre><code>x_transpose shape: (28, ?, 28)
+</code></pre><ul>
+<li>再來變成 <code>n_step * None, n_input</code></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x_reshape = tf.reshape(x_transpose, [<span class="number">-1</span>, n_input])</div><div class="line">print(<span class="string">"x_reshape shape: %s"</span> % x_reshape.get_shape())</div></pre></td></tr></table></figure>
+<pre><code>x_reshape shape: (?, 28)
+</code></pre><ul>
+<li>最後會把它切成長度為 n_steps 的 list，其中第 i 個元素就是對應第 i 個 step．每個元素會有 None x n_inputs</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">x_split = tf.split(<span class="number">0</span>, n_steps, x_reshape)</div><div class="line">print(<span class="string">"type of x_split: %s"</span> % type(x_split))</div><div class="line">print(<span class="string">"length of x_split: %d"</span> % len(x_split))</div><div class="line">print(<span class="string">"shape of x_split[0]: %s"</span> % x_split[<span class="number">0</span>].get_shape())</div></pre></td></tr></table></figure>
+<pre><code>type of x_split: &lt;type &apos;list&apos;&gt;
+length of x_split: 28
+shape of x_split[0]: (?, 28)
+</code></pre><p>接下來就是要建立模型，這裡直接使用 RNN cell，其中 n_hidden 是輸出的維度為 128．<br>觀察它輸出的 h 是一個長度 28 的 list，第 i 個元素代表著第 i 個 step 的輸出，每個元素會有 None x n_hidden</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">basic_rnn_cell = rnn_cell.BasicRNNCell(n_hidden)</div><div class="line">h, states = rnn.rnn(basic_rnn_cell, x_split, dtype=tf.float32)</div><div class="line">print(<span class="string">"type of outputs: %s"</span> % type(h))</div><div class="line">print(<span class="string">"length of outputs: %d"</span> % len(h))</div><div class="line">print(<span class="string">"shape of h[0]: %s"</span> % h[<span class="number">0</span>].get_shape())</div><div class="line">print(<span class="string">"type of states: %s"</span> % type(states))</div></pre></td></tr></table></figure>
+<pre><code>type of outputs: &lt;type &apos;list&apos;&gt;
+length of outputs: 28
+shape of h[0]: (?, 128)
+type of states: &lt;class &apos;tensorflow.python.framework.ops.Tensor&apos;&gt;
+</code></pre><h3 id="fully-connnected-layer"><a href="#fully-connnected-layer" class="headerlink" title="fully connnected layer"></a>fully connnected layer</h3><p>接一個 128 -&gt; 10 的全連結層</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">h_fc = tf.matmul(h[<span class="number">-1</span>], weights[<span class="string">'w_fc'</span>]) + biases[<span class="string">'b_fc'</span>]</div><div class="line">y_ = h_fc</div></pre></td></tr></table></figure>
+<h3 id="cost-function"><a href="#cost-function" class="headerlink" title="cost function"></a>cost function</h3><p>用 softmax 作分類</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(h_fc, y))</div><div class="line">optimizer = tf.train.AdamOptimizer(<span class="number">0.01</span>).minimize(cost)</div></pre></td></tr></table></figure>
+<h3 id="accuracy-function"><a href="#accuracy-function" class="headerlink" title="accuracy function"></a>accuracy function</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">correct_prediction = tf.equal(tf.argmax(y_, <span class="number">1</span>), tf.argmax(y, <span class="number">1</span>))</div><div class="line">accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))</div></pre></td></tr></table></figure>
+<h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">batch_size = <span class="number">100</span></div><div class="line">init_op = tf.global_variables_initializer()</div><div class="line">sess = tf.InteractiveSession()</div><div class="line">sess.run(init_op)</div><div class="line"></div><div class="line">variables_names =[v.name <span class="keyword">for</span> v <span class="keyword">in</span> tf.trainable_variables()]</div><div class="line"></div><div class="line"><span class="keyword">for</span> step <span class="keyword">in</span> range(<span class="number">5000</span>):</div><div class="line">    batch_x, batch_y = mnist.train.next_batch(batch_size)</div><div class="line">    batch_x = np.reshape(batch_x, (batch_size, n_steps, n_input))</div><div class="line">    cost_train, accuracy_train, states_train, rnn_out = sess.run([cost, accuracy, states, h[<span class="number">-1</span>]], feed_dict = &#123;x: batch_x, y: batch_y&#125;)</div><div class="line">    values = sess.run(variables_names)</div><div class="line">    rnn_out_mean = np.mean(rnn_out)</div><div class="line">    <span class="keyword">for</span> k,v <span class="keyword">in</span> zip(variables_names, values):</div><div class="line">        <span class="keyword">if</span> k == <span class="string">'RNN/BasicRNNCell/Linear/Matrix:0'</span>:</div><div class="line">            w_rnn_mean = np.mean(v)</div><div class="line"></div><div class="line">    <span class="keyword">if</span> step &lt; <span class="number">1500</span>:</div><div class="line">        <span class="keyword">if</span> step % <span class="number">100</span> == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"step %d, loss %.5f, accuracy %.3f, mean of rnn weight %.5f, mean of rnn out %.5f"</span> % (step, cost_train, accuracy_train, w_rnn_mean, rnn_out_mean))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">if</span> step%<span class="number">1000</span> == <span class="number">0</span>: </div><div class="line">            print(<span class="string">"step %d, loss %.5f, accuracy %.3f, mean of rnn weight %.5f, mean of rnn out %.5f"</span> % (step, cost_train, accuracy_train, w_rnn_mean, rnn_out_mean))</div><div class="line">    optimizer.run(feed_dict=&#123;x: batch_x, y: batch_y&#125;)</div></pre></td></tr></table></figure>
+<pre><code>step 0, loss 2.32416, accuracy 0.090, mean of rnn weight -0.00024, mean of rnn out -0.00735
+step 100, loss 1.64264, accuracy 0.380, mean of rnn weight -0.00052, mean of rnn out -0.09297
+step 200, loss 1.13360, accuracy 0.600, mean of rnn weight 0.00075, mean of rnn out 0.00324
+step 300, loss 1.03078, accuracy 0.670, mean of rnn weight 0.00082, mean of rnn out -0.00883
+step 400, loss 1.29169, accuracy 0.510, mean of rnn weight 0.00108, mean of rnn out 0.00112
+step 500, loss 1.48408, accuracy 0.420, mean of rnn weight 0.00160, mean of rnn out -0.01736
+step 600, loss 1.43396, accuracy 0.570, mean of rnn weight 0.00256, mean of rnn out -0.05415
+step 700, loss 2.06715, accuracy 0.350, mean of rnn weight 0.00297, mean of rnn out -0.04546
+step 800, loss 1.53593, accuracy 0.390, mean of rnn weight 0.00282, mean of rnn out 0.00934
+step 900, loss 1.58583, accuracy 0.370, mean of rnn weight 0.00266, mean of rnn out 0.01959
+step 1000, loss 1.36978, accuracy 0.470, mean of rnn weight 0.00299, mean of rnn out 0.04775
+step 1100, loss 2.12206, accuracy 0.360, mean of rnn weight 0.00161, mean of rnn out -0.00393
+step 1200, loss 1.50930, accuracy 0.470, mean of rnn weight 0.00138, mean of rnn out -0.01369
+step 1300, loss 1.39899, accuracy 0.520, mean of rnn weight 0.00152, mean of rnn out 0.00569
+step 1400, loss 1.44504, accuracy 0.430, mean of rnn weight 0.00158, mean of rnn out -0.00496
+step 2000, loss 2.32795, accuracy 0.170, mean of rnn weight 0.00122, mean of rnn out 0.09313
+step 3000, loss 2.43317, accuracy 0.100, mean of rnn weight 0.00119, mean of rnn out 0.07819
+step 4000, loss 2.42197, accuracy 0.110, mean of rnn weight 0.00111, mean of rnn out 0.07806
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cost_test, accuracy_test = sess.run([cost, accuracy], feed_dict=&#123;x: np.reshape(mnist.test.images, [<span class="number">-1</span>, <span class="number">28</span>, <span class="number">28</span>]), y: mnist.test.labels&#125;)</div><div class="line">print(<span class="string">"final loss %.5f, accuracy %.5f"</span> % (cost_test, accuracy_test) )</div></pre></td></tr></table></figure>
+<pre><code>final loss 2.41618, accuracy 0.10320
+</code></pre><h3 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h3><p>可以看到預測結果非常不好，測試的準確率只有 10%，rnn 的權重平均值滿低的．下面印出最後輸出 128 維的矩陣，可以看到每個值都接近 1 或是 -1，然後搜尋一下以後知道 RNN 裡面輸出之前會經過一個 <code>tanh</code>，而當 <code>tanh</code> 在 1 或 -1 的時候做微分是 0．我想這樣的情形就是<strong>Gradient Vanishing</strong>了．</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">print</span> h[<span class="number">-1</span>].eval(feed_dict=&#123;x: np.reshape(mnist.test.images, [<span class="number">-1</span>, <span class="number">28</span>, <span class="number">28</span>]), y: mnist.test.labels&#125;)[<span class="number">0</span>,:]</div></pre></td></tr></table></figure>
+<pre><code>[ 0.99999559  1.          1.         -1.         -0.99998862  1.          1.
+ -1.          1.          1.         -0.99999774  1.         -0.99999982
+  1.          1.          1.          1.          0.9999997   0.99999994
+  0.9999994  -0.99999225 -1.         -1.          1.         -1.          1.
+ -0.99999952  1.          0.99999928 -1.          0.99674076  1.         -1.
+ -0.99999458 -0.99956894  1.          0.99983639  0.99999982  0.99956954
+ -0.99999893  1.         -0.99999994  1.         -0.99997771  1.          1.
+  1.         -1.00000012 -1.          1.         -0.99970055  0.99998623
+ -0.99999619 -1.         -0.99960238  0.99785262 -1.          0.99962986
+ -1.          1.         -1.         -1.          1.         -1.          1.
+  0.99979544  1.          1.          1.          1.          1.          1.
+  1.          1.          1.          1.          0.99939382 -1.         -1.
+ -0.99976331 -0.99999881 -1.         -0.99999976 -1.         -0.99999964
+  1.         -1.         -0.99999934  0.99999392  0.99910891 -0.99995011
+ -1.         -1.         -1.         -0.99998069  0.99999958 -0.99999964
+  1.         -1.          0.99999958  1.         -1.          1.
+ -0.99998337  0.99999732  1.          1.          1.         -0.99997371
+ -1.         -0.999376    0.99992633  0.9999997   1.         -1.
+  0.99999499  1.         -1.         -1.          1.         -1.
+ -0.99995339  0.99957949 -1.         -0.999933   -0.99999905 -0.99999183
+  1.        ]
+</code></pre><h3 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h3><p>因為上面 RNN 的表現非常不好，讓我們來用一下 tensorflow 中的 LSTMs cell 看看成果如何．而更改 cell 的設定非常簡單，只要把 BasicRNNCell 改成 BasicLSTMCell 就可以了．</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">lstm_cell = rnn_cell.BasicLSTMCell(n_hidden, forget_bias=<span class="number">1.0</span>)</div><div class="line">h, states = rnn.rnn(lstm_cell, x_split, dtype=tf.float32)</div></pre></td></tr></table></figure>
+<pre><code>step 0, loss 2.30415, accuracy 0.110, mean of lstm weight 0.00013, mean of lstm out 0.01331
+step 100, loss 0.31279, accuracy 0.880, mean of lstm weight -0.00529, mean of lstm out -0.00088
+step 200, loss 0.17318, accuracy 0.940, mean of lstm weight -0.00648, mean of lstm out 0.00784
+step 300, loss 0.15617, accuracy 0.950, mean of lstm weight -0.00778, mean of lstm out -0.00153
+step 400, loss 0.08717, accuracy 0.980, mean of lstm weight -0.00872, mean of lstm out 0.00838
+step 500, loss 0.13275, accuracy 0.960, mean of lstm weight -0.00991, mean of lstm out 0.00275
+step 600, loss 0.11011, accuracy 0.970, mean of lstm weight -0.01076, mean of lstm out 0.00076
+step 700, loss 0.12507, accuracy 0.960, mean of lstm weight -0.01037, mean of lstm out 0.00274
+step 800, loss 0.09086, accuracy 0.970, mean of lstm weight -0.01050, mean of lstm out 0.00409
+step 900, loss 0.05551, accuracy 0.990, mean of lstm weight -0.01066, mean of lstm out -0.00078
+step 1000, loss 0.03132, accuracy 0.990, mean of lstm weight -0.01064, mean of lstm out -0.00035
+step 1100, loss 0.06873, accuracy 0.980, mean of lstm weight -0.01098, mean of lstm out -0.00248
+step 1200, loss 0.08930, accuracy 0.980, mean of lstm weight -0.01073, mean of lstm out -0.00918
+step 1300, loss 0.10252, accuracy 0.980, mean of lstm weight -0.01027, mean of lstm out -0.00038
+step 1400, loss 0.00594, accuracy 1.000, mean of lstm weight -0.01041, mean of lstm out 0.00762
+step 2000, loss 0.04595, accuracy 0.990, mean of lstm weight -0.01243, mean of lstm out 0.00263
+step 3000, loss 0.12044, accuracy 0.960, mean of lstm weight -0.01405, mean of lstm out -0.00691
+step 4000, loss 0.03068, accuracy 0.990, mean of lstm weight -0.01488, mean of lstm out -0.00371
+
+
+final loss 0.06450, accuracy 0.98390
+</code></pre><p>Bingo!可以看到準確率提升到非常高，看來 LSTMs 真的解決了 RNN 的缺點．</p>
+<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>了解了 RNN 的架構，以及會遇到的問題 <code>Gradient Exploding</code> 以及 <code>Gradient Vanishing</code>，並且使用 MNIST 手寫數字資料集來練習 RNN．</p>
+<p>在 MNIST 中純粹的 RNN 會遇到梯度消失問題，而改用 LSTMs 之後就成功了提高極多的準確度．</p>
+<h3 id="問題"><a href="#問題" class="headerlink" title="問題"></a>問題</h3><ul>
+<li>找找看 tensorflow 有沒有顯示各階段 gradient 的函數</li>
+<li>看看 RNN 的 backpropagation</li>
+</ul>
+<h2 id="學習資源連結"><a href="#學習資源連結" class="headerlink" title="學習資源連結"></a>學習資源連結</h2><ul>
+<li><a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/" target="_blank" rel="external">Colah Blog : Understanding LSTMs</a></li>
+<li><a href="http://karpathy.github.io/2015/05/21/rnn-effectiveness/" target="_blank" rel="external">The Unreasonable Effectiveness of Recurrent Neural Networks</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+          
+            <a href="/tags/deeplearning/" rel="tag"># deeplearning</a>
+          
+            <a href="/tags/ithome鐵人/" rel="tag"># ithome鐵人</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/tensorflow-note-day-22.html" rel="next" title="Tensorflow Day22 word2vec 介紹">
+                <i class="fa fa-chevron-left"></i> Tensorflow Day22 word2vec 介紹
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/tensorflow-note-day-26.html" rel="prev" title="Tensorflow Day26 LSTM">
+                Tensorflow Day26 LSTM <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/4519639?v=3&s=400.jpg"
+               alt="c1mone" />
+          <p class="site-author-name" itemprop="name">c1mone</p>
+          <p class="site-description motion-element" itemprop="description">Be relentlessly resourceful．</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/c1mone" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日目標"><span class="nav-number">1.</span> <span class="nav-text">今日目標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient-Exploding"><span class="nav-number">2.1.</span> <span class="nav-text">Gradient Exploding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient-Vanishing"><span class="nav-number">2.2.</span> <span class="nav-text">Gradient Vanishing</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MNIST-Test-with-RNN"><span class="nav-number">3.</span> <span class="nav-text">MNIST Test with RNN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuraions"><span class="nav-number">3.1.</span> <span class="nav-text">Configuraions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Adjust-input-x-to-RNN"><span class="nav-number">3.2.</span> <span class="nav-text">Adjust input x to RNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fully-connnected-layer"><span class="nav-number">3.3.</span> <span class="nav-text">fully connnected layer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cost-function"><span class="nav-number">3.4.</span> <span class="nav-text">cost function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#accuracy-function"><span class="nav-number">3.5.</span> <span class="nav-text">accuracy function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Training"><span class="nav-number">3.6.</span> <span class="nav-text">Training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Result"><span class="nav-number">3.7.</span> <span class="nav-text">Result</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LSTM"><span class="nav-number">3.8.</span> <span class="nav-text">LSTM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小結"><span class="nav-number">4.</span> <span class="nav-text">小結</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#問題"><span class="nav-number">4.1.</span> <span class="nav-text">問題</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#學習資源連結"><span class="nav-number">5.</span> <span class="nav-text">學習資源連結</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">c1mone</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'c1mone';
+      var disqus_identifier = 'tensorflow-note-day-25.html';
+
+      var disqus_title = "Tensorflow Day25 Reccurent Neural Network with MNIST";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

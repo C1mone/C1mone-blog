@@ -1,0 +1,887 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="NjP189VhFlmwjqBiqOeGB6U7MJXKXL9W0mO_oqF9rKY" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tensorflow,deeplearning,ithome鐵人," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="今日目標
+了解 Convolutional Autoencoder
+實作 Deconvolutional layer
+實作 Max Unpooling layer
+觀察 code layer 以及 decoder">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tensorflow Day18 Convolutional Autoencoder">
+<meta property="og:url" content="https://blog.c1mone.com.tw/tensorflow-note-day-18.html">
+<meta property="og:site_name" content="94 讀書筆記咩">
+<meta property="og:description" content="今日目標
+了解 Convolutional Autoencoder
+實作 Deconvolutional layer
+實作 Max Unpooling layer
+觀察 code layer 以及 decoder">
+<meta property="og:image" content="http://imgur.com/J3uW7A7.gif">
+<meta property="og:image" content="http://imgur.com/NHOeq0W.jpg">
+<meta property="og:image" content="http://imgur.com/NwgWG91.jpg">
+<meta property="og:image" content="http://imgur.com/3sColZc.jpg">
+<meta property="og:image" content="http://imgur.com/H2QL9FQ.jpg">
+<meta property="og:image" content="http://imgur.com/O3PJMhI.jpg">
+<meta property="og:image" content="http://imgur.com/yIRUKHA.jpg">
+<meta property="og:image" content="http://imgur.com/rgo4bw5.jpg">
+<meta property="og:image" content="http://imgur.com/HxSkDkv.jpg">
+<meta property="og:image" content="http://imgur.com/upvWlxk.jpg">
+<meta property="og:image" content="http://imgur.com/1JLeCnO.jpg">
+<meta property="og:updated_time" content="2017-06-24T13:59:00.021Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tensorflow Day18 Convolutional Autoencoder">
+<meta name="twitter:description" content="今日目標
+了解 Convolutional Autoencoder
+實作 Deconvolutional layer
+實作 Max Unpooling layer
+觀察 code layer 以及 decoder">
+<meta name="twitter:image" content="http://imgur.com/J3uW7A7.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.c1mone.com.tw/tensorflow-note-day-18.html"/>
+
+
+
+
+
+  <title> Tensorflow Day18 Convolutional Autoencoder | 94 讀書筆記咩 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-101607299-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">94 讀書筆記咩</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">全棧數據工程師之路迢迢</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://blog.c1mone.com.tw/tensorflow-note-day-18.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="c1mone">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/4519639?v=3&s=400.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="94 讀書筆記咩">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="94 讀書筆記咩" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Tensorflow Day18 Convolutional Autoencoder
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-02T22:04:29+08:00">
+                2017-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/tensorflow-note-day-18.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="tensorflow-note-day-18.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="今日目標"><a href="#今日目標" class="headerlink" title="今日目標"></a>今日目標</h2><ul>
+<li>了解 Convolutional Autoencoder</li>
+<li>實作 Deconvolutional layer</li>
+<li>實作 Max Unpooling layer</li>
+<li>觀察 code layer 以及 decoder</li>
+</ul>
+<a id="more"></a>
+<p><a href="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/7_Convolutional_Autoencoder.ipynb" target="_blank" rel="external">Github Ipython Notebook 好讀完整版</a></p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>讓我們仔細來看一下之前所實作的 Autoencoder 的網路結構，不管它的 <code>encoder</code> 還是 <code>decoder</code> 都是 <code>fully connected</code> 的結構．那就會有一個問題是如果網路的結構換成 <code>convolutional</code> 的樣子，是不是同樣可以 work 呢?答案是可以的，也就是今天要來看的 <code>convolutional autoencoder</code>．</p>
+<p>在 CNN 中，主要有兩個部分一個是 <code>convolutional layer</code>，另一個是 <code>max pooling layer</code>．在 autoencoder 的 encoder 以及 decoder，fully connected 的結構都是相對應的，例如 encoder 中第一層是 784 維降到 300 維，則相對的在 decoder 中的最後一層就要是 300 維升到 784 維．因此如果在 encoder 的部分有 convolutional layer，則在 decoder 的部分就要有一個 <code>deconvolutional layer</code>；在 encoder 的部分有 max pooling layer，則在 decoder 的部分就要有一個 <code>max unpooling layer</code>．</p>
+<h2 id="Deconvolution"><a href="#Deconvolution" class="headerlink" title="Deconvolution"></a>Deconvolution</h2><p>那在 encoder 中的 deconvolution 要怎麼做呢，以下有一個簡單的 gif 例子，而在 tensorflow 的實現上已經有了一個 <a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/g3doc/api_docs/python/functions_and_classes/shard4/tf.nn.conv2d_transpose.md" target="_blank" rel="external">tf.nn.conv2d_transpose</a> 來讓我們直接使用．</p>
+<p><img src="http://imgur.com/J3uW7A7.gif" alt=""></p>
+<p>這裡會建立一個包含兩層 encoder 以及兩層 decoder 的 convolutional autoencoder 來試試看它重建輸入的能力如何，而這裡的 strides 我們會設定成 2，也就是說對一個 mnist 輸入影像 28 <em> 28 維，經過 convolutional layer 之後會變成 14 </em> 14 維．達到維度降低的效果．以下是各層輸出的維度比較．</p>
+<ul>
+<li>x 維度: 28 * 28，channel: 1</li>
+<li>encoder layer1 維度: 14 * 14，channel: 16</li>
+<li>encoder_layer2 維度: 7 * 7，channel: 32</li>
+<li>decoder_layer1 維度: 14 * 14，channel: 16</li>
+<li>decoder_layer2 維度: 28 * 28，channel: 1</li>
+<li>x recontruct = decoder_layer2</li>
+</ul>
+<p>(<code>tf.nn.conv2d_transpose</code> 的參數跟 tf.nn.conv2d 很像，只是要多一個 <code>output_shape</code>)</p>
+<h3 id="Build-convolution-and-deconvolution-function"><a href="#Build-convolution-and-deconvolution-function" class="headerlink" title="Build convolution and deconvolution function"></a>Build convolution and deconvolution function</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv2d</span><span class="params">(x, W)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.nn.conv2d(x, W, strides=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], padding = <span class="string">'SAME'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">deconv2d</span><span class="params">(x, W, output_shape)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.nn.conv2d_transpose(x, W, output_shape, strides = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], padding = <span class="string">'SAME'</span>)</div></pre></td></tr></table></figure>
+<h3 id="Build-compute-graph"><a href="#Build-compute-graph" class="headerlink" title="Build compute graph"></a>Build compute graph</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">tf.reset_default_graph()</div><div class="line">x = tf.placeholder(tf.float32, shape = [<span class="keyword">None</span>, <span class="number">784</span>])</div><div class="line">x_origin = tf.reshape(x, [<span class="number">-1</span>, <span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>])</div><div class="line"></div><div class="line">W_e_conv1 = weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">16</span>], <span class="string">"w_e_conv1"</span>)</div><div class="line">b_e_conv1 = bias_variable([<span class="number">16</span>], <span class="string">"b_e_conv1"</span>)</div><div class="line">h_e_conv1 = tf.nn.relu(tf.add(conv2d(x_origin, W_e_conv1), b_e_conv1))</div><div class="line"></div><div class="line">W_e_conv2 = weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">16</span>, <span class="number">32</span>], <span class="string">"w_e_conv2"</span>)</div><div class="line">b_e_conv2 = bias_variable([<span class="number">32</span>], <span class="string">"b_e_conv2"</span>)</div><div class="line">h_e_conv2 = tf.nn.relu(tf.add(conv2d(h_e_conv1, W_e_conv2), b_e_conv2))</div><div class="line"></div><div class="line">code_layer = h_e_conv2</div><div class="line">print(<span class="string">"code layer shape : %s"</span> % h_e_conv2.get_shape())</div><div class="line"></div><div class="line">W_d_conv1 = weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">16</span>, <span class="number">32</span>], <span class="string">"w_d_conv1"</span>)</div><div class="line">b_d_conv1 = bias_variable([<span class="number">1</span>], <span class="string">"b_d_conv1"</span>)</div><div class="line">output_shape_d_conv1 = tf.pack([tf.shape(x)[<span class="number">0</span>], <span class="number">14</span>, <span class="number">14</span>, <span class="number">16</span>])</div><div class="line">h_d_conv1 = tf.nn.relu(deconv2d(h_e_conv2, W_d_conv1, output_shape_d_conv1))</div><div class="line"></div><div class="line">W_d_conv2 = weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">16</span>], <span class="string">"w_d_conv2"</span>)</div><div class="line">b_d_conv2 = bias_variable([<span class="number">16</span>], <span class="string">"b_d_conv2"</span>)</div><div class="line">output_shape_d_conv2 = tf.pack([tf.shape(x)[<span class="number">0</span>], <span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>])</div><div class="line">h_d_conv2 = tf.nn.relu(deconv2d(h_d_conv1, W_d_conv2, output_shape_d_conv2))</div><div class="line"></div><div class="line">x_reconstruct = h_d_conv2</div><div class="line">print(<span class="string">"reconstruct layer shape : %s"</span> % x_reconstruct.get_shape())</div></pre></td></tr></table></figure>
+<pre><code>code layer shape : (?, 7, 7, 32)
+reconstruct layer shape : (?, ?, ?, ?)
+</code></pre><h3 id="Build-cost-function"><a href="#Build-cost-function" class="headerlink" title="Build cost function"></a>Build cost function</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cost = tf.reduce_mean(tf.pow(x_reconstruct - x_origin, <span class="number">2</span>))</div><div class="line">optimizer = tf.train.AdamOptimizer(<span class="number">0.01</span>).minimize(cost)</div></pre></td></tr></table></figure>
+<h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">sess = tf.InteractiveSession()</div><div class="line">batch_size = <span class="number">60</span></div><div class="line">init_op = tf.global_variables_initializer()</div><div class="line">sess.run(init_op)</div><div class="line"></div><div class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">5000</span>):</div><div class="line">    batch = mnist.train.next_batch(batch_size)</div><div class="line">    <span class="keyword">if</span> epoch &lt; <span class="number">1500</span>:</div><div class="line">        <span class="keyword">if</span> epoch%<span class="number">100</span> == <span class="number">0</span>:</div><div class="line">            print(<span class="string">"step %d, loss %g"</span>%(epoch, cost.eval(feed_dict=&#123;x:batch[<span class="number">0</span>]&#125;)))</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">if</span> epoch%<span class="number">1000</span> == <span class="number">0</span>: </div><div class="line">            print(<span class="string">"step %d, loss %g"</span>%(epoch, cost.eval(feed_dict=&#123;x:batch[<span class="number">0</span>]&#125;)))</div><div class="line">    optimizer.run(feed_dict=&#123;x: batch[<span class="number">0</span>]&#125;)</div><div class="line">    </div><div class="line">print(<span class="string">"final loss %g"</span> % cost.eval(feed_dict=&#123;x: mnist.test.images&#125;))</div></pre></td></tr></table></figure>
+<pre><code>step 0, loss 0.103204
+step 100, loss 0.0235892
+step 200, loss 0.0167378
+step 300, loss 0.0203425
+step 400, loss 0.0175616
+step 500, loss 0.0171841
+step 600, loss 0.0155463
+step 700, loss 0.0153204
+step 800, loss 0.00345139
+step 900, loss 0.00248451
+step 1000, loss 0.00312759
+step 1100, loss 0.00264636
+step 1200, loss 0.00225495
+step 1300, loss 0.00223552
+step 1400, loss 0.00223038
+step 2000, loss 0.0017688
+step 3000, loss 0.00150994
+step 4000, loss 0.00099031
+final loss 0.000948159
+</code></pre><h3 id="Plot-reconstructed-images"><a href="#Plot-reconstructed-images" class="headerlink" title="Plot reconstructed images"></a>Plot reconstructed images</h3><p><img src="http://imgur.com/NHOeq0W.jpg" alt=""></p>
+<p>這裡我們可以看到它重建的結果很不錯，尤其 mean square err 都低很多，可見 convolution 實在是滿強大的．接下來我們要輸入一個數字 (7) 看它在 code layer 經過 filter 之後的樣子是如何，這裡印出前 16 個結果．</p>
+<h3 id="Plot-code-layer-result"><a href="#Plot-code-layer-result" class="headerlink" title="Plot code layer result"></a>Plot code layer result</h3><p><img src="http://imgur.com/NwgWG91.jpg" alt="png"></p>
+<p>可以看到不是所有的 filter 輸出都有結果，很多都是完全是 0．而有值的輸出，可以隱隱約約看到有數字的形狀．</p>
+<h2 id="Max-Unpooling"><a href="#Max-Unpooling" class="headerlink" title="Max Unpooling"></a>Max Unpooling</h2><p>那在 <code>Max Unpooling</code> 要如何實現呢？最簡單的想法是<strong>怎麼來就怎麼回去</strong>，encoder 在做 max pooling 的時候記下取 max 的索引值，而在 unpooling 的時候依據索引回填數值，其他沒有記錄到的地方則為零．</p>
+<p>使用 <code>tf.nn.max_pool_with_argmax</code> 這個函數，它除了會回傳 pooling 的結果外也會回傳對應原本的索引值 (argmax)，如下．</p>
+<blockquote>
+<p>The indices in argmax are flattened, so that a maximum value at position [b, y, x, c] becomes flattened index ((b <em> height + y) </em> width + x) * channels + c.</p>
+</blockquote>
+<p>理論上在做 unpooling 的時就會用到這裡產生的對應表．不過目前 tensorflow 中沒有 unpooling 這個 op (可以參考 <a href="https://github.com/tensorflow/tensorflow/issues/2169" target="_blank" rel="external">issue</a>)．因此以下展示了兩種方法作 unpooling 也都不會用到 argmax．</p>
+<ol>
+<li><p>使用 Github Issue 討論中的方法，也就是放大兩倍後在固定的地方填值 (ex. 左上角)</p>
+</li>
+<li><p>借用影像的 upsample 函數 <code>tf.image.resize_nearest_neighbor</code> 來做等比例放大，也就不會補 0．</p>
+</li>
+</ol>
+<p>註: </p>
+<ul>
+<li>在 encoder 中都是一個 convolutional layer 接一個 max pooling，因此 convolutional layer 的 strides 就調回為 1，只讓 max pooling 做降維．</li>
+<li>經過測試以後 encoder 使用 relu；decoder 使用 sigmoid，才有比較好的還原效果，都使用 relu 會訓練失敗．</li>
+</ul>
+<h3 id="Build-helper-functions"><a href="#Build-helper-functions" class="headerlink" title="Build helper functions"></a>Build helper functions</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv2d</span><span class="params">(x, W)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.nn.conv2d(x, W, strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding = <span class="string">'SAME'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">deconv2d</span><span class="params">(x, W, output_shape)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.nn.conv2d_transpose(x, W, output_shape, strides = [<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding = <span class="string">'SAME'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">max_unpool_2x2</span><span class="params">(x, output_shape)</span>:</span></div><div class="line">    out = tf.concat_v2([x, tf.zeros_like(x)], <span class="number">3</span>)</div><div class="line">    out = tf.concat_v2([out, tf.zeros_like(out)], <span class="number">2</span>)</div><div class="line">    out_size = output_shape</div><div class="line">    <span class="keyword">return</span> tf.reshape(out, out_size)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">max_pool_2x2</span><span class="params">(x)</span>:</span></div><div class="line">    _, argmax = tf.nn.max_pool_with_argmax(x, ksize=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">1</span>], strides=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">1</span>], padding = <span class="string">'SAME'</span>)</div><div class="line">    pool = tf.nn.max_pool(x, ksize = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], strides = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], padding = <span class="string">'SAME'</span>)</div><div class="line">    <span class="keyword">return</span> pool, argmax</div></pre></td></tr></table></figure>
+<h3 id="Build-compute-graph-1"><a href="#Build-compute-graph-1" class="headerlink" title="Build compute graph"></a>Build compute graph</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">tf.reset_default_graph()</div><div class="line">x = tf.placeholder(tf.float32, shape = [<span class="keyword">None</span>, <span class="number">784</span>])</div><div class="line">x_origin = tf.reshape(x, [<span class="number">-1</span>, <span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>])</div><div class="line"></div><div class="line">W_e_conv1 = weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">16</span>], <span class="string">"w_e_conv1"</span>)</div><div class="line">b_e_conv1 = bias_variable([<span class="number">16</span>], <span class="string">"b_e_conv1"</span>)</div><div class="line">h_e_conv1 = tf.nn.relu(tf.add(conv2d(x_origin, W_e_conv1), b_e_conv1))</div><div class="line">h_e_pool1, argmax_e_pool1 = max_pool_2x2(h_e_conv1)</div><div class="line"></div><div class="line">W_e_conv2 = weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">16</span>, <span class="number">32</span>], <span class="string">"w_e_conv2"</span>)</div><div class="line">b_e_conv2 = bias_variable([<span class="number">32</span>], <span class="string">"b_e_conv2"</span>)</div><div class="line">h_e_conv2 = tf.nn.relu(tf.add(conv2d(h_e_pool1, W_e_conv2), b_e_conv2))</div><div class="line">h_e_pool2, argmax_e_pool2 = max_pool_2x2(h_e_conv2)</div><div class="line"></div><div class="line">code_layer = h_e_pool2</div><div class="line">print(<span class="string">"code layer shape : %s"</span> % code_layer.get_shape())</div><div class="line"></div><div class="line">W_d_conv1 = weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">16</span>, <span class="number">32</span>], <span class="string">"w_d_conv1"</span>)</div><div class="line">b_d_conv1 = bias_variable([<span class="number">1</span>], <span class="string">"b_d_conv1"</span>)</div><div class="line"></div><div class="line"><span class="comment"># convolutional layer 不改變輸出的 shape</span></div><div class="line">output_shape_d_conv1 = tf.pack([tf.shape(x)[<span class="number">0</span>], <span class="number">7</span>, <span class="number">7</span>, <span class="number">16</span>])</div><div class="line">h_d_conv1 = tf.nn.sigmoid(deconv2d(code_layer, W_d_conv1, output_shape_d_conv1))</div><div class="line"></div><div class="line"><span class="comment"># max unpool layer 改變輸出的 shape 為兩倍</span></div><div class="line">output_shape_d_pool1 = tf.pack([tf.shape(x)[<span class="number">0</span>], <span class="number">14</span>, <span class="number">14</span>, <span class="number">16</span>])</div><div class="line">h_d_pool1 = max_unpool_2x2(h_d_conv1, output_shape_d_pool1)</div><div class="line"></div><div class="line">W_d_conv2 = weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">16</span>], <span class="string">"w_d_conv2"</span>)</div><div class="line">b_d_conv2 = bias_variable([<span class="number">16</span>], <span class="string">"b_d_conv2"</span>)</div><div class="line"></div><div class="line"><span class="comment"># convolutional layer 不改變輸出的 shape</span></div><div class="line">output_shape_d_conv2 = tf.pack([tf.shape(x)[<span class="number">0</span>], <span class="number">14</span>, <span class="number">14</span>, <span class="number">1</span>])</div><div class="line">h_d_conv2 = tf.nn.sigmoid(deconv2d(h_d_pool1, W_d_conv2, output_shape_d_conv2))</div><div class="line"></div><div class="line"><span class="comment"># max unpool layer 改變輸出的 shape 為兩倍</span></div><div class="line">output_shape_d_pool2 = tf.pack([tf.shape(x)[<span class="number">0</span>], <span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>])</div><div class="line">h_d_pool2 = max_unpool_2x2(h_d_conv2, output_shape_d_pool2)</div><div class="line"></div><div class="line">x_reconstruct = h_d_pool2</div><div class="line">print(<span class="string">"reconstruct layer shape : %s"</span> % x_reconstruct.get_shape())</div></pre></td></tr></table></figure>
+<pre><code>code layer shape : (?, 7, 7, 32)
+reconstruct layer shape : (?, 28, 28, 1)
+</code></pre><h3 id="Training-1"><a href="#Training-1" class="headerlink" title="Training"></a>Training</h3><pre><code>step 0, loss 0.143627
+step 100, loss 0.0930532
+step 200, loss 0.0884409
+step 300, loss 0.0928427
+step 400, loss 0.0909152
+step 500, loss 0.0826991
+step 600, loss 0.0848275
+step 700, loss 0.0810827
+step 800, loss 0.0864824
+step 900, loss 0.086182
+step 1000, loss 0.0865941
+step 1100, loss 0.0828469
+step 1200, loss 0.091879
+step 1300, loss 0.0909268
+step 1400, loss 0.0917193
+step 2000, loss 0.0869293
+step 3000, loss 0.078727
+step 4000, loss 0.0829563
+final loss 0.0858374
+</code></pre><h3 id="Plot-recontructed-images"><a href="#Plot-recontructed-images" class="headerlink" title="Plot recontructed images"></a>Plot recontructed images</h3><p>可以看到重建的影像有成功，但是有點狀的稀疏情形，因為在經過 unpooling 的時候使採取補 0 的動作．</p>
+<p><img src="http://imgur.com/3sColZc.jpg" alt=""></p>
+<h3 id="Plot-code-layer-result-1"><a href="#Plot-code-layer-result-1" class="headerlink" title="Plot code layer result"></a>Plot code layer result</h3><p>而在 code layer 中會發現也是部分的 filter 有值，另外許多部分都為 0．</p>
+<p><img src="http://imgur.com/H2QL9FQ.jpg" alt=""></p>
+<p>接下來觀察 deconvolution 1 的輸出，以及經過 unpooling 後的 pool 1 輸出，會很明顯地看到 unpooling 輸出有等比例放大，但是會有稀疏的情形，這就是因為補 0 的緣故．</p>
+<p><img src="http://imgur.com/O3PJMhI.jpg" alt=""></p>
+<p><img src="http://imgur.com/yIRUKHA.jpg" alt=""></p>
+<p>接下來使用 <code>tf.image.resize_nearest_neighbor</code> 的方法來做還原</p>
+<h3 id="Build-helper-functions-1"><a href="#Build-helper-functions-1" class="headerlink" title="Build helper functions"></a>Build helper functions</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv2d</span><span class="params">(x, W)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.nn.conv2d(x, W, strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding = <span class="string">'SAME'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">deconv2d</span><span class="params">(x, W, output_shape)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.nn.conv2d_transpose(x, W, output_shape, strides = [<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding = <span class="string">'SAME'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">max_pool_2x2</span><span class="params">(x)</span>:</span></div><div class="line">    _, argmax = tf.nn.max_pool_with_argmax(x, ksize=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">1</span>], strides=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">1</span>], padding = <span class="string">'SAME'</span>)</div><div class="line">    pool = tf.nn.max_pool(x, ksize = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], strides = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], padding = <span class="string">'SAME'</span>)</div><div class="line">    <span class="keyword">return</span> pool, argmax</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">max_unpool_2x2</span><span class="params">(x, shape)</span>:</span></div><div class="line">    inference = tf.image.resize_nearest_neighbor(x, tf.pack([shape[<span class="number">1</span>]*<span class="number">2</span>, shape[<span class="number">2</span>]*<span class="number">2</span>]))</div><div class="line">    <span class="keyword">return</span> inference</div></pre></td></tr></table></figure>
+<h3 id="Training-2"><a href="#Training-2" class="headerlink" title="Training"></a>Training</h3><pre><code>step 0, loss 0.117823
+step 100, loss 0.022254
+step 200, loss 0.0202093
+step 300, loss 0.0189887
+step 400, loss 0.0180246
+step 500, loss 0.0189967
+step 600, loss 0.0178063
+step 700, loss 0.0176837
+step 800, loss 0.0180569
+step 900, loss 0.0173936
+step 1000, loss 0.0176715
+step 1100, loss 0.0180319
+step 1200, loss 0.0170217
+step 1300, loss 0.0181365
+step 1400, loss 0.0164201
+step 2000, loss 0.0178452
+step 3000, loss 0.0171906
+step 4000, loss 0.0164161
+final loss 0.0172661
+</code></pre><h3 id="Plot-reconstructed-images-1"><a href="#Plot-reconstructed-images-1" class="headerlink" title="Plot reconstructed images"></a>Plot reconstructed images</h3><p>Bingo!可以看到效果算不錯的重建影像，而且不會有前一種方法的稀疏情形．</p>
+<p><img src="http://imgur.com/rgo4bw5.jpg" alt=""></p>
+<h3 id="Plot-code-layer-result-2"><a href="#Plot-code-layer-result-2" class="headerlink" title="Plot code layer result"></a>Plot code layer result</h3><p><img src="http://imgur.com/HxSkDkv.jpg" alt=""></p>
+<p>可以看到 convolutional layer 的輸出在 unpooling 中被很平滑的放大兩倍．</p>
+<p><img src="http://imgur.com/upvWlxk.jpg" alt=""></p>
+<p><img src="http://imgur.com/1JLeCnO.jpg" alt=""></p>
+<h2 id="今日心得"><a href="#今日心得" class="headerlink" title="今日心得"></a>今日心得</h2><p>這裡實現了 convolutional autoencoder，包含使用了 <code>deconvolution</code> 以及 <code>max unpooling</code> 兩個方法來組成 decoder．其中 deconvolution 使用了官方的 op，而 max unpooling 則使用了兩種非官方的方法，其中用 tf.image.resize_nearest_neighbor 的方法所做的 unpooling 效果較好．</p>
+<p>遇到最困難的點會是一開始在 decoder 都使用 relu 作 activation function，但是完全得不出好的重建影像，而後來改用 sigmoid 後才成功．我想是因為 relu 會讓小於 0 的部分都等於 0，失去了影響後面網路的能力．或許在更大且複雜的網路，或是較長的訓練時間，才有可能成功．</p>
+<h3 id="問題"><a href="#問題" class="headerlink" title="問題"></a>問題</h3><ul>
+<li>conv2d_transpose 是如何利用 padding 調整輸出大小的呢?</li>
+<li>convolutional autoencoder 和 autoencoder mean square error 似乎低很多，why?</li>
+</ul>
+<h2 id="學習資源連結"><a href="#學習資源連結" class="headerlink" title="學習資源連結"></a>學習資源連結</h2><ul>
+<li><a href="https://github.com/pkmital/tensorflow_tutorials/blob/master/python/09_convolutional_autoencoder.py" target="_blank" rel="external">github convolutional autoencoder example</a></li>
+<li><a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/g3doc/api_docs/python/functions_and_classes/shard4/tf.nn.conv2d_transpose.md" target="_blank" rel="external">tensorflow conv2d_transpose doc</a></li>
+<li><a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/g3doc/api_docs/python/functions_and_classes/shard9/tf.nn.max_pool_with_argmax.md" target="_blank" rel="external">tensorflow max pool with argmax doc</a></li>
+<li><a href="https://github.com/fabianbormann/Tensorflow-DeconvNet-Segmentation/blob/master/tests/UnpoolLayerTest.ipynb" target="_blank" rel="external">max unpool implement</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+          
+            <a href="/tags/deeplearning/" rel="tag"># deeplearning</a>
+          
+            <a href="/tags/ithome鐵人/" rel="tag"># ithome鐵人</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/tensorflow-note-day-17.html" rel="next" title="Tensorflow Day17 Sparse Autoencoder">
+                <i class="fa fa-chevron-left"></i> Tensorflow Day17 Sparse Autoencoder
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/tensorflow-note-day-19.html" rel="prev" title="Tensorflow Day19 Denoising Autoencoder">
+                Tensorflow Day19 Denoising Autoencoder <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/4519639?v=3&s=400.jpg"
+               alt="c1mone" />
+          <p class="site-author-name" itemprop="name">c1mone</p>
+          <p class="site-description motion-element" itemprop="description">Be relentlessly resourceful．</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/c1mone" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日目標"><span class="nav-number">1.</span> <span class="nav-text">今日目標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deconvolution"><span class="nav-number">3.</span> <span class="nav-text">Deconvolution</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-convolution-and-deconvolution-function"><span class="nav-number">3.1.</span> <span class="nav-text">Build convolution and deconvolution function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-compute-graph"><span class="nav-number">3.2.</span> <span class="nav-text">Build compute graph</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-cost-function"><span class="nav-number">3.3.</span> <span class="nav-text">Build cost function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Training"><span class="nav-number">3.4.</span> <span class="nav-text">Training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Plot-reconstructed-images"><span class="nav-number">3.5.</span> <span class="nav-text">Plot reconstructed images</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Plot-code-layer-result"><span class="nav-number">3.6.</span> <span class="nav-text">Plot code layer result</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Max-Unpooling"><span class="nav-number">4.</span> <span class="nav-text">Max Unpooling</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-helper-functions"><span class="nav-number">4.1.</span> <span class="nav-text">Build helper functions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-compute-graph-1"><span class="nav-number">4.2.</span> <span class="nav-text">Build compute graph</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Training-1"><span class="nav-number">4.3.</span> <span class="nav-text">Training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Plot-recontructed-images"><span class="nav-number">4.4.</span> <span class="nav-text">Plot recontructed images</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Plot-code-layer-result-1"><span class="nav-number">4.5.</span> <span class="nav-text">Plot code layer result</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-helper-functions-1"><span class="nav-number">4.6.</span> <span class="nav-text">Build helper functions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Training-2"><span class="nav-number">4.7.</span> <span class="nav-text">Training</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Plot-reconstructed-images-1"><span class="nav-number">4.8.</span> <span class="nav-text">Plot reconstructed images</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Plot-code-layer-result-2"><span class="nav-number">4.9.</span> <span class="nav-text">Plot code layer result</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#今日心得"><span class="nav-number">5.</span> <span class="nav-text">今日心得</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#問題"><span class="nav-number">5.1.</span> <span class="nav-text">問題</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#學習資源連結"><span class="nav-number">6.</span> <span class="nav-text">學習資源連結</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">c1mone</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'c1mone';
+      var disqus_identifier = 'tensorflow-note-day-18.html';
+
+      var disqus_title = "Tensorflow Day18 Convolutional Autoencoder";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

@@ -1,0 +1,750 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="NjP189VhFlmwjqBiqOeGB6U7MJXKXL9W0mO_oqF9rKY" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="scala,coursera,functional programming," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Assignment：Functional Setsweek2 的作業花了我許多的時間在想解法呀！要從以前的觀念體系到函數的體系不是想像中簡單的事情，不過最大的錯誤在於沒有把題目好好看清楚，所以在一些地方都卡住了，以下篇幅就紀錄我的思考歷程．">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FP In Scala week2 assignment">
+<meta property="og:url" content="https://blog.c1mone.com.tw/FP_scala_week2_assignment.html">
+<meta property="og:site_name" content="94 讀書筆記咩">
+<meta property="og:description" content="Assignment：Functional Setsweek2 的作業花了我許多的時間在想解法呀！要從以前的觀念體系到函數的體系不是想像中簡單的事情，不過最大的錯誤在於沒有把題目好好看清楚，所以在一些地方都卡住了，以下篇幅就紀錄我的思考歷程．">
+<meta property="og:updated_time" content="2017-06-24T13:59:00.017Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FP In Scala week2 assignment">
+<meta name="twitter:description" content="Assignment：Functional Setsweek2 的作業花了我許多的時間在想解法呀！要從以前的觀念體系到函數的體系不是想像中簡單的事情，不過最大的錯誤在於沒有把題目好好看清楚，所以在一些地方都卡住了，以下篇幅就紀錄我的思考歷程．">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.c1mone.com.tw/FP_scala_week2_assignment.html"/>
+
+
+
+
+
+  <title> FP In Scala week2 assignment | 94 讀書筆記咩 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-101607299-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">94 讀書筆記咩</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">全棧數據工程師之路迢迢</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://blog.c1mone.com.tw/FP_scala_week2_assignment.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="c1mone">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/4519639?v=3&s=400.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="94 讀書筆記咩">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="94 讀書筆記咩" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                FP In Scala week2 assignment
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-21T10:37:31+08:00">
+                2016-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/FP_scala_week2_assignment.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="FP_scala_week2_assignment.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Assignment：Functional-Sets"><a href="#Assignment：Functional-Sets" class="headerlink" title="Assignment：Functional Sets"></a>Assignment：Functional Sets</h1><p>week2 的作業花了我許多的時間在想解法呀！要從以前的觀念體系到函數的體系不是想像中簡單的事情，不過最大的錯誤在於沒有把題目好好看清楚，所以在一些地方都卡住了，以下篇幅就紀錄我的思考歷程．<br><a id="more"></a></p>
+<h2 id="forall"><a href="#forall" class="headerlink" title="forall"></a>forall</h2><p>在實現 <code>forall</code> 這個函數的時候，題目就給了充足的 hint：（嗚嗚我不該沒仔細看題目直接看程式的．．．對不起 odersky）<strong>在 bound 之內把每一個 integer 都 iterate 一遍，測試看看這個 integer 有沒有在 set 裡面</strong> ，所以應該可以寫出如下的程式碼：</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">forall</span></span>(s: <span class="type">Set</span>, p: <span class="type">Int</span> =&gt; <span class="type">Boolean</span>): <span class="type">Boolean</span> = &#123;</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">iter</span></span>(a: <span class="type">Int</span>): <span class="type">Boolean</span> = &#123;</div><div class="line">    <span class="keyword">if</span> (s(a)) p(a) &amp;&amp; iter(a - <span class="number">1</span>) <span class="comment">//如果存在 s 內，並且符合 p 的話就繼續搜尋下一個 integer；如果不符合 p 的話就會回傳 false</span></div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (a &lt; -bound) <span class="literal">true</span></div><div class="line">    <span class="keyword">else</span> iter(a - <span class="number">1</span>)</div><div class="line">  &#125;</div><div class="line">  iter(bound)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>不過後來偷看了一下網路上其他人的解答，覺得我第一個判斷式有點醜改寫成以下會比較好看</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (s(a) &amp;&amp; !p(a)) <span class="literal">false</span></div></pre></td></tr></table></figure>
+<h2 id="exists"><a href="#exists" class="headerlink" title="exists"></a>exists</h2><p>一樣題目也有給了 hint 來利用 forall 來實現 exists，不過 forall 和 exists 兩個定義是不一樣的．</p>
+<ul>
+<li>forall：這個 set 中所有的 element 都符合條件 p</li>
+</ul>
+<ul>
+<li>exists：這個 set 中至少有一個 element 符合條件 p</li>
+</ul>
+<p>因此我們要把 forall 做小加工，關鍵在<strong>如果 forall 都符合 !p ，那他的反面就是至少有一個 符合 p !</strong></p>
+<p>不會是像我寫的第一版 <code>forall(s, p(x))</code>．．．正確請看以下</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Returns whether there exists a bounded integer within `s`</div><div class="line"> * that satisfies `p`.</div><div class="line"> */</div><div class="line">  <span class="function"><span class="keyword">def</span> <span class="title">exists</span></span>(s: <span class="type">Set</span>, p: <span class="type">Int</span> =&gt; <span class="type">Boolean</span>): <span class="type">Boolean</span> = &#123;</div><div class="line">    !forall(s, &#123;x: <span class="type">Int</span> =&gt; !p(x)&#125;)</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h2 id="map"><a href="#map" class="headerlink" title="map"></a>map</h2><p>map 應該是這次裡面最難的，偶腦子卡住了實在想不出來，就偷 google 一下大家是怎麼寫的，才發現原來要用 exists 來解．感謝友站連結教學（跪</p>
+<p><a href="http://fu-sheng-wang.blogspot.tw/2016/10/scala-8.html" target="_blank" rel="external">東學西毒部落格</a></p>
+<p>假設 <code>s = {1,2,3}, f = {x =&gt; 2*x}</code>, 則被 mapped 過的 set 應該要是 <code>{2,4,6}</code></p>
+<p><code>map(s, f)(2) == map(s, f)(4) == map(s,f)(6) == true</code></p>
+<p>但我一開始的還是想錯了寫成了第一個版本如下</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">map</span></span>(s: <span class="type">Set</span>, f: <span class="type">Int</span> =&gt; <span class="type">Int</span>): <span class="type">Set</span> = &#123;</div><div class="line">  x: <span class="type">Int</span> =&gt; exists(s, &#123;y: <span class="type">Int</span> =&gt; y == f(x)&#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>正確的話應該是讓外面進來的 x 測試符不符合裡面的 f(y)</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">map</span></span>(s: <span class="type">Set</span>, f: <span class="type">Int</span> =&gt; <span class="type">Int</span>): <span class="type">Set</span> = &#123;</div><div class="line">  x: <span class="type">Int</span> =&gt; exists(s, &#123;y: <span class="type">Int</span> =&gt; x == f(y)&#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>祝大家學習愉快</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/scala/" rel="tag"># scala</a>
+          
+            <a href="/tags/coursera/" rel="tag"># coursera</a>
+          
+            <a href="/tags/functional-programming/" rel="tag"># functional programming</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/word2vec介紹.html" rel="next" title="玩轉文字探勘以 word2vec 以 ptt 資料為例">
+                <i class="fa fa-chevron-left"></i> 玩轉文字探勘以 word2vec 以 ptt 資料為例
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/FP_scala_week3_1.html" rel="prev" title="FP In Scala week3 note(1):class & binary tree">
+                FP In Scala week3 note(1):class & binary tree <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/4519639?v=3&s=400.jpg"
+               alt="c1mone" />
+          <p class="site-author-name" itemprop="name">c1mone</p>
+          <p class="site-description motion-element" itemprop="description">Be relentlessly resourceful．</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/c1mone" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Assignment：Functional-Sets"><span class="nav-number">1.</span> <span class="nav-text">Assignment：Functional Sets</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#forall"><span class="nav-number">1.1.</span> <span class="nav-text">forall</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#exists"><span class="nav-number">1.2.</span> <span class="nav-text">exists</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#map"><span class="nav-number">1.3.</span> <span class="nav-text">map</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">c1mone</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'c1mone';
+      var disqus_identifier = 'FP_scala_week2_assignment.html';
+
+      var disqus_title = "FP In Scala week2 assignment";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

@@ -1,0 +1,789 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="NjP189VhFlmwjqBiqOeGB6U7MJXKXL9W0mO_oqF9rKY" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tensorflow,deeplearning,ithome鐵人," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="今日目標
+了解如何儲存訓練好的模型參數
+儲存模型範例
+載入模型範例">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tensorflow Day12 儲存以及載入模型參數">
+<meta property="og:url" content="https://blog.c1mone.com.tw/tensorflow-note-day-12.html">
+<meta property="og:site_name" content="94 讀書筆記咩">
+<meta property="og:description" content="今日目標
+了解如何儲存訓練好的模型參數
+儲存模型範例
+載入模型範例">
+<meta property="og:updated_time" content="2017-06-24T13:59:00.017Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tensorflow Day12 儲存以及載入模型參數">
+<meta name="twitter:description" content="今日目標
+了解如何儲存訓練好的模型參數
+儲存模型範例
+載入模型範例">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.c1mone.com.tw/tensorflow-note-day-12.html"/>
+
+
+
+
+
+  <title> Tensorflow Day12 儲存以及載入模型參數 | 94 讀書筆記咩 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-101607299-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">94 讀書筆記咩</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">全棧數據工程師之路迢迢</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://blog.c1mone.com.tw/tensorflow-note-day-12.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="c1mone">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/4519639?v=3&s=400.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="94 讀書筆記咩">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="94 讀書筆記咩" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Tensorflow Day12 儲存以及載入模型參數
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-27T22:02:07+08:00">
+                2016-12-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/tensorflow-note-day-12.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="tensorflow-note-day-12.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="今日目標"><a href="#今日目標" class="headerlink" title="今日目標"></a>今日目標</h2><ul>
+<li>了解如何儲存訓練好的模型參數</li>
+<li>儲存模型範例</li>
+<li>載入模型範例</li>
+</ul>
+<a id="more"></a>
+<p><a href="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/3_Save_Restore_Model.ipynb" target="_blank" rel="external">Github Ipython Notebook 完整連結</a></p>
+<p>還記得當我們在定義模型的時候，會使用 <a href="https://www.tensorflow.org/api_docs/python/state_ops" target="_blank" rel="external">Variables</a> 來儲存模型參數，而在訓練的時候則會一次又一次的更新它．這些參數在這些過程中都是儲存在記憶體裡．不過我們仍然需要在訓練過後把訓練完成的參數儲存在硬碟裡面，以便之後來使用或者對模型對進一步分析．</p>
+<p>在 Tensorflow 裡面最簡單的方法是使用 <code>tf.train.Saver</code> 這個物件 (object) 來儲存模型，在初始化這個物件的時候，裡面包含了計算圖 (graph) 中對於變量 (variables) 的許多種操作方法 (ops) ．而物件中又提供了許多方法 (method) 來執行這些操作方法 (ops)．它可以幫助我們簡單的把變量 (variables) 儲存成檔案，以提供之後使用．以下先附上兩個 class 的 api 連結，可以在裡面看到更為完整的說明．</p>
+<ul>
+<li><a href="https://www.tensorflow.org/api_docs/python/state_ops/variables#Variable" target="_blank" rel="external">tf.Variable</a> class</li>
+<li><a href="https://www.tensorflow.org/api_docs/python/state_ops/saving_and_restoring_variables#Saver" target="_blank" rel="external">tf.train.Saver</a> class</li>
+</ul>
+<h2 id="儲存模型"><a href="#儲存模型" class="headerlink" title="儲存模型"></a>儲存模型</h2><h3 id="Checkpoint-檔案"><a href="#Checkpoint-檔案" class="headerlink" title="Checkpoint 檔案"></a>Checkpoint 檔案</h3><p>變量 (Variables) 是被以 binary 的方式儲存成一個 checkpoint 檔 (.ckpt)，簡單的說它儲存了變量 (variable) 的名字和對應的張量 (tensor) 數值．</p>
+<p>當你建立了一個 Saver 物件以後，是可以選擇每個 variable 要用什麼名字儲存在 checkpoint 檔裡的．預設上則是會使用 <a href="https://www.tensorflow.org/api_docs/python/state_ops/variables#Variable.name" target="_blank" rel="external">Variable.name</a> 的值．</p>
+<p>為了要來了解到底儲存了什麼 variable 在 checkpoint 檔裡，你可以使用 <a href="https://github.com/tensorflow/tensorflow/blob/master/tensorflow/python/tools/inspect_checkpoint.py" target="_blank" rel="external">inpect_checkpoint</a> 中的 <code>print_tensors_in_checkpoint_file</code> 函數來檢測．</p>
+<h3 id="儲存變量-Variables"><a href="#儲存變量-Variables" class="headerlink" title="儲存變量 (Variables)"></a>儲存變量 (Variables)</h3><p>以下是一個利用 <code>tf.train.Saver()</code> 來建立物件來儲存變量 (variables) 的範例．</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</div><div class="line"><span class="keyword">import</span> os</div><div class="line">os.makedirs(<span class="string">"/tmp/model"</span>)</div><div class="line">os.makedirs(<span class="string">"/tmp/model-subset"</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 建立一些變數以及對應的名字．</span></div><div class="line"></div><div class="line">v1 = tf.Variable([<span class="number">0.1</span>, <span class="number">0.1</span>], name=<span class="string">"v1"</span>)</div><div class="line">v2 = tf.Variable([<span class="number">0.2</span>, <span class="number">0.2</span>], name=<span class="string">"v2"</span>)</div><div class="line"></div><div class="line"><span class="comment"># 建立所有 variables 的初始化 ops</span></div><div class="line">init_op = tf.global_variables_initializer()</div><div class="line"></div><div class="line"><span class="comment"># 建立 saver 物件</span></div><div class="line">saver = tf.train.Saver()</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    </div><div class="line">    <span class="comment"># 執行初始化</span></div><div class="line">    sess.run(init_op)</div><div class="line">    </div><div class="line">    <span class="comment">#重新指定 v2 的值</span></div><div class="line">    ops = tf.assign(v2, [<span class="number">0.3</span>, <span class="number">0.3</span>])</div><div class="line">    sess.run(ops)</div><div class="line">    </div><div class="line">    <span class="keyword">print</span> sess.run(tf.global_variables())</div><div class="line">    <span class="comment"># ... 中間略去許多模型定義以及訓練，例如可以是 MNIST 的定義以及訓練</span></div><div class="line">    </div><div class="line">    save_path = saver.save(sess, <span class="string">"/tmp/model/model.ckpt"</span>) <span class="comment"># 儲存模型到 /tmp/model.ckpt</span></div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[array([ 0.1,  0.1], dtype=float32), array([ 0.30000001,  0.30000001], dtype=float32)]</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 使用 inspect_checkpoint.py tool 來印出 ckpt 檔</span></div><div class="line">!python /usr/local/lib/python2<span class="number">.7</span>/dist-packages/tensorflow/python/tools/inspect_checkpoint.py --file_name=/tmp/model/model.ckpt</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">v1 (DT_FLOAT) [2]</div><div class="line">v2 (DT_FLOAT) [2]</div></pre></td></tr></table></figure>
+<h3 id="儲存特定變量-Variables"><a href="#儲存特定變量-Variables" class="headerlink" title="儲存特定變量 (Variables)"></a>儲存特定變量 (Variables)</h3><p>如果我們沒有指定特定的參數給 <code>tf.train.Saver()</code>，它會自動把計算圖裡的所有變量都儲存進去．</p>
+<p>但有時候在儲存的時候我們會想要指定不一樣的名字，例如建立了一個變量叫做 “weights” 但是在儲存的時候我們會希望他的名字叫做 “params”</p>
+<p>也有些時候我們只想儲存部分的變量．例如訓練了一個 5 層的神經網路，但是我們只需要前 4 層的變量．</p>
+<p>我們可以很簡單地在 <code>Python dictionary</code> 裡指定變量以及對應的名字來給 <code>tf.train.Saver()</code> 當參數，就可以完成上面的目標了．範例如下</p>
+<p>註: </p>
+<ul>
+<li>你可以建立許多個 <code>saver</code> 物件，並且在這些物件之間，儲存或者載入部分的模型變量．同樣的變量會在不同的 <code>saver</code> 物件中存在，而且只有在執行 <code>restore()</code> 的時候才會被改變．</li>
+<li>如果你只在一個 session 裡載入了一個模型中一部分的變量，你必須要先用 <code>tf.global_variables_initializer()</code> 的方法先把其他的沒有載入的變量先初始化起來．</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">tf.reset_default_graph()</div><div class="line">v1 = tf.Variable([<span class="number">0.1</span>, <span class="number">0.1</span>], name=<span class="string">"v1"</span>)</div><div class="line">v2 = tf.Variable([<span class="number">0.4</span>, <span class="number">0.4</span>], name=<span class="string">"v2"</span>)</div><div class="line">init_ops = tf.global_variables_initializer()</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    sess.run(init_ops)</div><div class="line">    saver = tf.train.Saver(&#123;<span class="string">"my_v2"</span>: v2&#125;)</div><div class="line">    save_path = saver.save(sess, <span class="string">"/tmp/model-subset/model.ckpt"</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 使用 inspect_checkpoint.py tool 來印出 ckpt 檔</span></div><div class="line">!python /usr/local/lib/python2<span class="number">.7</span>/dist-packages/tensorflow/python/tools/inspect_checkpoint.py --file_name=/tmp/model-subset/model.ckpt</div></pre></td></tr></table></figure>
+<pre><code>my_v2 (DT_FLOAT) [2]
+</code></pre><h2 id="載入模型"><a href="#載入模型" class="headerlink" title="載入模型"></a>載入模型</h2><h3 id="1-預先定義好模型"><a href="#1-預先定義好模型" class="headerlink" title="1. 預先定義好模型"></a>1. 預先定義好模型</h3><p>第一種方法來載入模型的時候，你必須先定義好原本的計算圖 (模型)，例如這裡我們先定義了 <code>v1</code> 和 <code>v2</code> 然後用 <code>sess.restore</code> 的方法載入之前被更改過的值．<br>同樣的 Saver 物件也是可以拿來載入變量 (variables)．值得注意的是當要從檔案中載入變量 (variables) 的時候是不用先把它初始化的．</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">tf.reset_default_graph()</div><div class="line"></div><div class="line">v1 = tf.Variable(tf.constant(<span class="number">0.1</span>, shape = [<span class="number">2</span>]), name=<span class="string">"v1"</span>)</div><div class="line">v2 = tf.Variable(tf.constant(<span class="number">0.2</span>, shape = [<span class="number">2</span>]), name=<span class="string">"v2"</span>)</div><div class="line"></div><div class="line">saver = tf.train.Saver()</div><div class="line"></div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    saver.restore(sess, <span class="string">"/tmp/model/model.ckpt"</span>)</div><div class="line">    print(<span class="string">"Model restored."</span>)</div><div class="line">    print(<span class="string">"all values %s"</span> % sess.run(tf.global_variables()))</div><div class="line">    print(<span class="string">"v2 value : %s"</span> % sess.run(v2))</div></pre></td></tr></table></figure>
+<pre><code>Model restored.
+all values [array([ 0.1,  0.1], dtype=float32), array([ 0.30000001,  0.30000001], dtype=float32)]
+v2 value : [ 0.30000001  0.30000001]
+</code></pre><h3 id="2-載入-meta"><a href="#2-載入-meta" class="headerlink" title="2. 載入 meta"></a>2. 載入 meta</h3><p>另一種方法則是在 <code>0.11.0RC1</code> 之後可以用載入 <code>meta</code> 的方式，就不用預先定義計算圖了．但是需要從重新拿取每一個參數的名字，以下就是範例．</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">tf.reset_default_graph()</div><div class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</div><div class="line">    saver = tf.train.import_meta_graph(<span class="string">'/tmp/model-subset/model.ckpt.meta'</span>)</div><div class="line">    saver.restore(sess, tf.train.latest_checkpoint(<span class="string">'/tmp/model-subset/'</span>))</div><div class="line">    sess.run(tf.global_variables_initializer())</div><div class="line">    all_vars = tf.trainable_variables()</div><div class="line">    <span class="keyword">for</span> v <span class="keyword">in</span> all_vars:</div><div class="line">        print(<span class="string">"%s with value %s"</span> % (v.name, sess.run(v)))</div></pre></td></tr></table></figure>
+<pre><code>v1:0 with value [ 0.1  0.1]
+v2:0 with value [ 0.40000001  0.40000001]
+</code></pre><h2 id="今日心得"><a href="#今日心得" class="headerlink" title="今日心得"></a>今日心得</h2><p>今天學習到了如何儲存以及載入訓練好的模型參數．其中比較困難的點是因為 ipython 的每一個步驟可能會不小心執行很多次，而這之中如果有重複建立計算圖的情形就會出現錯誤 (上一個步驟定義了變量，下一個步驟定義了同樣名稱的變量)．這需要在每個單獨步驟前面加入 <code>tf.reset_default_graph()</code> 來確保每次都是重新使用新的 <code>graph</code>．</p>
+<p>不過因為如此讓我對 tensorflow 建立計算圖的流程更為清楚</p>
+<ol>
+<li>建立計算圖</li>
+<li>建立 session</li>
+<li>執行 ops (訓練或是讀取 tensor 數值)</li>
+</ol>
+<h2 id="學習資源連結"><a href="#學習資源連結" class="headerlink" title="學習資源連結"></a>學習資源連結</h2><ul>
+<li><a href="https://www.tensorflow.org/how_tos/variables/" target="_blank" rel="external">[tensorflow 官方文件] variables</a></li>
+<li><a href="http://stackoverflow.com/questions/33759623/tensorflow-how-to-restore-a-previously-saved-model-python" target="_blank" rel="external">[stackoverflow] How to restore model</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+          
+            <a href="/tags/deeplearning/" rel="tag"># deeplearning</a>
+          
+            <a href="/tags/ithome鐵人/" rel="tag"># ithome鐵人</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/tensorflow-note-day-10.html" rel="next" title="Tensorflow Day10 卷積神經網路 (CNN) 分析 (3) 第二卷積層, 全連結層, dropout">
+                <i class="fa fa-chevron-left"></i> Tensorflow Day10 卷積神經網路 (CNN) 分析 (3) 第二卷積層, 全連結層, dropout
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/tensorflow-note-day-11.html" rel="prev" title="Tensorflow Day11 MNIST CNN 各層視覺化分析">
+                Tensorflow Day11 MNIST CNN 各層視覺化分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/4519639?v=3&s=400.jpg"
+               alt="c1mone" />
+          <p class="site-author-name" itemprop="name">c1mone</p>
+          <p class="site-description motion-element" itemprop="description">Be relentlessly resourceful．</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/c1mone" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日目標"><span class="nav-number">1.</span> <span class="nav-text">今日目標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#儲存模型"><span class="nav-number">2.</span> <span class="nav-text">儲存模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Checkpoint-檔案"><span class="nav-number">2.1.</span> <span class="nav-text">Checkpoint 檔案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#儲存變量-Variables"><span class="nav-number">2.2.</span> <span class="nav-text">儲存變量 (Variables)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#儲存特定變量-Variables"><span class="nav-number">2.3.</span> <span class="nav-text">儲存特定變量 (Variables)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#載入模型"><span class="nav-number">3.</span> <span class="nav-text">載入模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-預先定義好模型"><span class="nav-number">3.1.</span> <span class="nav-text">1. 預先定義好模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-載入-meta"><span class="nav-number">3.2.</span> <span class="nav-text">2. 載入 meta</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#今日心得"><span class="nav-number">4.</span> <span class="nav-text">今日心得</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#學習資源連結"><span class="nav-number">5.</span> <span class="nav-text">學習資源連結</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">c1mone</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'c1mone';
+      var disqus_identifier = 'tensorflow-note-day-12.html';
+
+      var disqus_title = "Tensorflow Day12 儲存以及載入模型參數";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

@@ -1,0 +1,773 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="NjP189VhFlmwjqBiqOeGB6U7MJXKXL9W0mO_oqF9rKY" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tensorflow,deeplearning,ithome鐵人," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="今日目標
+了解過濾器 (Filter) 運作方式
+了解 ReLU 激活函數 (Activation) 運作方式
+了解最大池化器 MaxPooling 運作方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tensorflow Day9 卷積神經網路 (CNN) 分析 (2) - Filter, ReLU, MaxPolling">
+<meta property="og:url" content="https://blog.c1mone.com.tw/tensorflow-note-day-9.html">
+<meta property="og:site_name" content="94 讀書筆記咩">
+<meta property="og:description" content="今日目標
+了解過濾器 (Filter) 運作方式
+了解 ReLU 激活函數 (Activation) 運作方式
+了解最大池化器 MaxPooling 運作方式">
+<meta property="og:image" content="http://imgur.com/8XHiO5I.gif">
+<meta property="og:image" content="http://imgur.com/qch3liz.jpg">
+<meta property="og:image" content="http://cs231n.github.io/assets/nn1/relu.jpeg">
+<meta property="og:image" content="http://imgur.com/89OTxR2.jpg">
+<meta property="og:image" content="http://imgur.com/MxuEsSo.gif">
+<meta property="og:image" content="http://imgur.com/403IOhD.jpg">
+<meta property="og:updated_time" content="2017-06-24T13:59:00.021Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tensorflow Day9 卷積神經網路 (CNN) 分析 (2) - Filter, ReLU, MaxPolling">
+<meta name="twitter:description" content="今日目標
+了解過濾器 (Filter) 運作方式
+了解 ReLU 激活函數 (Activation) 運作方式
+了解最大池化器 MaxPooling 運作方式">
+<meta name="twitter:image" content="http://imgur.com/8XHiO5I.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.c1mone.com.tw/tensorflow-note-day-9.html"/>
+
+
+
+
+
+  <title> Tensorflow Day9 卷積神經網路 (CNN) 分析 (2) - Filter, ReLU, MaxPolling | 94 讀書筆記咩 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-101607299-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">94 讀書筆記咩</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">全棧數據工程師之路迢迢</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://blog.c1mone.com.tw/tensorflow-note-day-9.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="c1mone">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/4519639?v=3&s=400.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="94 讀書筆記咩">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="94 讀書筆記咩" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Tensorflow Day9 卷積神經網路 (CNN) 分析 (2) - Filter, ReLU, MaxPolling
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-24T20:49:34+08:00">
+                2016-12-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/tensorflow-note-day-9.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="tensorflow-note-day-9.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="今日目標"><a href="#今日目標" class="headerlink" title="今日目標"></a>今日目標</h2><ul>
+<li>了解過濾器 (Filter) 運作方式</li>
+<li>了解 ReLU 激活函數 (Activation) 運作方式</li>
+<li>了解最大池化器 MaxPooling 運作方式</li>
+</ul>
+<a id="more"></a>
+<h2 id="過濾器-Filter"><a href="#過濾器-Filter" class="headerlink" title="過濾器 (Filter)"></a>過濾器 (Filter)</h2><p>從昨天的結果中我們看到過濾器中似乎會對有同樣特徵的輸入產生反應，例如過濾器如果有紅色橫線的存在，那對應輸出圖片的紅色橫線就會特別明顯．那這段過程中過濾器和輸入圖片是如何的互動關係呢？</p>
+<p>答案是 : <strong>Convolution！</strong></p>
+<p>避免掉了數學上的複雜我們直接用下面的 gif 來解釋，假設有一個 4 x 4 x 1 的輸入圖片，過濾器是 3 x 3 x 1，然後給定參數 stride = 1，可以看到過濾器開始從左上角往右以及往下和紅色的區域做點積 (每個對應元素相乘，最後全部相加)，得到的結果就是 2．再來我們會注意到紅色區域往右移了一格，而一格就是 stride 的值所對應的，同樣的當紅色區域到達最右邊後他會從左邊往下一格開始依序做點積，而最後的成果就是輸出矩陣了．</p>
+<p>我們可以依此類推，如果 stride = 2 那就是紅色區域一次會移動兩格的意思．</p>
+<p><img src="http://imgur.com/8XHiO5I.gif" alt=""></p>
+<p>但這時侯回頭看一下 conv2d 的定義會看到還有一個參數值是 padding．</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv2d</span><span class="params">(x, W)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.nn.conv2d(x, W, strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding = <span class="string">'SAME'</span>)</div></pre></td></tr></table></figure>
+<p>padding 為 SAME 的意思是就是要讓輸入和輸出的大小是一樣的，因為從上面的例子看到經過 convolution 以後 size 變小了，那如果要一樣的話，我們做的事情就是把輸入一開始補上 0 如下圖，那再去跑一次 convolution 就會得到一樣大小的圖片了．</p>
+<p><img src="http://imgur.com/qch3liz.jpg" alt=""></p>
+<h2 id="ReLU-激活函數"><a href="#ReLU-激活函數" class="headerlink" title="ReLU 激活函數"></a>ReLU 激活函數</h2><p>在這裡我們會把上面的輸出都通過一個函數如下，其實就是 <code>x &lt; 0</code> 的時候全部為 0，而 <code>x &gt; 0</code> 則為 x．要做激活函數的原因是因為要模擬出非線性函數，簡單想像就是加入激活函數可以讓神經網路學到更多奇奇怪怪的東西．</p>
+<p>而之前小弟在學校訓練原始 nn 的時候好像是用 <code>sigmoid</code> or <code>tanh</code>，大概查了一下是因為 ReLU 更簡單 ，在深度的網路裡面計算更快．(結果小於零就認定你辨識不出來，就把你關掉！譬如說一個過濾器是來辨識眼睛，若是發現圖片完全沒有眼睛，則輸出以後就會小於零，那經過 ReLU 以後，後面的神經網路就不會知道有這個特徵了，因為這個特徵被關掉了．)．</p>
+<p><img src="http://cs231n.github.io/assets/nn1/relu.jpeg" alt=""></p>
+<p>如下圖，就是經過 ReLU 後的結果，只剩下紅色大於零的輸出．</p>
+<p><img src="http://imgur.com/89OTxR2.jpg" alt=""></p>
+<h2 id="最大池化器-MaxPooling"><a href="#最大池化器-MaxPooling" class="headerlink" title="最大池化器 MaxPooling"></a>最大池化器 MaxPooling</h2><p>好的，convolutional layer 的最後一個地方就是 max pooling 了，話說我一直不太喜歡池化器這個翻譯…因為好饒口啊．</p>
+<p>記得前面有提到說 CNN 有個目標就是想要把參數降低，而我們學習是為了學習特徵，因此不一定要從高清（？中學習，可以把它變得沒那麼清楚一點．這裡做的事情就是 <code>downsampling</code>！那要怎麼樣既 down sampling 又保留特徵呢？以下就是一個示範：</p>
+<p>首先我們用一個 2x2 的矩陣來掃過輸入 (stride = 2)，然後在每個紅色區域裡都找那個區域裡最大值當作輸出，就這樣就完成了 down sampling 了！</p>
+<p><img src="http://imgur.com/MxuEsSo.gif" alt=""></p>
+<p>以下就是經過 max-pooling 的結果了！</p>
+<p><img src="http://imgur.com/403IOhD.jpg" alt=""></p>
+<h2 id="心得"><a href="#心得" class="headerlink" title="心得"></a>心得</h2><p>呼，今天把關於 convolutional layer 我學到的東西盡量簡化描述出來，知道了 convolution ReLU 以及 maxpooling 在做些什麼事情，以及輸出是什麼．但是記得這只是第一層的結果而已，明天要來看看第二層的結果會是如何呢？</p>
+<p>在這段自我學習的過程中，覺得最困難的事就是從數學還有敘述中理解 cnn 在做些什麼事，而最後終於大概理解以後心裡對於創造出這一切的人真的是萬分佩服．．．LeCun 和其他人實在太神啦．</p>
+<p>如果今天以及一系列我的筆記，大家有什麼問題或是寫錯的地方，再麻煩各位大大來跟我提醒一下，感謝！祝大家聖誕快樂！</p>
+<h3 id="學習資源連結"><a href="#學習資源連結" class="headerlink" title="學習資源連結"></a>學習資源連結</h3><p><a href="http://cs231n.github.io/convolutional-networks/" target="_blank" rel="external">超猛教學 CS231n</a></p>
+<p><a href="http://colah.github.io/posts/2014-07-Understanding-Convolutions/" target="_blank" rel="external">Convolution 究極理解</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+          
+            <a href="/tags/deeplearning/" rel="tag"># deeplearning</a>
+          
+            <a href="/tags/ithome鐵人/" rel="tag"># ithome鐵人</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/tensorflow-note-day-8.html" rel="next" title="Tensorflow Day8 卷積神經網路 (CNN) 分析 (1) 流程">
+                <i class="fa fa-chevron-left"></i> Tensorflow Day8 卷積神經網路 (CNN) 分析 (1) 流程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/tensorflow-note-day-10.html" rel="prev" title="Tensorflow Day10 卷積神經網路 (CNN) 分析 (3) 第二卷積層, 全連結層, dropout">
+                Tensorflow Day10 卷積神經網路 (CNN) 分析 (3) 第二卷積層, 全連結層, dropout <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/4519639?v=3&s=400.jpg"
+               alt="c1mone" />
+          <p class="site-author-name" itemprop="name">c1mone</p>
+          <p class="site-description motion-element" itemprop="description">Be relentlessly resourceful．</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/c1mone" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日目標"><span class="nav-number">1.</span> <span class="nav-text">今日目標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#過濾器-Filter"><span class="nav-number">2.</span> <span class="nav-text">過濾器 (Filter)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ReLU-激活函數"><span class="nav-number">3.</span> <span class="nav-text">ReLU 激活函數</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最大池化器-MaxPooling"><span class="nav-number">4.</span> <span class="nav-text">最大池化器 MaxPooling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#心得"><span class="nav-number">5.</span> <span class="nav-text">心得</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#學習資源連結"><span class="nav-number">5.1.</span> <span class="nav-text">學習資源連結</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">c1mone</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'c1mone';
+      var disqus_identifier = 'tensorflow-note-day-9.html';
+
+      var disqus_title = "Tensorflow Day9 卷積神經網路 (CNN) 分析 (2) - Filter, ReLU, MaxPolling";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

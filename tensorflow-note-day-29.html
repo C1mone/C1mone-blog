@@ -1,0 +1,816 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="NjP189VhFlmwjqBiqOeGB6U7MJXKXL9W0mO_oqF9rKY" />
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="tensorflow,deeplearning,ithome鐵人," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="今日目標
+了解 DCGAN
+使用 MNIST 資料集嘗試訓練 DCGAN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tensorflow Day29 DCGAN with MNIST">
+<meta property="og:url" content="https://blog.c1mone.com.tw/tensorflow-note-day-29.html">
+<meta property="og:site_name" content="94 讀書筆記咩">
+<meta property="og:description" content="今日目標
+了解 DCGAN
+使用 MNIST 資料集嘗試訓練 DCGAN">
+<meta property="og:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/14_DCGAN/dcgan.jpg?raw=true">
+<meta property="og:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/14_DCGAN/dcgan.gif?raw=true">
+<meta property="og:updated_time" content="2017-06-24T13:59:00.021Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tensorflow Day29 DCGAN with MNIST">
+<meta name="twitter:description" content="今日目標
+了解 DCGAN
+使用 MNIST 資料集嘗試訓練 DCGAN">
+<meta name="twitter:image" content="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/14_DCGAN/dcgan.jpg?raw=true">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.c1mone.com.tw/tensorflow-note-day-29.html"/>
+
+
+
+
+
+  <title> Tensorflow Day29 DCGAN with MNIST | 94 讀書筆記咩 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-101607299-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">94 讀書筆記咩</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">全棧數據工程師之路迢迢</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://blog.c1mone.com.tw/tensorflow-note-day-29.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="c1mone">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/4519639?v=3&s=400.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="94 讀書筆記咩">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="94 讀書筆記咩" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Tensorflow Day29 DCGAN with MNIST
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-13T23:08:19+08:00">
+                2017-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <a href="/tensorflow-note-day-29.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="tensorflow-note-day-29.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="今日目標"><a href="#今日目標" class="headerlink" title="今日目標"></a>今日目標</h2><ul>
+<li>了解 DCGAN</li>
+<li>使用 MNIST 資料集嘗試訓練 DCGAN</li>
+</ul>
+<a id="more"></a>
+<p><a href="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/14_DCGAN_with_MNIST.ipynb" target="_blank" rel="external">Ipython Notebook 好讀完整版</a></p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Deep Convolutional Generative Adversarial Network 簡稱 DCGAN 中文稱作深度卷積對抗式生成網路，原始的論文<a href="https://arxiv.org/abs/1511.06434" target="_blank" rel="external">連結</a>．這是基於 GAN 上所做的工作．</p>
+<p>跟 GAN 不同的是，DCGAN 把 convolution 引進網路結構中．在 discriminator 中輸入的圖像會經過層層 convolution 之後變成一個預測是否為真實圖片的機率；在 generator 中會把輸入的 z 向量經過層層 deconvolution 輸出生成式的圖片．可以看到它的結構如下圖．</p>
+<p><img src="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/14_DCGAN/dcgan.jpg?raw=true" alt="jpg"></p>
+<p>(圖片出處<a href="https://arxiv.org/abs/1607.07539" target="_blank" rel="external">論文</a>) </p>
+<p>同時論文中有提到許多如何訓練一個穩定 GAN 的細節，但這裡只先單純的把 convolution 以及 deconvolution 實現進 GAN，以下會使用 MNIST 手寫數字資料集來嘗試訓練一個 DCGAN．</p>
+<h2 id="Implementation"><a href="#Implementation" class="headerlink" title="Implementation"></a>Implementation</h2><h3 id="Parameters"><a href="#Parameters" class="headerlink" title="Parameters"></a>Parameters</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">batch_size = <span class="number">256</span></div><div class="line">g_dim = <span class="number">100</span></div></pre></td></tr></table></figure>
+<h3 id="Build-helper-functions"><a href="#Build-helper-functions" class="headerlink" title="Build helper functions"></a>Build helper functions</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv2d</span><span class="params">(x, W)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.nn.conv2d(x, W, strides=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], padding = <span class="string">'SAME'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">deconv2d</span><span class="params">(x, W, output_shape)</span>:</span></div><div class="line">    <span class="keyword">return</span> tf.nn.conv2d_transpose(x, W, output_shape, strides = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], padding = <span class="string">'SAME'</span>)</div></pre></td></tr></table></figure>
+<h3 id="Build-convolutional-discriminator-and-generator"><a href="#Build-convolutional-discriminator-and-generator" class="headerlink" title="Build convolutional discriminator and generator"></a>Build convolutional discriminator and generator</h3><p>這裡我們會建立生成式網路 (generator) 以及判斷式網路 (discriminator)</p>
+<h4 id="Discriminator"><a href="#Discriminator" class="headerlink" title="Discriminator"></a>Discriminator</h4><p>在 discriminator 中，首先會輸入一個 None x 784 維的 MNIST 資料，首先會先把它變成一個二維的圖片向量也就是 None x 28(width) x 28(height) x 1(channels)．接下來就是連續的使用 filter 作 convolution，其中 strides = 2，使得每做完一次 convolution 的輸出長和寬就會變成一半．以下是輸入圖片的維度變化順序：</p>
+<ol>
+<li>原始輸入維度 None x 28 x 28 x 1</li>
+<li>經過第一個 5 x 5 convolution filter 後輸出維度為 None x 14 x 14 x 32</li>
+<li>經過第二個 5 x 5 convolution filter 後輸出維度為 None x 7 x 7 x 64</li>
+<li>經過一個 fully connected 層變成維度 None x 1 的判斷機率輸出</li>
+</ol>
+<h4 id="Generator"><a href="#Generator" class="headerlink" title="Generator"></a>Generator</h4><p>在 generator 中，首先會輸入一個 None x 128 維從 noise 中取樣出的向量，首先經過一個全連結會把它擴展成 None x 4*4*64，再把它 reshape 成一個 None x 4(width) x 4(height) x 64(channels) 的輸入(可以想像成把輸入向量變成一個 4x4 的圖像)．接下來就是經過一連串的 deconvolution，最後輸出圖片．以下是輸入的維度變化順序：</p>
+<ol>
+<li>原始輸入取樣向量維度 None x 100</li>
+<li>經過第一個 fully connected 層以及 reshape 變成維度 None x 4 x 4 x 64</li>
+<li>經過第一個 5 x 5 deconvolution filter 後輸出維度為 None x 7 x 7 x 32</li>
+<li>經過第二個 5 x 5 deconvolution filter 後輸出維度為 None x 14 x 14 x 16</li>
+<li>經過第三個 5 x 5 deconvolution filter 後輸出維度為 None x 28 x 28 x 1</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">x_d = tf.placeholder(tf.float32, shape = [<span class="keyword">None</span>, <span class="number">784</span>])</div><div class="line">x_g = tf.placeholder(tf.float32, shape = [<span class="keyword">None</span>, g_dim])</div><div class="line">weights = &#123;</div><div class="line">    <span class="string">"w_d1"</span> : weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">32</span>], <span class="string">"w_d1"</span>),</div><div class="line">    <span class="string">"w_d2"</span> : weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">32</span>, <span class="number">64</span>], <span class="string">"w_d2"</span>),</div><div class="line">    <span class="string">"w_d3"</span> : weight_variable([<span class="number">7</span> * <span class="number">7</span> * <span class="number">64</span>, <span class="number">1</span>], <span class="string">"w_d3"</span>),</div><div class="line">    </div><div class="line">    <span class="string">"w_g1"</span> : weight_variable([g_dim, <span class="number">4</span> * <span class="number">4</span> * <span class="number">64</span>], <span class="string">"w_g1"</span>),</div><div class="line">    <span class="string">"w_g2"</span> : weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">32</span>, <span class="number">64</span>], <span class="string">"w_g2"</span>),</div><div class="line">    <span class="string">"w_g3"</span> : weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">16</span>, <span class="number">32</span>], <span class="string">"w_g3"</span>),</div><div class="line">    <span class="string">"w_g4"</span> : weight_variable([<span class="number">5</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">16</span>], <span class="string">"w_g4"</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line">biases = &#123;</div><div class="line">    <span class="string">"b_d1"</span> : bias_variable([<span class="number">32</span>], <span class="string">"b_d1"</span>),</div><div class="line">    <span class="string">"b_d2"</span> : bias_variable([<span class="number">64</span>], <span class="string">"b_d2"</span>),</div><div class="line">    <span class="string">"b_d3"</span> : bias_variable([<span class="number">1</span>], <span class="string">"b_d3"</span>),</div><div class="line">    <span class="string">"b_g1"</span> : bias_variable([<span class="number">4</span> * <span class="number">4</span> * <span class="number">64</span>], <span class="string">"b_g1"</span>),</div><div class="line">    <span class="string">"b_g2"</span> : bias_variable([<span class="number">32</span>], <span class="string">"b_g2"</span>),</div><div class="line">    <span class="string">"b_g3"</span> : bias_variable([<span class="number">16</span>], <span class="string">"b_g3"</span>),</div><div class="line">    <span class="string">"b_g4"</span> : bias_variable([<span class="number">1</span>], <span class="string">"b_g4"</span>),</div><div class="line">&#125;</div><div class="line"></div><div class="line">var_d = [weights[<span class="string">"w_d1"</span>], weights[<span class="string">"w_d2"</span>], weights[<span class="string">"w_d3"</span>], biases[<span class="string">"b_d1"</span>], biases[<span class="string">"b_d2"</span>], biases[<span class="string">"b_d3"</span>]]</div><div class="line">var_g = [weights[<span class="string">"w_g1"</span>], weights[<span class="string">"w_g2"</span>],weights[<span class="string">"w_g3"</span>], weights[<span class="string">"w_g4"</span>], biases[<span class="string">"b_g1"</span>], biases[<span class="string">"b_g2"</span>],biases[<span class="string">"b_g3"</span>], biases[<span class="string">"b_g4"</span>]]</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">generator</span><span class="params">(z)</span>:</span></div><div class="line">    <span class="comment">#100 x 1</span></div><div class="line">    h_g1 = tf.nn.relu(tf.add(tf.matmul(z, weights[<span class="string">"w_g1"</span>]), biases[<span class="string">"b_g1"</span>]))</div><div class="line">    <span class="comment">#-1 x 4*4*128</span></div><div class="line">    h_g1_reshape = tf.reshape(h_g1, [<span class="number">-1</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">64</span>])</div><div class="line">    </div><div class="line">    output_shape_g2 = tf.stack([tf.shape(z)[<span class="number">0</span>], <span class="number">7</span>, <span class="number">7</span>, <span class="number">32</span>])</div><div class="line">    h_g2 = tf.nn.relu(tf.add(deconv2d(h_g1_reshape, weights[<span class="string">"w_g2"</span>], output_shape_g2), biases[<span class="string">"b_g2"</span>]))</div><div class="line">    </div><div class="line">    output_shape_g3 = tf.stack([tf.shape(z)[<span class="number">0</span>], <span class="number">14</span>, <span class="number">14</span>, <span class="number">16</span>])</div><div class="line">    h_g3 = tf.nn.relu(tf.add(deconv2d(h_g2, weights[<span class="string">"w_g3"</span>], output_shape_g3), biases[<span class="string">"b_g3"</span>]))</div><div class="line">    </div><div class="line">    output_shape_g4 = tf.stack([tf.shape(z)[<span class="number">0</span>], <span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>])</div><div class="line">    h_g4 = tf.nn.tanh(tf.add(deconv2d(h_g3, weights[<span class="string">"w_g4"</span>], output_shape_g4), biases[<span class="string">"b_g4"</span>]))</div><div class="line">    </div><div class="line">    <span class="keyword">return</span> h_g4</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">discriminator</span><span class="params">(x)</span>:</span></div><div class="line">    x_reshape = tf.reshape(x, [<span class="number">-1</span>, <span class="number">28</span>, <span class="number">28</span>, <span class="number">1</span>])</div><div class="line">    <span class="comment"># 28 x 28 x 1</span></div><div class="line">    h_d1 = tf.nn.relu(tf.add(conv2d(x_reshape, weights[<span class="string">"w_d1"</span>]), biases[<span class="string">"b_d1"</span>]))</div><div class="line">    <span class="comment"># 14 x 14 x 32</span></div><div class="line">    h_d2 = tf.nn.relu(tf.add(conv2d(h_d1, weights[<span class="string">"w_d2"</span>]), biases[<span class="string">"b_d2"</span>]))</div><div class="line">    <span class="comment"># 7 x 7 x 64</span></div><div class="line">    h_d2_reshape = tf.reshape(h_d2, [<span class="number">-1</span>, <span class="number">7</span> * <span class="number">7</span> * <span class="number">64</span>])</div><div class="line">    h_d3 = tf.nn.sigmoid(tf.add(tf.matmul(h_d2_reshape, weights[<span class="string">"w_d3"</span>]), biases[<span class="string">"b_d3"</span>]))</div><div class="line">    <span class="keyword">return</span> h_d3</div></pre></td></tr></table></figure>
+<h3 id="Build-cost-function"><a href="#Build-cost-function" class="headerlink" title="Build cost function"></a>Build cost function</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">sample_Z</span><span class="params">(m, n)</span>:</span></div><div class="line">    <span class="keyword">return</span> np.random.uniform(<span class="number">-1.</span>, <span class="number">1.</span>, size=[m, n])</div><div class="line"></div><div class="line">g_sample = generator(x_g)</div><div class="line">d_real= discriminator(x_d)</div><div class="line">d_fake = discriminator(g_sample)</div><div class="line"></div><div class="line">d_loss = -tf.reduce_mean(tf.log(d_real) + tf.log(<span class="number">1.</span> - d_fake))</div><div class="line">g_loss = -tf.reduce_mean(tf.log(d_fake))</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 只更新 discriminator</span></div><div class="line">d_optimizer = tf.train.AdamOptimizer(<span class="number">0.0001</span>).minimize(d_loss, var_list= var_d)</div><div class="line"><span class="comment"># 只更新 generator parameters</span></div><div class="line">g_optimizer = tf.train.AdamOptimizer(<span class="number">0.0001</span>).minimize(g_loss, var_list= var_g)</div></pre></td></tr></table></figure>
+<h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><pre><code>step 0, discriminator loss 2.41063  generator loss 0.29276
+step 100, discriminator loss 0.85784  generator loss 1.39115
+step 200, discriminator loss 0.44820  generator loss 2.21131
+step 300, discriminator loss 0.84276  generator loss 1.69659
+step 400, discriminator loss 0.72615  generator loss 1.95878
+step 500, discriminator loss 0.71053  generator loss 1.77434
+step 600, discriminator loss 0.71514  generator loss 1.84341
+step 700, discriminator loss 0.51880  generator loss 1.86431
+step 800, discriminator loss 0.26334  generator loss 2.29687
+step 900, discriminator loss 0.22319  generator loss 2.62868
+step 1000, discriminator loss 0.18192  generator loss 2.64233
+step 2000, discriminator loss 0.24685  generator loss 2.95130
+step 3000, discriminator loss 0.05564  generator loss 4.25037
+step 4000, discriminator loss 0.04217  generator loss 4.71265
+step 5000, discriminator loss 0.22856  generator loss 3.57268
+step 6000, discriminator loss 0.12961  generator loss 4.49799
+step 7000, discriminator loss 0.04830  generator loss 5.12374
+step 8000, discriminator loss 0.01379  generator loss 6.38079
+step 9000, discriminator loss 0.00626  generator loss 5.92065
+step 10000, discriminator loss 0.05310  generator loss 6.42939
+step 11000, discriminator loss 0.01101  generator loss 7.24146
+step 12000, discriminator loss 0.00744  generator loss 6.53067
+step 13000, discriminator loss 0.01497  generator loss 8.72534
+step 14000, discriminator loss 0.05123  generator loss 5.25377
+step 15000, discriminator loss 0.00633  generator loss 6.64243
+step 16000, discriminator loss 0.00066  generator loss 7.72938
+step 17000, discriminator loss 0.00209  generator loss 7.22791
+step 18000, discriminator loss 0.00046  generator loss 7.68677
+step 19000, discriminator loss 0.00222  generator loss 6.73453
+step 20000, discriminator loss 0.00914  generator loss 5.61193
+</code></pre><p>以下是連續 gif 圖，這一連串的訓練時間真的是還滿久的…很有趣的有兩點</p>
+<ol>
+<li>只出現了數字 1，沒有其他的數字，怪哉．</li>
+<li>到了 step 18000 突然生成式網路就壞掉了，然後又好了．</li>
+</ol>
+<p><img src="https://github.com/c1mone/Tensorflow-101/blob/master/notebooks/images/14_DCGAN/dcgan.gif?raw=true" alt="gif"></p>
+<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>我們實作了 DCGAN ，以及利用 MNIST 資料來測試它的效果．</p>
+<p>效果跟預期有些差異，其中只出現了某一數字，然後在某一時刻生成器發生崩壞．</p>
+<h3 id="問題"><a href="#問題" class="headerlink" title="問題"></a>問題</h3><ul>
+<li>尋找生成式網路崩壞還有只出現某一數字的原因．</li>
+<li>調整生成式網路的層數</li>
+<li>調整生成式網路各層的 channels</li>
+</ul>
+<h2 id="學習資源連結"><a href="#學習資源連結" class="headerlink" title="學習資源連結"></a>學習資源連結</h2><ul>
+<li><a href="https://arxiv.org/abs/1511.06434" target="_blank" rel="external">DCGAN paper</a></li>
+<li><a href="https://github.com/carpedm20/DCGAN-tensorflow" target="_blank" rel="external">DCGAN tensorflow example</a></li>
+<li><a href="http://bamos.github.io/2016/08/09/deep-completion/" target="_blank" rel="external">DCGAN explanation blog post</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
+          
+            <a href="/tags/deeplearning/" rel="tag"># deeplearning</a>
+          
+            <a href="/tags/ithome鐵人/" rel="tag"># ithome鐵人</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/tensorflow-note-day-28.html" rel="next" title="Tensorflow Day28 Generative Adversarial Network with MNIST">
+                <i class="fa fa-chevron-left"></i> Tensorflow Day28 Generative Adversarial Network with MNIST
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/tensorflow-note-day-30.html" rel="prev" title="Tensorflow Day30 學習心得以及入門建議">
+                Tensorflow Day30 學習心得以及入門建議 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars2.githubusercontent.com/u/4519639?v=3&s=400.jpg"
+               alt="c1mone" />
+          <p class="site-author-name" itemprop="name">c1mone</p>
+          <p class="site-description motion-element" itemprop="description">Be relentlessly resourceful．</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-name">posts</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://github.com/c1mone" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#今日目標"><span class="nav-number">1.</span> <span class="nav-text">今日目標</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">2.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Implementation"><span class="nav-number">3.</span> <span class="nav-text">Implementation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Parameters"><span class="nav-number">3.1.</span> <span class="nav-text">Parameters</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-helper-functions"><span class="nav-number">3.2.</span> <span class="nav-text">Build helper functions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-convolutional-discriminator-and-generator"><span class="nav-number">3.3.</span> <span class="nav-text">Build convolutional discriminator and generator</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Discriminator"><span class="nav-number">3.3.1.</span> <span class="nav-text">Discriminator</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Generator"><span class="nav-number">3.3.2.</span> <span class="nav-text">Generator</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-cost-function"><span class="nav-number">3.4.</span> <span class="nav-text">Build cost function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Training"><span class="nav-number">3.5.</span> <span class="nav-text">Training</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小結"><span class="nav-number">4.</span> <span class="nav-text">小結</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#問題"><span class="nav-number">4.1.</span> <span class="nav-text">問題</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#學習資源連結"><span class="nav-number">5.</span> <span class="nav-text">學習資源連結</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">c1mone</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+    <script type="text/javascript">
+      var disqus_shortname = 'c1mone';
+      var disqus_identifier = 'tensorflow-note-day-29.html';
+
+      var disqus_title = "Tensorflow Day29 DCGAN with MNIST";
+
+
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
+
+      run_disqus_script('count.js');
+
+      
+        var disqus_config = function () {
+            this.page.url = disqus_url;
+            this.page.identifier = disqus_identifier;
+            this.page.title = disqus_title;
+        };
+        run_disqus_script('embed.js');
+      
+
+    </script>
+  
+
+
+
+
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
