@@ -4,8 +4,8 @@
 
 # Site
 title: 94 讀書筆記咩
-subtitle: Be relentlessly resourceful．
-description: 全棧數據工程師之路迢迢
+subtitle: 全棧數據工程師之路迢迢
+description: Be relentlessly resourceful．
 author: c1mone
 language: en
 timezone: Asia/Taipei
@@ -21,7 +21,8 @@ google_analytics: UA-101607299-1
 url: https://blog.c1mone.com.tw
 enforce_ssl: blog.c1mone.com.tw
 #root:
-permalink: :year/:month/:day/:title/
+#permalink: :year/:month/:day/:title/
+permalink: :title.html
 permalink_defaults:
 
 # Directory
