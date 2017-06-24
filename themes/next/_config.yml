@@ -6,7 +6,7 @@
 favicon: /favicon.ico
 
 # Set default keywords (Use a comma to separate)
-keywords: "Hexo, NexT"
+keywords: "Data Science, Data Engineer, 資料科學, 資料工程, 學習筆記"
 
 # Set rss to false to disable feed link.
 # Leave rss as empty to use site's feed link.
@@ -396,7 +396,7 @@ algolia_search:
 #! ---------------------------------------------------------------
 
 # Motion
-use_motion: true
+use_motion: false
 
 # Fancybox
 fancybox: true

@@ -7,7 +7,7 @@ title: 94 讀書筆記咩
 subtitle: 全棧數據工程師之路
 description: Be relentlessly resourceful．
 author: c1mone
-language: zh-tw
+language: en
 timezone: Asia/Taipei
 
 sitemap:
@@ -15,7 +15,8 @@ sitemap:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://blog.c1mone.com.tw
+url: https://blog.c1mone.com.tw
+enforce_ssl: blog.c1mone.com.tw
 #root:
 permalink: :year/:month/:day/:title/
 permalink_defaults:
